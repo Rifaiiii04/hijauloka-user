@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@layer components {
+  .side-btn {
+    @apply w-28 h-11 flex items-center justify-evenly text-center rounded-md p-2;
+  }
+  .gradient-sky {
+    @apply bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text text-transparent;
+  }
+  .perspective {
+    perspective: 1000px;
+  }
+}
+
+@theme {
+  --font-poppins: "poppins";
+}
+
+@font-face {
+  font-family: "poppins";
+  src: url("./../dist/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "poppins";
+  src: url("/dist/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+}
