@@ -6,7 +6,7 @@ class Auth extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
-        $this->load->library('session');
+        $this->load->library(['session', 'form_validation']);
     }
 
     public function index() {
@@ -50,27 +50,47 @@ class Auth extends CI_Controller {
 
     public function register() {
         if ($this->input->method() === 'post') {
-            $data = array(
-                'nama' => $this->input->post('nama'),
-                'email' => $this->input->post('email'),
-                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
-                'alamat' => $this->input->post('alamat'),
-                'no_tlp' => $this->input->post('no_tlp')
-            );
+            // Validation rules
+            $this->form_validation->set_rules('nama', 'Name', 'required|trim', [
+                'required' => 'Name is required'
+            ]);
+            $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]', [
+                'required' => 'Email is required',
+                'valid_email' => 'Please enter a valid email address',
+                'is_unique' => 'This email is already registered'
+            ]);
+            $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[6]', [
+                'required' => 'Password is required',
+                'min_length' => 'Password must be at least 6 characters'
+            ]);
+            $this->form_validation->set_rules('alamat', 'Address', 'required|trim', [
+                'required' => 'Address is required'
+            ]);
+            $this->form_validation->set_rules('no_tlp', 'Phone Number', 'required|trim|numeric', [
+                'required' => 'Phone number is required',
+                'numeric' => 'Please enter a valid phone number'
+            ]);
     
-            // Check if email already exists
-            if ($this->User_model->get_user_by_email($data['email'])) {
-                $this->session->set_flashdata('error', 'Email already registered');
+            if ($this->form_validation->run() == FALSE) {
+                $error_messages = str_replace(['<p>', '</p>'], '', validation_errors());
+                $this->session->set_flashdata('error', $error_messages);
                 redirect('auth/register');
                 return;
             }
     
-            // Insert user
+            $data = array(
+                'nama' => htmlspecialchars($this->input->post('nama', true)),
+                'email' => htmlspecialchars($this->input->post('email', true)),
+                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                'alamat' => htmlspecialchars($this->input->post('alamat', true)),
+                'no_tlp' => htmlspecialchars($this->input->post('no_tlp', true))
+            );
+    
             if ($this->User_model->insert_user($data)) {
-                $this->session->set_flashdata('success', 'Registration successful. Please login.');
+                $this->session->set_flashdata('success', 'Your account has been created successfully! Please login.');
                 redirect('auth');
             } else {
-                $this->session->set_flashdata('error', 'Registration failed. Please try again.');
+                $this->session->set_flashdata('error', 'Something went wrong. Please try again.');
                 redirect('auth/register');
             }
         }

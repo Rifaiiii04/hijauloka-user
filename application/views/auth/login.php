@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <!-- Add Snackbar Notifications -->
+    <?php if($this->session->flashdata('success')): ?>
+    <div id="snackbar" class="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
+        <i class="fas fa-check-circle text-xl"></i>
+        <div>
+            <h4 class="font-semibold">Success!</h4>
+            <p class="text-sm"><?= $this->session->flashdata('success') ?></p>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if($this->session->flashdata('error')): ?>
+    <div id="snackbar" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
+        <i class="fas fa-exclamation-circle text-xl"></i>
+        <div>
+            <h4 class="font-semibold">Error!</h4>
+            <p class="text-sm"><?= $this->session->flashdata('error') ?></p>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Back to Home Button -->
     <a href="<?= base_url('home') ?>" class="fixed top-4 left-4 flex items-center gap-2 text-green-800 hover:text-green-600 transition-colors">
         <i class="fas fa-arrow-left"></i>
@@ -18,14 +39,62 @@
     <div class="bg-white shadow-lg rounded-lg flex p-8 w-full max-w-4xl">
         <!-- Left Section: Plant Image and Title -->
         <div class="w-1/2 flex flex-col items-center justify-center">
-            <img src="img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
+            <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
         </div>
 
         <!-- Right Section: Login Form -->
         <div class="w-1/2 px-8">
             <h2 class="text-3xl font-bold text-center mb-6">Welcome to PlantNet!</h2>
 
-            <form action="<?= base_url('auth/login') ?>" method="post">
+            <!-- Add loader HTML after the snackbar notifications -->
+            <div id="loader" class="fixed inset-0 bg-black/30 backdrop-blur-[2px] hidden items-center justify-center z-50">
+                <div class="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-lg transform scale-95 opacity-0 transition-all duration-300 max-w-xs w-11/12">
+                    <div class="flex items-center gap-2 mb-2">
+                        <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Logo" class="w-8 h-8">
+                    </div>
+                    <div class="relative w-20 h-20">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-leaf text-4xl text-green-600 animate-pulse"></i>
+                        </div>
+                        <div class="absolute inset-0 border-4 border-dashed border-green-200 rounded-full animate-spin" style="animation-duration: 3s"></div>
+                    </div>
+                    <div class="text-center">
+                        <h2 class="text-lg font-medium text-green-800">Selamat Datang!</h2>
+                        <p class="text-green-600/80 text-sm">Sedang masuk ke akun Anda...</p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fas fa-seedling text-green-500 text-xs animate-bounce"></i>
+                        <i class="fas fa-seedling text-green-600 text-sm animate-bounce" style="animation-delay: 0.2s"></i>
+                        <i class="fas fa-seedling text-green-700 text-xs animate-bounce" style="animation-delay: 0.4s"></i>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const loginForm = document.getElementById('loginForm');
+                    const loader = document.getElementById('loader');
+
+                    loginForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        loader.classList.remove('hidden');
+                        loader.classList.add('flex');
+                        
+                        const modalContent = loader.querySelector('div[class*="bg-white"]');
+                        setTimeout(() => {
+                            modalContent.style.opacity = '1';
+                            modalContent.style.transform = 'scale(1)';
+                        }, 50);
+
+                        setTimeout(() => {
+                            this.submit();
+                        }, 2000);
+                    });
+                });
+            </script>
+
+            <!-- Update the form with an ID -->
+            <form action="<?= base_url('auth/login') ?>" method="post" id="loginForm">
                 <!-- Email Input -->
                 <div class="mb-4">
                     <input 
@@ -83,12 +152,12 @@
            <!-- Social Login Buttons -->
            <div class="flex justify-center space-x-4">
             <button class="flex items-center space-x-2 border px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="img/google.png" class="w-6 h-6" alt="Google">
+                <img src="<?= base_url('assets/')?>img/google.png" class="w-6 h-6" alt="Google">
                 <span class="text-sm">Google</span>
             </button>
 
             <button class="flex items-center space-x-2 border px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="img/fb.png" class="w-6 h-6" alt="Facebook">
+                <img src="<?= base_url('assets/')?>img/fb.png" class="w-6 h-6" alt="Facebook">
                 <span class="text-sm">Facebook</span>
             </button>
         </div>
@@ -104,3 +173,33 @@
         <?= $this->session->flashdata('error') ?>
     </div>
 <?php endif; ?>
+
+    <!-- Add this script before closing body tag -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const snackbar = document.getElementById('snackbar');
+            if (snackbar) {
+                setTimeout(() => {
+                    snackbar.style.opacity = '0';
+                    snackbar.style.transform = 'translateY(100%)';
+                    setTimeout(() => {
+                        snackbar.remove();
+                    }, 500);
+                }, 3000);
+            }
+
+            // Add login form handling
+            const loginForm = document.getElementById('loginForm');
+            const loader = document.getElementById('loader');
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+                
+                setTimeout(() => {
+                    this.submit();
+                }, 1500); // 1.5 seconds delay
+            });
+        });
+</script>
