@@ -33,13 +33,15 @@
               <h3 class="font-bold text-slate-800 text-md sm:text-xl line-clamp-2">
                 <?= $produk['nama_product']; ?>
               </h3>
-              <div class="flex justify-between items-end mt-3">
+              <div class="flex justify-between items-end mt-22">
                 <h3 class="font-bold text-green-800 text-xs sm:text-lg">
                   Rp<?= number_format($produk['harga'], 0, ',', '.'); ?>
                 </h3>
                 <i class="fa-solid fa-cart-shopping text-xl sm:text-2xl text-green-800 mb-1"></i>
               </div>
-            </div>
+           <a href="<?= base_url('auth') ?>" class="your-existing-classes">
+    <!-- Your user icon here -->
+</a> </div>
           </div>
         </a>
       </div>
@@ -83,11 +85,11 @@
                   <?= $produk->nama_produk; ?>
                 </h3>
                 <div class="flex justify-between items-end mt-3">
-                  <h3 class="font-bold text-green-800 text-xs sm:text-lg">
-                    Rp<?= number_format($produk->harga, 0, ',', '.'); ?>
-                  </h3>
-                  <i class="fa-solid fa-cart-shopping text-xl sm:text-2xl text-green-800 mb-1"></i>
-                </div>
+                <h3 class="font-bold text-green-800 text-xs sm:text-lg">
+                  Rp<?= number_format($produk->harga, 0, ',', '.'); ?>
+                </h3>
+                <i class="fa-solid fa-cart-shopping text-xl sm:text-2xl text-green-800 mb-1"></i>
+              </div>
               </div>
             </div>
           </a>
