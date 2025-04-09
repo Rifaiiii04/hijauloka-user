@@ -119,9 +119,18 @@
               </a>
             </li>
             <li>
-              <a href="#" class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full">
-                <i class="fa-solid fa-user"></i>
-              </a>
+              <?php if($this->session->userdata('logged_in')): ?>
+                <div class="flex items-center gap-3">
+                  <span class="text-white"><?= $this->session->userdata('nama') ?></span>
+                  <a href="<?= base_url('auth/logout') ?>" class="text-red-300 hover:text-red-400">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                  </a>
+                </div>
+              <?php else: ?>
+                <a href="<?= base_url('auth') ?>" class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full">
+                  <i class="fa-solid fa-user"></i>
+                </a>
+              <?php endif; ?>
             </li>
           </ul>
 
@@ -141,13 +150,18 @@
         id="sidebar"
         class="fixed top-0 left-0 w-64 h-full bg-green-800 transform -translate-x-full transition-transform duration-300 z-20"
       >
+        <!-- Also update the mobile sidebar user name section -->
         <div class="flex flex-col shadow-lg h-36 justify-center items-center gap-2 mt-5 font-semibold text-white">
           <img
             src="<?= base_url('assets/img/logo1.png') ;?>"
             alt="Logo"
             class="w-24 h-24 rounded-full"
           />
-          <h2>User Name</h2>
+          <?php if($this->session->userdata('logged_in')): ?>
+            <h2><?= $this->session->userdata('nama') ?></h2>
+          <?php else: ?>
+            <h2>Guest</h2>
+          <?php endif; ?>
         </div>
         <div>
           <ul class="flex flex-col gap-6 ml-3 text-md mt-4 font-semibold text-white mr-10">
