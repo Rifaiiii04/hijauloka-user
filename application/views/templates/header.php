@@ -16,8 +16,16 @@
   <body class="bg-slate-100 overflow-x-hidden font-poppins">
     <!-- Header & Navbar -->
     <header>
-      <?php include 'navbar.php'; ?>
-      <?php include 'section.php'; ?>
+      <?php $this->load->view('templates/navbar'); ?>
     </header>
+    <?php include 'section.php'; ?>
+    <script>
+      function handleLogout(event) {
+        event.preventDefault();
+        if (confirm("Apakah Anda yakin ingin keluar?")) {
+          window.location.href = "<?= base_url('auth/logout'); ?>";
+        }
+      }
+    </script>
   </body>
 </html>

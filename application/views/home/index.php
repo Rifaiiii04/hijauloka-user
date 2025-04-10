@@ -5,9 +5,9 @@
 
 <!-- main -->
 <main class="h-full mt-28">
-  <!-- For You Section -->
-  <h1 class="font-bold ml-3 text-md text-green-800 sm:text-lg">For You</h1>
-  <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 md:gap-y-5 gap-y-10 place-items-center sm:place-items-start justify-between">
+  <!-- Bagian Untuk Anda -->
+  <h1 class="font-bold ml-3 text-md text-green-800 sm:text-lg">Untuk Anda</h1>
+  <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 md:p-5 gap-y-10 place-items-center sm:place-items-start justify-between">
     <?php foreach ($produk_terbaru as $produk) : ?>
       <?php 
       if (!empty($produk['gambar'])) {
@@ -17,7 +17,7 @@
           $gambar = 'default.jpg'; 
       }
       ?>
-      <!-- Card -->
+      <!-- Kartu Produk -->
       <div class="bg-white shadow-lg w-40 sm:w-52 h-72 sm:h-96 p-2 rounded-lg transform hover:scale-105 transition-all duration-300">
         <div class="absolute cursor-pointer">
           <i class="fa-solid fa-heart wishlist-icon text-2xl sm:text-3xl text-slate-300"></i>
@@ -48,14 +48,14 @@
 
   <div class="mt-8"></div>
 
-  <!-- Best Seller Section -->
+  <!-- Bagian Produk Terlaris -->
   <div class="flex justify-between items-center">
-    <h1 class="font-bold ml-3 text-md text-green-800 sm:text-lg">Best Seller</h1>
+    <h1 class="font-bold ml-3 text-md text-green-800 sm:text-lg">Produk Terlaris</h1>
     <a href="#" class="font-bold mr-5 text-md text-green-800 sm:text-lg decoration-1">
       <u>Lihat lainnya..</u>
     </a>
   </div>
-  <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 md:gap-y-5 gap-y-10 place-items-center sm:place-items-start justify-between">
+  <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 md:p-5 gap-y-10 place-items-center sm:place-items-start justify-between">
     <?php if (!empty($produk_terlaris)) : ?>
       <?php foreach ($produk_terlaris as $produk) : ?>
         <?php 
@@ -66,7 +66,7 @@
             $gambar = 'default.jpg';
         }
         ?>
-        <!-- Card -->
+        <!-- Kartu Produk -->
         <div class="bg-white shadow-lg w-40 sm:w-52 h-72 sm:h-96 p-2 rounded-lg transform hover:scale-105 transition-all duration-300">
           <div class="absolute cursor-pointer">
             <i class="fa-solid fa-heart wishlist-icon text-2xl sm:text-3xl text-slate-300"></i>
