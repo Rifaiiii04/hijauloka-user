@@ -23,122 +23,107 @@
   <body class="bg-slate-100 overflow-x-hidden font-poppins">
     <!-- Header & Navbar -->
     <header>
-      <nav class="bg-green-800 flex items-center p-3 fixed top-0 w-screen z-100">
-        <!-- Bagian Kiri -->
+      <nav class="bg-green-800 flex items-center p-4 fixed top-0 w-screen z-50 shadow-lg">
+        <!-- Left Section -->
         <div class="flex items-center">
-          <!-- Tombol Mobile -->
-          <button
-            id="toggleSidebar"
-            class="w-12 h-12 mt-2 md:hidden flex flex-col items-center space-y-2 justify-center cursor-pointer"
-          >
-            <div
-              id="line1"
-              class="bg-white rounded-lg w-10 h-1 transition-all duration-300"
-            ></div>
-            <div
-              id="line2"
-              class="bg-white rounded-lg w-8 h-1 transition-all duration-300"
-            ></div>
-            <div
-              id="line3"
-              class="bg-white rounded-lg w-10 h-1 transition-all duration-300"
-            ></div>
+          <button id="toggleSidebar" class="w-12 h-12 md:hidden flex flex-col items-center space-y-1.5 justify-center">
+            <div id="line1" class="bg-white rounded-full w-8 h-0.5 transition-all duration-300"></div>
+            <div id="line2" class="bg-white rounded-full w-6 h-0.5 transition-all duration-300"></div>
+            <div id="line3" class="bg-white rounded-full w-8 h-0.5 transition-all duration-300"></div>
           </button>
-          <!-- Logo versi Desktop -->
+          
           <div class="logo hidden md:flex items-center ml-4">
-            <a href="#" class="flex items-center">
-              <img
-                src="<?= base_url('assets/img/logo1.png') ;?>"
-                alt="Logo"
-                class="w-20 transition-all duration-300"
-                id="logoo-img"
-              />
-    
+            <a href="<?= base_url() ?>" class="flex items-center gap-3">
+              <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Logo" class="w-16 transition-all duration-300">
+              <span class="text-white font-semibold text-xl">HijauLoka</span>
             </a>
           </div>
         </div>
 
-        <!-- Bagian Tengah (Menu) -->
+        <!-- Center Section -->
         <div class="hidden md:flex flex-1 justify-center">
-          <ul class="flex gap-10 text-lg text-white">
+          <ul class="flex gap-12 text-base text-white font-medium">
             <li>
-              <a
-                href="#"
-                class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Home
+              <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Collection
+              <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-leaf"></i>
+                <span>Collection</span>
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Popular
+              <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-star"></i>
+                <span>Popular</span>
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Wishlist
+              <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
               </a>
             </li>
           </ul>
         </div>
 
-        <!-- Bagian Kanan -->
+        <!-- Right Section -->
         <div class="flex items-center">
-          <!-- Search dan ikon lainnya untuk tampilan desktop -->
-          <ul class="hidden md:flex gap-10 text-lg items-center text-white mr-10">
-            <li class="relative flex items-center">
-              <a href="#" id="search-icon" class="flex items-center">
-                <i
-                  class="fa-solid fa-magnifying-glass text-white text-lg hover:text-green-300 transition-all duration-300"
-                ></i>
-              </a>
-              <input
-                type="text"
-                id="search-input"
-                class="ml-2 bg-transparent border-b-2 border-white outline-none text-white placeholder-gray-400 w-0 opacity-0 transition-all duration-300"
-                placeholder="Search..."
-              />
-            </li>
+          <ul class="hidden md:flex items-center gap-6 text-white mr-4">
+            <!-- Search -->
             <li class="relative">
-              <a href="#" class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full">
-                <i class="fa-solid fa-cart-shopping"></i>
+              <div class="flex items-center bg-green-700/50 rounded-lg px-3 py-2">
+                <input type="text" placeholder="Search..." class="bg-transparent border-none outline-none text-white placeholder-gray-300 w-40">
+                <i class="fas fa-search ml-2"></i>
+              </div>
+            </li>
+            
+            <!-- Cart -->
+            <li>
+              <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
               </a>
             </li>
+
+            <!-- Notifications -->
             <li>
+              <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-5 h-5 flex items-center justify-center rounded-full">3</span>
+              </a>
+            </li>
+
+            <!-- User Section -->
+            <li class="relative">
               <?php if($this->session->userdata('logged_in')): ?>
-                <div class="flex items-center gap-3">
-                  <span class="text-white"><?= $this->session->userdata('nama') ?></span>
-                  <a href="<?= base_url('auth/logout') ?>" class="text-red-300 hover:text-red-400">
-                    <i class="fa-solid fa-sign-out-alt"></i>
+                <div class="flex items-center gap-3 bg-green-700/50 px-4 py-2 rounded-lg">
+                  <span class="text-sm font-medium"><?= $this->session->userdata('nama') ?></span>
+                  <a href="#" onclick="handleLogout(event)" class="text-white hover:text-red-300 transition-colors">
+                    <i class="fas fa-sign-out-alt"></i>
                   </a>
                 </div>
               <?php else: ?>
-                <a href="<?= base_url('auth') ?>" class="relative inline-block after:content-[''] after:block after:w-0 after:h-0.5 after:bg-white after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full">
-                  <i class="fa-solid fa-user"></i>
+                <a href="<?= base_url('auth') ?>" class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                  <span>Login</span>
                 </a>
               <?php endif; ?>
             </li>
           </ul>
 
-          <!-- Ikon untuk tampilan mobile -->
-          <ul class="flex md:hidden gap-5 text-2xl items-center mr-5 mt-4">
+          <!-- Mobile Icons -->
+          <ul class="flex md:hidden gap-4 items-center mr-2">
             <li>
-              <a href="#">
-                <i class="fa-solid fa-bell text-white"></i>
+              <a href="#" class="text-white">
+                <i class="fas fa-search text-xl"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="text-white">
+                <i class="fas fa-shopping-cart text-xl"></i>
               </a>
             </li>
           </ul>
@@ -295,7 +280,48 @@
       </section>
     </header>
 
-    <!-- Skrip JavaScript -->
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="fixed inset-0 bg-black/30 backdrop-blur-[2px] hidden items-center justify-center z-[100]">
+        <div class="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-5 shadow-lg transform scale-95 opacity-0 transition-all duration-300 max-w-xs w-11/12">
+            <div class="relative w-24 h-24">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fas fa-leaf text-5xl text-green-600 animate-pulse"></i>
+                </div>
+                <div class="absolute inset-0 border-4 border-dashed border-green-200 rounded-full animate-spin" style="animation-duration: 3s"></div>
+            </div>
+            <div class="text-center space-y-1">
+                <h2 class="text-xl font-medium text-green-800">See you soon!</h2>
+                <p class="text-green-600/80 text-sm">Growing memories with HijauLoka</p>
+            </div>
+            <div class="flex items-center gap-1">
+                <i class="fas fa-seedling text-green-500 text-xs animate-bounce"></i>
+                <i class="fas fa-seedling text-green-600 text-sm animate-bounce" style="animation-delay: 0.2s"></i>
+                <i class="fas fa-seedling text-green-700 text-xs animate-bounce" style="animation-delay: 0.4s"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function handleLogout(e) {
+        e.preventDefault();
+        const modal = document.getElementById('logoutModal');
+        const modalContent = modal.querySelector('div[class*="bg-white"]');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        setTimeout(() => {
+            modalContent.style.opacity = '1';
+            modalContent.style.transform = 'scale(1)';
+        }, 50);
+
+        setTimeout(() => {
+            window.location.href = '<?= base_url('auth/logout') ?>';
+        }, 1500);
+    }
+    </script>
+
+    <!-- Existing Scripts -->
     <script src="<?= base_url('assets/') ;?>js/index.js"></script>
     <script src="<?= base_url('assets/') ;?>js/slide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

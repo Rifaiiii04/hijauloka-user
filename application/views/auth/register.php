@@ -9,6 +9,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <!-- Add Snackbar -->
+    <!-- Update the snackbar section -->
+    <?php if($this->session->flashdata('success')): ?>
+    <div id="snackbar" class="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
+        <i class="fas fa-check-circle text-xl"></i>
+        <div>
+            <h4 class="font-semibold">Success!</h4>
+            <p class="text-sm"><?= $this->session->flashdata('success') ?></p>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if($this->session->flashdata('error')): ?>
+    <div id="snackbar" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
+        <i class="fas fa-exclamation-circle text-xl"></i>
+        <div>
+            <h4 class="font-semibold">Error!</h4>
+            <p class="text-sm whitespace-pre-line"><?= $this->session->flashdata('error') ?></p>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Back to Home Button -->
     <a href="<?= base_url() ?>" class="fixed top-4 left-4 flex items-center gap-2 text-green-800 hover:text-green-600 transition-colors">
         <i class="fas fa-arrow-left"></i>
@@ -18,7 +40,7 @@
     <div class="bg-white shadow-lg rounded-lg flex p-6 w-full max-w-4xl">
         <!-- Left Section -->
         <div class="hidden md:flex w-1/2 flex-col items-center justify-center">
-            <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Plant Image" class="rounded-full w-52 h-52 object-cover">
+            <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-52 h-52 object-cover">
         </div>
 
         <!-- Right Section -->
@@ -91,5 +113,20 @@
             </div>
         </div>
     </div>
+    <!-- Add this script before closing body tag -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const snackbar = document.getElementById('snackbar');
+            if (snackbar) {
+                setTimeout(() => {
+                    snackbar.style.opacity = '0';
+                    snackbar.style.transform = 'translateY(100%)';
+                    setTimeout(() => {
+                        snackbar.remove();
+                    }, 500);
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
