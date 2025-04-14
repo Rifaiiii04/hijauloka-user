@@ -19,7 +19,7 @@
   <div class="hidden md:flex flex-1 justify-center">
     <ul class="flex gap-12 text-base text-white font-medium">
       <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+        <a href="<?= base_url('home') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
           <i class="fas fa-home"></i>
           <span>Home</span>
         </a>
@@ -31,7 +31,7 @@
         </a>
       </li>
       <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+        <a href="<?= base_url('popular') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
           <i class="fas fa-star"></i>
           <span>Popular</span>
         </a>
@@ -76,10 +76,15 @@
       <li class="relative">
         <?php if ($this->session->userdata('logged_in')): ?>
           <div class="flex items-center gap-3 bg-green-700/50 px-4 py-2 rounded-lg">
-            <span class="text-sm font-medium"><?= $this->session->userdata('nama') ?></span>
-            <a href="#" onclick="handleLogout(event)" class="text-white hover:text-red-300 transition-colors">
-              <i class="fas fa-sign-out-alt"></i>
-            </a>
+            <div class="flex items-center gap-2 cursor-pointer">
+              <span class="text-sm font-medium"><?= $this->session->userdata('nama') ?></span>
+              <a href="<?= base_url('profile') ?>" class="text-white hover:text-gray-200 transition-colors">
+                <i class="fas fa-user"></i>
+              </a>
+              <a href="#" onclick="handleLogout(event)" class="text-white hover:text-red-300 transition-colors">
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
+            </div>
           </div>
         <?php else: ?>
           <a href="<?= base_url('auth') ?>" class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">

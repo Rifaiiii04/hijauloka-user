@@ -18,7 +18,7 @@
     <header>
       <?php $this->load->view('templates/navbar'); ?>
     </header>
-    <?php include 'section.php'; ?>
+    
     <script>
       function handleLogout(event) {
         event.preventDefault();

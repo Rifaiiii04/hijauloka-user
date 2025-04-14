@@ -27,4 +27,14 @@ class Product_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_popular_products() {
+        $this->db->select('id_product, nama_product, harga, gambar, rating, desk_product');
+        $this->db->from('product');
+        $this->db->where('stok >', 0);
+        $this->db->order_by('rating', 'DESC');
+        $this->db->limit(12);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
