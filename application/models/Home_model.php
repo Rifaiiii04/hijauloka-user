@@ -8,7 +8,7 @@ class Home_model extends CI_Model {
     }
 
     public function getProdukTerbaru($limit = 6) {
-        $this->db->select('id_product, nama_product, harga, stok, gambar, rating');
+        $this->db->select('id_product, nama_product, desk_product, harga, stok, gambar, rating');
         $this->db->from('product'); 
         $this->db->order_by('id_product', 'DESC');
         $this->db->limit($limit);

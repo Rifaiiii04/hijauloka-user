@@ -1,61 +1,64 @@
-<!-- Bagian Header Mobile -->
-<section class="bg-green-800 md:hidden flex h-48 relative top-20 items-center justify-center">
-  <div class="p-3 w-72">
-    <div class="swiper mySwiper h-full">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide relative aspect-[16/9] max-h-56 rounded-lg overflow-hidden">
-          <img src="<?= base_url('assets/plant/plant1.png') ;?>" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 text-white text-center">
-            <h1 class="text-2xl font-bold">Selamat Datang di Website Kami</h1>
-            <p class="text-sm mt-2">Jelajahi keindahan alam bersama kami</p>
-          </div>
-        </div>
-        <div class="swiper-slide relative aspect-[16/9] max-h-56 rounded-lg overflow-hidden">
-          <img src="<?= base_url('assets/plant/plant2.png') ;?>" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/50 text-white text-center">
-            <h1 class="text-2xl font-bold">Teknologi Inovatif</h1>
-            <p class="text-sm mt-2">Temukan tren teknologi terbaru</p>
-          </div>
-        </div>
-        <div class="swiper-slide relative aspect-[16/9] max-h-56 rounded-lg overflow-hidden">
-          <img src="<?= base_url('assets/plant/plant3.png') ;?>" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/50 text-white text-center">
-            <h1 class="text-2xl font-bold">Bangun Masa Depan Anda</h1>
-            <p class="text-sm mt-2">Kembangkan bisnis Anda bersama kami</p>
-          </div>
-        </div>
-      </div>
-      <!-- Pagination -->
-      <div class="swiper-pagination"></div>
+<!-- Hero Section -->
+<section class="relative top-20 overflow-hidden" style="height: 85vh;">
+  <!-- Background Image with Parallax -->
+  <div class="absolute inset-0">
+    <img src="<?= base_url('assets/plant/hero-bg.png') ;?>" 
+         class="w-full h-full object-cover scale-105 motion-safe:animate-subtle-zoom brightness-[0.85]" 
+         alt="Background" />
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="text-center text-white animate-fade-in max-w-4xl">
+      <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 text-sm uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">
+        Tanaman Hias Berkualitas
+      </span>
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 tracking-tight drop-shadow-xl">
+        Hijaukan Ruangan Anda dengan <span class="bg-gradient-to-r from-green-400 to-emerald-400 text-transparent bg-clip-text">HijauLoka</span>
+      </h1>
+      <p class="text-base sm:text-lg mb-6 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
+        Koleksi tanaman hias terbaik untuk mempercantik interior rumah Anda
+      </p>
+      <a href="#produk_section" 
+         class="inline-flex items-center p-3 cursor-pointer bg-green-600 text-white text-lg font-medium rounded-full transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5">
+        Eksplor Sekarang
+      </a>
+        <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- Bagian Header Desktop -->
-<section class="hidden md:flex justify-between bg-green-800 relative top-20 flex-col md:flex-row p-10 items-center text-center md:text-left text-white">
-  <div class="md:w-[450px]">
-    <h1 class="text-4xl font-bold">Selamat Datang di HijauLoka!</h1>
-    <p class="mt-4 text-lg leading-relaxed">
-      Temukan berbagai tanaman hias sesuai selera Anda di sini. Buat
-      lingkungan sekitar Anda semakin indah dengan tanaman hias.
-    </p>
-    <a href="#main" class="text-xl relative top-8 bg-white rounded-lg text-green-800 p-3 font-bold shadow-lg">Lihat Produk</a>
-  </div>
-  <div class="md:w-1/2 grid grid-cols-3 gap-2 items-center">
-    <div class="grid grid-rows-2 gap-2">
-      <img src="<?= base_url('assets/plant/plant2.png') ;?>" class="w-full h-full object-cover rounded-lg" alt="Gambar Tanaman" />
-      <img src="<?= base_url('assets/plant/plant1.png') ;?>" class="w-full h-full object-cover rounded-lg" alt="Gambar Tanaman" />
-    </div>
-    <div class="col-span-2 relative">
-      <img src="<?= base_url('assets/plant/plant3.png') ;?>" class="w-full h-full object-cover rounded-lg" alt="Gambar Tanaman" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end rounded-lg">
-        <h3 class="text-2xl font-bold">Bunga Anthurium</h3>
-        <p class="text-sm">
-          Bunga yang melambangkan manusia. Bunga ini memiliki makna bahwa
-          tanaman selalu tumbuh di segala musim dan cuaca...
-        </p>
-        <a href="#seller" class="mt-4 px-4 py-2 bg-white text-green-900 font-bold rounded-lg text-center hover:bg-green-800 hover:text-white transition duration-500">BACA SELENGKAPNYA</a>
-      </div>
-    </div>
-  </div>
-</section>
+<style>
+@keyframes subtle-zoom {
+  from { transform: scale(1.05); }
+  to { transform: scale(1.15); }
+}
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-subtle-zoom {
+  animation: subtle-zoom 20s ease-in-out infinite alternate;
+}
+.animate-fade-in {
+  animation: fade-in 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+</style>
+
+<script>
+document.querySelectorAll('a[href="#produk_section"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetSection = document.querySelector('#produk_section');
+        const offset = 80; // Adjust this value based on your header height
+        const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    });
+});
+</script>
