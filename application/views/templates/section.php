@@ -15,7 +15,7 @@
         Tanaman Hias Berkualitas
       </span>
       <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 tracking-tight drop-shadow-xl">
-        Hijaukan Ruangan Anda dengan <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">Hijauloka</span>
+        Hijaukan Ruangan Anda dengan <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">HijauLoka</span>
       </h1>
       <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
         Koleksi tanaman hias terbaik untuk mempercantik interior rumah Anda
