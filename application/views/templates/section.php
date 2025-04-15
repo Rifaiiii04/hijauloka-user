@@ -14,17 +14,15 @@
       <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 text-sm uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">
         Tanaman Hias Berkualitas
       </span>
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 tracking-tight drop-shadow-xl">
-        Hijaukan Ruangan Anda dengan <span class="bg-gradient-to-r from-green-400 to-emerald-400 text-transparent bg-clip-text">HijauLoka</span>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight drop-shadow-xl">
+        Hijaukan Ruangan Anda dengan <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">Hijauloka</span>
       </h1>
-      <p class="text-base sm:text-lg mb-6 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
+      <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
         Koleksi tanaman hias terbaik untuk mempercantik interior rumah Anda
       </p>
       <a href="#produk_section" 
-         class="inline-flex items-center p-3 cursor-pointer bg-green-600 text-white text-lg font-medium rounded-full transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5">
+         class="inline-flex items-center px-6 py-3 cursor-pointer bg-green-600 text-white text-lg font-medium rounded-full transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5">
         Eksplor Sekarang
-      </a>
-        <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
       </a>
     </div>
   </div>

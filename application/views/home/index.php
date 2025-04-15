@@ -23,7 +23,7 @@
                 $gambar = 'default.jpg';
             }
             ?>
-            <!-- Product Card -->
+            <!-- Product Card for Produk Terlaris -->
             <div class="bg-white rounded-lg overflow-hidden shadow">
                 <div class="aspect-w-1 aspect-h-1">
                     <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
@@ -32,15 +32,21 @@
                 </div>
                 <div class="p-4">
                     <h3 class="text-xl font-semibold mb-2"><?= $produk->nama_produk; ?></h3>
-                    <p class="text-gray-600 text-sm mb-3">
+                    <div class="flex flex-wrap gap-2 mb-3">
                         <?php
-                        $desc = $produk->desk_product ?? 'Deskripsi tidak tersedia';
-                        echo (strlen($desc) > 100) ? substr($desc, 0, 100) . '...' : $desc;
-                        ?>
-                    </p>
-                    <div class="flex justify-between items-center">
+                        $this->db->select('c.nama_kategori');
+                        $this->db->from('product_category pc');
+                        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+                        $this->db->where('pc.id_product', $produk->id_product);
+                        $product_categories = $this->db->get()->result_array();
+                        
+                        foreach ($product_categories as $cat) : ?>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between sm:items-center">
                         <span class="text-lg font-bold">Rp<?= number_format($produk->harga, 0, ',', '.'); ?></span>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        <button class="w-full sm:w-auto bg-green-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-700 text-sm sm:text-base transition-colors">
                             Order Now
                         </button>
                     </div>
@@ -72,7 +78,7 @@
           $gambar = 'default.jpg'; 
       }
       ?>
-      <!-- Product Card -->
+      <!-- Product Card for Untuk Anda -->
       <div class="bg-white rounded-lg overflow-hidden shadow">
         <div class="aspect-w-1 aspect-h-1">
           <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
@@ -81,18 +87,24 @@
         </div>
         <div class="p-4">
           <h3 class="text-xl font-semibold mb-2"><?= $produk['nama_product']; ?></h3>
-          <p class="text-gray-600 text-sm mb-3">
-                        <?php
-                        $desc = $produk['desk_product'] ?? 'Deskripsi tidak tersedia';
-                        echo (strlen($desc) > 100) ? substr($desc, 0, 100) . '...' : $desc;
-                        ?>
-                    </p>
-                    <div class="flex justify-between items-center">
-            <span class="text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Order Now
-            </button>
+          <div class="flex flex-wrap gap-2 mb-3">
+              <?php
+              $this->db->select('c.nama_kategori');
+              $this->db->from('product_category pc');
+              $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+              $this->db->where('pc.id_product', $produk['id_product']);
+              $product_categories = $this->db->get()->result_array();
+              
+              foreach ($product_categories as $cat) : ?>
+                  <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+              <?php endforeach; ?>
           </div>
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between sm:items-center">
+                        <span class="text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
+                        <button class="w-full sm:w-auto bg-green-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-700 text-sm sm:text-base transition-colors">
+                            Order Now
+                        </button>
+                    </div>
         </div>
       </div>
     <?php endforeach; ?>

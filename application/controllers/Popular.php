@@ -8,7 +8,10 @@ class Popular extends CI_Controller {
     }
 
     public function index() {
-        $data['produk_populer'] = $this->Product_model->get_popular_products();
+        $kategori_id = $this->input->get('kategori');
+        $data['categories'] = $this->Product_model->get_categories();
+        $data['produk_populer'] = $this->Product_model->get_popular_products_by_category($kategori_id);
+        $data['selected_category'] = $kategori_id;
         $this->load->view('popular/index', $data);
     }
 }

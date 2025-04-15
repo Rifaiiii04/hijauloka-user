@@ -37,4 +37,28 @@ class Product_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function get_categories() {
+        $this->db->select('id_kategori, nama_kategori');
+        $this->db->from('category');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_popular_products_by_category($kategori_id = null) {
+        $this->db->select('p.*');
+        $this->db->from('product p');
+        
+        if ($kategori_id) {
+            $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+            $this->db->where('pc.id_kategori', $kategori_id);
+        }
+        
+        $this->db->where('p.stok >', 0);
+        $this->db->order_by('p.rating', 'DESC');
+        $this->db->group_by('p.id_product'); // Prevent duplicates if multiple categories
+        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
