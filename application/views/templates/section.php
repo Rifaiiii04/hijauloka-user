@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<section class="relative top-20 overflow-hidden" style="height: 85vh;">
+<section class="relative md:top-20 top-10 overflow-hidden" style="height: 85vh;">
   <!-- Background Image with Parallax -->
   <div class="absolute inset-0">
     <img src="<?= base_url('assets/plant/hero-bg.png') ;?>" 
@@ -14,7 +14,7 @@
       <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 text-sm uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">
         Tanaman Hias Berkualitas
       </span>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight drop-shadow-xl">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 tracking-tight drop-shadow-xl">
         Hijaukan Ruangan Anda dengan <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">Hijauloka</span>
       </h1>
       <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">

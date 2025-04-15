@@ -36,15 +36,20 @@
         <span>Back to Home</span>
     </a>
 
-    <div class="bg-white shadow-lg rounded-lg flex p-8 w-full max-w-4xl">
+    <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row p-4 md:p-8 w-full max-w-4xl mx-4">
         <!-- Left Section: Plant Image and Title -->
-        <div class="w-1/2 flex flex-col items-center justify-center">
+        <div class="hidden md:w-1/2 md:flex md:flex-col md:items-center md:justify-center">
             <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
         </div>
 
         <!-- Right Section: Login Form -->
-        <div class="w-1/2 px-8">
-            <h2 class="text-3xl font-bold text-center mb-6">Welcome to PlantNet!</h2>
+        <div class="w-full md:w-1/2 px-4 md:px-8">
+            <!-- Mobile Logo -->
+            <div class="flex md:hidden justify-center mb-6">
+                <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
+            </div>
+            
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to PlantNet!</h2>
 
             <!-- Add loader HTML after the snackbar notifications -->
             <div id="loader" class="fixed inset-0 bg-black/30 backdrop-blur-[2px] hidden items-center justify-center z-50">
@@ -150,15 +155,15 @@
             </div>
 
            <!-- Social Login Buttons -->
-           <div class="flex justify-center space-x-4">
-            <button class="flex items-center space-x-2 border px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="<?= base_url('assets/')?>img/google.png" class="w-6 h-6" alt="Google">
-                <span class="text-sm">Google</span>
+           <div class="flex justify-center space-x-2 md:space-x-4">
+            <button class="flex items-center space-x-1 md:space-x-2 border px-3 md:px-4 py-2 rounded-lg hover:bg-gray-100">
+                <img src="<?= base_url('assets/')?>img/google.png" class="w-5 md:w-6 h-5 md:h-6" alt="Google">
+                <span class="text-xs md:text-sm">Google</span>
             </button>
 
-            <button class="flex items-center space-x-2 border px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="<?= base_url('assets/')?>img/fb.png" class="w-6 h-6" alt="Facebook">
-                <span class="text-sm">Facebook</span>
+            <button class="flex items-center space-x-1 md:space-x-2 border px-3 md:px-4 py-2 rounded-lg hover:bg-gray-100">
+                <img src="<?= base_url('assets/')?>img/fb.png" class="w-5 md:w-6 h-5 md:h-6" alt="Facebook">
+                <span class="text-xs md:text-sm">Facebook</span>
             </button>
         </div>
         </div>

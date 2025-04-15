@@ -37,21 +37,26 @@
         <span>Back to Home</span>
     </a>
 
-    <div class="bg-white shadow-lg rounded-lg flex p-6 w-full max-w-4xl">
+    <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row p-4 md:p-6 w-full max-w-4xl mx-4">
         <!-- Left Section -->
-        <div class="hidden md:flex w-1/2 flex-col items-center justify-center">
+        <div class="hidden md:flex md:w-1/2 md:flex-col md:items-center md:justify-center">
             <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-52 h-52 object-cover">
         </div>
 
         <!-- Right Section -->
-        <div class="w-full md:w-1/2 px-6">
-            <h2 class="text-2xl font-bold text-center mb-3">Create Your Account</h2>
+        <div class="w-full md:w-1/2 px-4 md:px-6">
+            <!-- Mobile Logo -->
+            <div class="flex md:hidden justify-center mb-8">
+                <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-28 h-28 object-cover">
+            </div>
+            
+            <h2 class="text-xl md:text-2xl font-bold text-center mb-6">Create Your Account</h2>
 
-            <form action="<?= base_url('auth/register') ?>" method="post" class="space-y-2">
+            <form action="<?= base_url('auth/register') ?>" method="post" class="space-y-3">
                 <div>
-                    <label class="block text-gray-700 text-sm mb-1">Name</label>
+                    <label class="block text-gray-700 text-sm font-medium mb-1.5">Name</label>
                     <input type="text" name="nama" required
-                        class="w-full px-3 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                         placeholder="Enter your name">
                 </div>
 
@@ -84,29 +89,29 @@
                 </div>
 
                 <button type="submit" 
-                    class="w-full bg-green-800 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200 font-semibold mt-4">
+                    class="w-full bg-green-800 text-white py-2.5 rounded-lg hover:bg-green-700 transition duration-200 font-semibold mt-6">
                     Create Account
                 </button>
             </form>
 
-            <p class="text-center mt-4 text-sm">
+            <p class="text-center mt-6 mb-6 text-sm">
                 Already have an account? 
                 <a href="<?= base_url('auth') ?>" class="text-green-600 font-semibold hover:underline">Sign in</a>
             </p>
 
-            <div class="flex items-center my-4">
+            <div class="flex items-center mb-6">
                 <hr class="flex-grow border-gray-300">
-                <span class="mx-3 text-sm text-gray-500">or continue with</span>
+                <span class="mx-4 text-sm text-gray-500">or continue with</span>
                 <hr class="flex-grow border-gray-300">
             </div>
 
-            <div class="flex justify-center space-x-4">
-                <button class="flex items-center space-x-2 border px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <div class="flex justify-center space-x-3 md:space-x-4">
+                <button class="flex items-center space-x-2 border px-4 md:px-6 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
                     <img src="<?= base_url('assets/img/google.png') ?>" class="w-5 h-5" alt="Google">
                     <span class="text-sm">Google</span>
                 </button>
 
-                <button class="flex items-center space-x-2 border px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <button class="flex items-center space-x-2 border px-4 md:px-6 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
                     <img src="<?= base_url('assets/img/fb.png') ?>" class="w-5 h-5" alt="Facebook">
                     <span class="text-sm">Facebook</span>
                 </button>

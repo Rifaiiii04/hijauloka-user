@@ -24,31 +24,45 @@
             }
             ?>
             <!-- Product Card for Produk Terlaris -->
-            <div class="bg-white rounded-lg overflow-hidden shadow">
+            <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
                 <div class="aspect-w-1 aspect-h-1">
                     <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
                          alt="<?= $produk->nama_produk; ?>" 
-                         class="w-full h-48 object-cover">
+                         class="w-full h-36 sm:h-48 object-cover">
                 </div>
-                <div class="p-4">
-                    <h3 class="text-xl font-semibold mb-2"><?= $produk->nama_produk; ?></h3>
-                    <div class="flex flex-wrap gap-2 mb-3">
-                        <?php
-                        $this->db->select('c.nama_kategori');
-                        $this->db->from('product_category pc');
-                        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
-                        $this->db->where('pc.id_product', $produk->id_product);
-                        $product_categories = $this->db->get()->result_array();
-                        
-                        foreach ($product_categories as $cat) : ?>
-                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
-                        <?php endforeach; ?>
+                <div class="p-3 sm:p-4 flex flex-col flex-1">
+                    <div>
+                        <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= $produk->nama_produk; ?></h3>
+                        <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
+                            <?php
+                            $this->db->select('c.nama_kategori');
+                            $this->db->from('product_category pc');
+                            $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+                            $this->db->where('pc.id_product', $produk->id_product);
+                            $product_categories = $this->db->get()->result_array();
+                            
+                            foreach ($product_categories as $cat) : ?>
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between sm:items-center">
-                        <span class="text-lg font-bold">Rp<?= number_format($produk->harga, 0, ',', '.'); ?></span>
-                        <button class="w-full sm:w-auto bg-green-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-700 text-sm sm:text-base transition-colors">
-                            Order Now
-                        </button>
+                    <div class="mt-auto">
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(4.5)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($produk->harga, 0, ',', '.'); ?></span>
+                            <button class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                                <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,32 +93,46 @@
       }
       ?>
       <!-- Product Card for Untuk Anda -->
-      <div class="bg-white rounded-lg overflow-hidden shadow">
+      <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
         <div class="aspect-w-1 aspect-h-1">
           <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
                alt="<?= $produk['nama_product']; ?>" 
                class="w-full h-48 object-cover">
         </div>
-        <div class="p-4">
-          <h3 class="text-xl font-semibold mb-2"><?= $produk['nama_product']; ?></h3>
-          <div class="flex flex-wrap gap-2 mb-3">
-              <?php
-              $this->db->select('c.nama_kategori');
-              $this->db->from('product_category pc');
-              $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
-              $this->db->where('pc.id_product', $produk['id_product']);
-              $product_categories = $this->db->get()->result_array();
-              
-              foreach ($product_categories as $cat) : ?>
-                  <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
-              <?php endforeach; ?>
-          </div>
-          <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between sm:items-center">
-                        <span class="text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
-                        <button class="w-full sm:w-auto bg-green-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-700 text-sm sm:text-base transition-colors">
-                            Order Now
-                        </button>
+        <div class="p-3 sm:p-4 flex flex-col flex-1">
+            <div>
+                <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= $produk['nama_product']; ?></h3>
+                <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
+                    <?php
+                    $this->db->select('c.nama_kategori');
+                    $this->db->from('product_category pc');
+                    $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+                    $this->db->where('pc.id_product', $produk['id_product']);
+                    $product_categories = $this->db->get()->result_array();
+                    
+                    foreach ($product_categories as $cat) : ?>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="mt-auto">
+                <div class="flex items-center mb-2">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
                     </div>
+                    <span class="text-gray-500 text-xs ml-1">(4.5)</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
+                    <button class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                        <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                    </button>
+                </div>
+            </div>
         </div>
       </div>
     <?php endforeach; ?>
