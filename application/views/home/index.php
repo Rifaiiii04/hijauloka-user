@@ -26,7 +26,7 @@
             <!-- Product Card for Produk Terlaris -->
             <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
                 <div class="aspect-w-1 aspect-h-1">
-                    <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
+                    <img src="http://localhost/hijauloka-dashboard/uploads/<?= $gambar; ?>" 
                          alt="<?= $produk->nama_produk; ?>" 
                          class="w-full h-36 sm:h-48 object-cover">
                 </div>
@@ -95,7 +95,7 @@
       <!-- Product Card for Untuk Anda -->
       <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
         <div class="aspect-w-1 aspect-h-1">
-          <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
+          <img src="http://localhost/hijauloka-dashboard/uploads/<?= $gambar; ?>" 
                alt="<?= $produk['nama_product']; ?>" 
                class="w-full h-48 object-cover">
         </div>
