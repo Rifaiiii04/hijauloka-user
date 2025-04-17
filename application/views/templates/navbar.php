@@ -11,6 +11,7 @@
 
   <!-- Keep existing desktop menu and right section unchanged -->
   <div class="hidden md:flex flex-1 justify-center">
+    <!-- For desktop menu, replace the Collection list item with: -->
     <ul class="flex gap-12 text-base text-white font-medium">
       <li>
         <a href="<?= base_url('home') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
@@ -18,11 +19,63 @@
           <span>Home</span>
         </a>
       </li>
-      <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+      <li class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+        <button
+          type="button"
+          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/60 transition-all duration-200 focus:outline-none"
+        >
           <i class="fas fa-leaf"></i>
           <span>Collection</span>
-        </a>
+          <i class="fas fa-chevron-down text-sm ml-1"></i>
+        </button>
+        <div
+          x-show="open"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 scale-100"
+          x-transition:leave-end="opacity-0 scale-95"
+          class="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-2xl ring-1 ring-black/10 z-[9999] py-2"
+        >
+          <div class="relative" x-data="{ plantsOpen: false }" @mouseenter="plantsOpen = true" @mouseleave="plantsOpen = false">
+            <button
+              type="button"
+              class="flex items-center justify-between px-5 py-2 w-full text-green-900 hover:bg-green-50 rounded-lg transition"
+            >
+              <span class="flex items-center gap-2">
+                <i class="fas fa-seedling"></i> Plants
+              </span>
+              <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+            <div
+              x-show="plantsOpen"
+              x-transition:enter="transition ease-out duration-200"
+              x-transition:enter-start="opacity-0 translate-x-2"
+              x-transition:enter-end="opacity-100 translate-x-0"
+              x-transition:leave="transition ease-in duration-150"
+              x-transition:leave-start="opacity-100 translate-x-0"
+              x-transition:leave-end="opacity-0 translate-x-2"
+              class="absolute top-0 left-full ml-2 w-52 bg-white rounded-xl shadow-2xl ring-1 ring-black/10 z-[10000] py-2"
+            >
+              <a href="<?= base_url('collection/plants/indoor') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
+                Indoor
+              </a>
+              <a href="<?= base_url('collection/plants/outdoor') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
+                Outdoor
+              </a>
+              <a href="<?= base_url('collection/plants/mudah-dirawat') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
+                Mudah Dirawat
+              </a>
+            </div>
+          </div>
+          <a href="<?= base_url('collection/seeds') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
+            <i class="fas fa-wheat-awn mr-2"></i>Seeds
+          </a>
+          <a href="<?= base_url('collection/pots') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
+            <i class="fas fa-box mr-2"></i>Pots
+          </a>
+        </div>
       </li>
       <li>
         <a href="<?= base_url('popular') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
@@ -31,7 +84,7 @@
         </a>
       </li>
       <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+        <a href="<?= base_url('wishlist') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
           <i class="fas fa-heart"></i>
           <span>Wishlist</span>
         </a>

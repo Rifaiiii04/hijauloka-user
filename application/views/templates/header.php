@@ -12,6 +12,7 @@
         color: red !important;
       }
     </style>
+    <script src="//unpkg.com/alpinejs" defer></script>
   </head>
   <body class="bg-slate-100 overflow-x-hidden font-poppins">
     <!-- Header & Navbar -->
