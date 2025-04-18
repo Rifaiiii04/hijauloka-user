@@ -1,5 +1,10 @@
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6 text-green-800">Indoor Plants</h1>
+<div class="mb-12 mt-28 text-center">
+    <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
+       Koleksi Indoor
+        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+    </h1>
+</div>
     <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <?php if (!empty($plants)) : ?>
             <?php foreach ($plants as $produk) : ?>

@@ -13,7 +13,16 @@
       }
     </style>
     <script src="//unpkg.com/alpinejs" defer></script>
-  </head>
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
   <body class="bg-slate-100 overflow-x-hidden font-poppins">
     <!-- Header & Navbar -->
     <header>
