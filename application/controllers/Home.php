@@ -9,11 +9,9 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        
-        $data['judul'] = 'Beranda - Hijauloka';
-        $data['produk_terbaru'] = $this->Home_model->getProdukTerbaru();
-        $data['produk_terlaris'] = $this->Home_model->get_produk_terlaris();
-        
+        $this->load->model('Product_model');
+        $data['produk_terlaris'] = $this->Product_model->get_best_sellers();
+        $data['produk_terbaru'] = $this->Product_model->get_latest_products();
         $this->load->view('home/index', $data);
     }
 }

@@ -8,28 +8,14 @@ class Plants extends CI_Controller {
         parent::__construct();
     }
 
-    public function indoor()
-    {
-        // Example static data for indoor plants
-        $data['plants'] = [
-            [
-                'name' => 'Monstera Deliciosa',
-                'image' => base_url('assets/img/products/monstera.jpg'),
-                'price' => 'Rp 120.000'
-            ],
-            [
-                'name' => 'Peace Lily',
-                'image' => base_url('assets/img/products/peace_lily.jpg'),
-                'price' => 'Rp 95.000'
-            ],
-            [
-                'name' => 'Snake Plant',
-                'image' => base_url('assets/img/products/snake_plant.jpg'),
-                'price' => 'Rp 80.000'
-            ]
-        ];
-        $data['title'] = 'Indoor Plants';
-        $this->load->view('templates/header', $data);
+    public function indoor() {
+        $this->load->model('Product_model');
+        $this->load->model('Wishlist_model');
+        
+        // Get indoor plants with categories
+        $data['plants'] = $this->Product_model->getIndoorPlants();
+        
+        $this->load->view('templates/header');
         $this->load->view('plants/indoor', $data);
         $this->load->view('templates/footer');
     }

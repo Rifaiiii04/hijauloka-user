@@ -17,15 +17,15 @@ class Product_model extends CI_Model {
     }
 
     public function get_best_sellers() {
-        $this->db->select('p.id_product, p.nama_product, p.harga, p.gambar, p.rating, p.desk_product, COUNT(oi.id_product) as jumlah_pembelian');
+        $this->db->select('p.*, COALESCE(SUM(oi.quantity), 0) as total_sales');
         $this->db->from('product p');
         $this->db->join('order_items oi', 'p.id_product = oi.id_product', 'left');
         $this->db->where('p.stok >', 0);
         $this->db->group_by('p.id_product');
-        $this->db->order_by('jumlah_pembelian', 'DESC');
-        $this->db->limit(10);
-        $query = $this->db->get();
-        return $query->result();
+        $this->db->having('total_sales >', 5);
+        $this->db->order_by('total_sales', 'DESC');
+        $this->db->limit(8);
+        return $this->db->get()->result_array();
     }
 
     public function get_popular_products() {
@@ -60,5 +60,24 @@ class Product_model extends CI_Model {
         
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    public function getIndoorPlants() {
+        $this->db->select('p.*, GROUP_CONCAT(c.nama_kategori) as categories');
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+        $this->db->where('c.nama_kategori', 'Indoor');
+        $this->db->group_by('p.id_product');
+        $result = $this->db->get()->result_array();
+
+        foreach ($result as &$item) {
+            $item['categories'] = explode(',', $item['categories']);
+            $item['name'] = $item['nama_product'];
+            $item['price'] = (float)($item['harga'] ?? 0); // Handle null price
+            $item['image'] = base_url('uploads/' . $item['gambar']);
+        }
+
+        return $result;
     }
 }

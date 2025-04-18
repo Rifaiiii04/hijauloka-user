@@ -56,7 +56,7 @@
               x-transition:leave="transition ease-in duration-150"
               x-transition:leave-start="opacity-100 translate-x-0"
               x-transition:leave-end="opacity-0 translate-x-2"
-              class="absolute top-0 left-full ml-2 w-52 bg-white rounded-xl shadow-2xl ring-1 ring-black/10 z-[10000] py-2"
+              class="absolute -top-1 left-full ml-1 w-52 bg-white rounded-xl shadow-2xl ring-1 ring-black/10 z-[10000] py-2"
             >
               <a href="<?= base_url('collection/plants/indoor') ?>" class="block px-5 py-2 text-green-900 hover:bg-green-50 rounded-lg transition">
                 Indoor
