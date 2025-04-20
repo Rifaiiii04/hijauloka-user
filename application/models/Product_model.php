@@ -95,4 +95,40 @@ class Product_model extends CI_Model {
 
         return $result;
     }
+    public function getEasyCarePlants() {
+        $this->db->select('p.*, GROUP_CONCAT(c.nama_kategori) as categories');
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+        $this->db->where('c.nama_kategori', 'Mudah dirawat');
+        $this->db->group_by('p.id_product');
+        $result = $this->db->get()->result_array();
+
+        foreach ($result as &$item) {
+            $item['categories'] = explode(',', $item['categories']);
+            $item['name'] = $item['nama_product'];
+            $item['price'] = (float)($item['harga'] ?? 0); // Handle null price
+            $item['image'] = base_url('uploads/' . $item['gambar']);
+        }
+
+        return $result;
+    }
+    public function getFlorikulturaPlants() {
+        $this->db->select('p.*, GROUP_CONCAT(c.nama_kategori) as categories');
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+        $this->db->where('c.nama_kategori', 'Florikultura');
+        $this->db->group_by('p.id_product');
+        $result = $this->db->get()->result_array();
+
+        foreach ($result as &$item) {
+            $item['categories'] = explode(',', $item['categories']);
+            $item['name'] = $item['nama_product'];
+            $item['price'] = (float)($item['harga'] ?? 0); // Handle null price
+            $item['image'] = base_url('uploads/' . $item['gambar']);
+        }
+
+        return $result;
+    }
 }

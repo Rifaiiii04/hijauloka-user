@@ -30,7 +30,7 @@ class Plants extends CI_Controller {
         $data['title'] = 'Indoor Plants';
 
         // Load view dengan data tanaman indoor
-        $this->load->view('templates/header', $data);
+        $this->load->view('templates/header2', $data);
         $this->load->view('collection/indoor', $data);
         $this->load->view('templates/footer');
     }
@@ -44,8 +44,8 @@ class Plants extends CI_Controller {
         $data['title'] = 'Outdoor Plants';
 
         // Load view dengan data tanaman outdoor
-        $this->load->view('templates/header', $data);
-        $this->load->view('plants/outdoor', $data);
+        $this->load->view('templates/header2', $data);
+        $this->load->view('collection/outdoor', $data);
         $this->load->view('templates/footer');
     }
 
@@ -58,8 +58,21 @@ class Plants extends CI_Controller {
         $data['title'] = 'Easy Care Plants';
 
         // Load view dengan data tanaman mudah dirawat
-        $this->load->view('templates/header', $data);
-        $this->load->view('plants/mudah_dirawat', $data);
+        $this->load->view('templates/header2', $data);
+        $this->load->view('collection/mudah_dirawat', $data);
+        $this->load->view('templates/footer');
+    }
+    public function florikultura()
+    {
+        // Ambil data tanaman mudah dirawat dari database
+        $data['plants'] = $this->Product_model->getFlorikulturaPlants();
+
+        // Tambahkan judul halaman
+        $data['title'] = 'Florikultura Plants';
+
+        // Load view dengan data tanaman mudah dirawat
+        $this->load->view('templates/header2', $data);
+        $this->load->view('collection/florikultura', $data);
         $this->load->view('templates/footer');
     }
 

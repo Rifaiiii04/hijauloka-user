@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4 py-0 sm:py-8">
 <div class="mb-12 mt-12 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
-       Koleksi Indoor
+       Koleksi Florikultura
         <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
     </h1>
     <input type="search" name="" id="" class="w-full mt-5 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
@@ -81,7 +81,7 @@
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p class="col-span-full text-center text-gray-500">No indoor plants available.</p>
+            <p class="col-span-full text-center text-gray-500">No Florikultura plants available.</p>
         <?php endif; ?>
     </div>
 </div>
