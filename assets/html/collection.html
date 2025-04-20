@@ -179,10 +179,86 @@
 			</nav>
 		</header>
 		<!-- Koleksi Dea Kerjain disini SEMANGATTTT -->
-		<section class="md:hidden">
-			<div class="container w-full h-screen p-3">
-				<h1 class="text-5xl text-red-600 w-screen relative top-50">❤❤❤❤❤❤</h1>
+		<main class="md:hidden px-3 pt-20 pb-24 min-h-screen bg-gradient-to-b from-green-50 to-green-100 font-sans" 
+			x-data="{ open: '', categories: {
+				plants: ['Type', 'Price Range', 'Indoor Plants', 'Outdoor Plants', 'Maintenance', 'Light Requirement', 'Pet Friendly', 'Placement Location', 'Air-Purifying Plants'],
+				seeds: ['Flower Seeds', 'Vegetable Seeds', 'Fruit Seeds', 'Tree & Grass Seeds', 'Herb Seeds'],
+				pots: ['Plastic Pots', 'Ceramic Pots', 'Hanging Pots']
+			}}">
+			<div class="space-y-8 max-w-md mx-auto">
+				<!-- Plants Card -->
+				<div>
+					<button
+						@click="open === 'plants' ? open = '' : open = 'plants'"
+						class="w-full flex items-center justify-between bg-green-800 rounded-3xl px-7 py-8 shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-95"
+					>
+						<span class="flex items-center gap-5">
+							<img src="/assets/img/plants.png" alt="Plants" class="w-16 h-16 object-contain bg-white rounded-2xl p-2 shadow" onerror="this.style.display='none'">
+							<span class="text-white text-2xl font-bold tracking-wide drop-shadow">Plants</span>
+						</span>
+						<i :class="open === 'plants' ? 'fa-chevron-up' : 'fa-chevron-down'" class="fas text-white text-3xl"></i>
+					</button>
+					<template x-if="open === 'plants'">
+						<div class="bg-white rounded-2xl shadow-2xl mt-4 mb-2 border border-green-200 overflow-hidden animate-dropdown">
+							<template x-for="item in categories.plants" :key="item">
+								<a href="#" class="block px-7 py-4 text-green-900 hover:bg-green-100 hover:text-green-700 border-b last:border-b-0 transition-all duration-150 text-lg font-medium">
+									<span x-text="item"></span>
+								</a>
+							</template>
+						</div>
+					</template>
+				</div>
+				<div class="border-t border-green-200"></div>
+				<!-- Seeds Card -->
+				<div>
+					<button
+						@click="open === 'seeds' ? open = '' : open = 'seeds'"
+						class="w-full flex items-center justify-between bg-green-800 rounded-3xl px-7 py-8 shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-95"
+					>
+						<span class="flex items-center gap-5">
+							<img src="/assets/img/seeds.png" alt="Seeds" class="w-16 h-16 object-contain bg-white rounded-2xl p-2 shadow" onerror="this.style.display='none'">
+							<span class="text-white text-2xl font-bold tracking-wide drop-shadow">Seeds</span>
+						</span>
+						<i :class="open === 'seeds' ? 'fa-chevron-up' : 'fa-chevron-down'" class="fas text-white text-3xl"></i>
+					</button>
+					<template x-if="open === 'seeds'">
+						<div class="bg-white rounded-2xl shadow-2xl mt-4 mb-2 border border-green-200 overflow-hidden animate-dropdown">
+							<template x-for="item in categories.seeds" :key="item">
+								<a href="#" class="block px-7 py-4 text-green-900 hover:bg-green-100 hover:text-green-700 border-b last:border-b-0 transition-all duration-150 text-lg font-medium">
+									<span x-text="item"></span>
+								</a>
+							</template>
+						</div>
+					</template>
+				</div>
+				<div class="border-t border-green-200"></div>
+				<!-- Pots Carr -->
+				<div>
+					<button
+						@click="open === 'pots' ? open = '' : open = 'pots'"
+						class="w-full flex items-center justify-between bg-green-800 rounded-3xl px-7 py-8 shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-95"
+					>
+						<span class="flex items-center gap-5">
+							<img src="/assets/img/pots.png" alt="Pots & planters" class="w-16 h-16 object-contain bg-white rounded-2xl p-2 shadow" onerror="this.style.display='none'">
+							<span class="text-white text-2xl font-bold tracking-wide drop-shadow">Pots</span>
+						</span>
+						<i :class="open === 'pots' ? 'fa-chevron-up' : 'fa-chevron-down'" class="fas text-white text-3xl"></i>
+					</button>
+					<template x-if="open === 'pots'">
+						<div class="bg-white rounded-2xl shadow-2xl mt-4 mb-2 border border-green-200 overflow-hidden animate-dropdown">
+							<template x-for="item in categories.pots" :key="item">
+								<a href="#" class="block px-7 py-4 text-green-900 hover:bg-green-100 hover:text-green-700 border-b last:border-b-0 transition-all duration-150 text-lg font-medium">
+									<span x-text="item"></span>
+								</a>
+							</template>
+						</div>
+					</template>
+				</div>
 			</div>
+		</main>
+		<div class="container w-full h-screen p-3">
+			<h1 class="text-5xl text-red-600 w-screen relative top-50">❤❤❤❤❤❤</h1>
+		</div>
 		</section>
 
 		<footer class="bg-gray-200 mt-5">
