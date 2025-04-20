@@ -68,11 +68,11 @@
       }
       ?>
       <!-- Product Card for Untuk Anda -->
-      <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
+      <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col transform hover:scale-105 transition-all duration-300">
         <div class="aspect-w-1 aspect-h-1">
           <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
                alt="<?= $produk['nama_product']; ?>" 
-               class="w-full h-48 object-cover">
+               class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-300">
         </div>
         <div class="p-3 sm:p-4 flex flex-col flex-1">
             <div>
