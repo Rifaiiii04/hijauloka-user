@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-0 sm:py-8">
 <div class="mb-12 mt-28 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
        Koleksi Indoor
