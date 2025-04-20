@@ -41,7 +41,7 @@
                     <?php if (!empty($plants_subcategories)): ?>
                         <?php foreach ($plants_subcategories as $subcategory): ?>
                             <a
-                                href="<?= base_url('collection/' . strtolower(str_replace(' ', '_', $subcategory['nama_kategori'])) . '.php') ?>"
+                                href="<?= base_url('plants/' . strtolower(str_replace(' ', '_', $subcategory['nama_kategori']))) ?>"
                                 class="block px-7 py-4 text-white active:bg-green-800 border-b last:border-b-0 transition-all duration-150 text-lg font-medium"
                             >
                                 <?= $subcategory['nama_kategori'] ?>

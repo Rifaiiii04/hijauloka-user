@@ -31,7 +31,7 @@ class Plants extends CI_Controller {
 
         // Load view dengan data tanaman indoor
         $this->load->view('templates/header', $data);
-        $this->load->view('plants/indoor', $data);
+        $this->load->view('collection/indoor', $data);
         $this->load->view('templates/footer');
     }
 
