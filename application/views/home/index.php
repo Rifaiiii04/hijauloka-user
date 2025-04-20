@@ -17,7 +17,6 @@
                 <?php if (!empty($produk_terlaris)) : ?>
                     <?php foreach ($produk_terlaris as $produk) : ?>
                         <?php 
-                        // Process image first
                         if (!empty($produk['gambar'])) {
                             $gambarArr = explode(',', $produk['gambar']);
                             $gambar = trim($gambarArr[0]);
