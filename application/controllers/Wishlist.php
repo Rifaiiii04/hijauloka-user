@@ -18,6 +18,10 @@ class Wishlist extends CI_Controller {
 
     public function index()
     {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+    
         $user_id = $this->session->userdata('id_user');
         $data['wishlist'] = $this->wishlist_model->get_user_wishlist($user_id);
         $data['title'] = 'Wishlist';

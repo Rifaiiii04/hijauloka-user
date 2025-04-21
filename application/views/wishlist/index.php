@@ -1,5 +1,8 @@
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6 text-green-800">My Wishlist</h1>
+<div class="container mx-auto px-4 py-20">
+    <div class="text-center relative mb-12">
+        <h1 class="text-4xl font-bold text-green-800 mt-10 mb-6">My Wishlist</h1>
+        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+    </div>
     
     <?php if (empty($wishlist)): ?>
         <div class="text-center py-8">

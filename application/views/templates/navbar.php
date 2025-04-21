@@ -31,11 +31,14 @@
           <span>Popular</span>
         </a>
       </li>
+      <!-- Desktop menu wishlist link -->
       <li>
-        <a href="<?= base_url('wishlist') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
-          <i class="fas fa-heart"></i>
-          <span>Wishlist</span>
-        </a>
+          <a href="<?= $this->session->userdata('logged_in') ? base_url('wishlist') : '#' ?>" 
+             onclick="<?= !$this->session->userdata('logged_in') ? 'document.getElementById(\'loginPrompt\').classList.remove(\'hidden\'); return false;' : '' ?>" 
+             class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+              <i class="fas fa-heart"></i>
+              <span>Wishlist</span>
+          </a>
       </li>
     </ul>
   </div>
@@ -186,11 +189,14 @@
         <span class="text-[10px] mt-0.5">Popular</span>
       </a>
     </li>
+    <!-- Mobile Bottom Navigation - Update wishlist link -->
     <li>
-      <a href="<?= base_url('wishlist/index') ?>" class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
-        <i class="fas fa-heart text-lg"></i>
-        <span class="text-[10px] mt-0.5">Wishlist</span>
-      </a>
+        <a href="<?= $this->session->userdata('logged_in') ? base_url('wishlist/index') : '#' ?>" 
+           onclick="<?= !$this->session->userdata('logged_in') ? 'document.getElementById(\'loginPrompt\').classList.remove(\'hidden\'); return false;' : '' ?>" 
+           class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
+            <i class="fas fa-heart text-lg"></i>
+            <span class="text-[10px] mt-0.5">Wishlist</span>
+        </a>
     </li>
   </ul>
 </nav>

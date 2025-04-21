@@ -1,5 +1,3 @@
-<?php $this->load->view('templates/header'); ?>
-
 <!-- Login Prompt Modal -->
 <div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
@@ -72,14 +70,14 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
         <a href="<?= base_url('plants/index') ?>" class="text-green-800 text-xl font-bold underline ">Kembali</a>
     </div>
 <div class="container mx-auto px-4 py-0 sm:py-8">
-<div class="mb-12 mt-12 text-center">
+<div class="mb-28 mt-3 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
        Koleksi Mudah dirawat
         <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
-    </h1>
-    <input type="search" name="" id="" class="w-full mt-5 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
+    </h1><br>
+    <input type="search" name="" id="" class="w-96 mt-5 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
 </div>
-    <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 mt-5 lg:grid-cols-4 gap-6">
         <?php if (!empty($plants)) : ?>
             <?php foreach ($plants as $produk) : ?>
                 <?php 
