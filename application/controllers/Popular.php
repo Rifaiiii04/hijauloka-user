@@ -5,6 +5,9 @@ class Popular extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Product_model');
+        $this->load->model('Category_model');
+        $this->load->model('wishlist_model');
+        $this->load->library('session');
     }
 
     public function index() {

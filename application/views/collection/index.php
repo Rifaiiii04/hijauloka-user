@@ -1,8 +1,8 @@
 <main
-    class="md:hidden px-3 py-20 pt-20 pb-24 bg-gradient-to-b from-green-50 to-green-100 font-sans"
+    class="px-3 py-20 pt-20 pb-24 bg-gradient-to-b from-green-50 to-green-100 font-sans"
     x-data="{ open: '' }"
 >
-    <div class="mb-12 text-center">
+    <div class="mb-12 mt-10 text-center">
         <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
             Koleksi
             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>

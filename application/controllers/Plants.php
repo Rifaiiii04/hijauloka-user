@@ -2,18 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Plants extends CI_Controller {
-
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
-        $this->load->model('Category_model'); // Load model untuk kategori
-        $this->load->model('Product_model');  // Load model untuk produk
+        $this->load->model('Product_model');  // Changed to match exact model name
+        $this->load->model('Category_model'); // Changed to match exact model name
+        $this->load->model('wishlist_model');
+        $this->load->library('session');
     }
 
     public function index()
     {
-        // Ambil subkategori dari database untuk kategori Plants
-        $data['plants_subcategories'] = $this->Category_model->get_subcategories(1); // id_admin = 1 untuk Plants
+        $data['plants_subcategories'] = $this->Category_model->get_subcategories(1);
 
         // Load view dengan data subkategori
         $this->load->view('templates/header');

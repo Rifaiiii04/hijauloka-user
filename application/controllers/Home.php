@@ -5,7 +5,7 @@ class Home extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Home_model'); // Load model Home
+        $this->load->model('wishlist_model');
     }
 
     public function index() {

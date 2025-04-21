@@ -70,9 +70,24 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
-                            <button class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                            </button>
+                            <div class="flex gap-2">
+                                <?php 
+                                $is_wishlisted = false;
+                                if ($this->session->userdata('logged_in') && isset($this->wishlist_model)) {
+                                    $is_wishlisted = $this->wishlist_model->is_wishlisted(
+                                        $this->session->userdata('id_user'), 
+                                        $produk['id_product']
+                                    );
+                                }
+                                ?>
+                                <button onclick="toggleWishlist(<?= $produk['id_product'] ?>)" 
+                                        class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
+                                    <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
+                                </button>
+                                <button class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                                    <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,7 +8,7 @@
             Produk Terlaris
             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
         </h1>
-        <p class="text-gray-600 mt-3">Tanaman hias pilihan terbaik yang paling diminati</p>
+        <p id="produk_section" class="text-gray-600 mt-3">Tanaman hias pilihan terbaik yang paling diminati</p>
     </div>
 
     <div class="relative mt-6">
@@ -110,9 +110,13 @@
                     <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
                     <div class="flex gap-2">
                         <?php 
-                        $is_wishlisted = $this->session->userdata('logged_in') ? 
-                            $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $produk['id_product']) : 
-                            false;
+                        $is_wishlisted = false;
+                        if ($this->session->userdata('logged_in') && isset($this->wishlist_model)) {
+                            $is_wishlisted = $this->wishlist_model->is_wishlisted(
+                                $this->session->userdata('id_user'), 
+                                $produk['id_product']
+                            );
+                        }
                         ?>
                         <button class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
                             <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
