@@ -66,7 +66,7 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
 });
 </script>
 
-<div class="w-32 h-12 flex text-center justify-center items-center mb-4 mt-4">
+<div class="w-32 h-12 flex text-center justify-center items-center mb-20 mt-2">
         <a href="<?= base_url('plants/index') ?>" class="text-green-800 text-xl font-bold underline ">Kembali</a>
     </div>
 <div class="container mx-auto px-4 py-0 sm:py-8">
@@ -75,7 +75,190 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
        Koleksi Indoor
         <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
     </h1><br>
-    <input type="search" name="" id="" class="w-96 mt-5 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
+    <div class="flex items-center mt-10 justify-center gap-4">
+        <input type="search" name="" id="searchInput" class="w-96 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
+        
+        <!-- Filter Button -->
+        <div class="relative">
+            <button onclick="toggleFilter()" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all">
+                <i class="fas fa-filter"></i>
+                <span>Filter</span>
+            </button>
+            
+            <!-- Filter Dropdown -->
+            <div id="filterMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 p-4">
+                <!-- Price Range -->
+                <div class="mb-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">Price Range</h3>
+                    <select id="priceRange" class="w-full p-2 border rounded-lg">
+                        <option value="">All Prices</option>
+                        <option value="0-50000">Under Rp50.000</option>
+                        <option value="50000-100000">Rp50.000 - Rp100.000</option>
+                        <option value="100000-200000">Rp100.000 - Rp200.000</option>
+                        <option value="200000+">Above Rp200.000</option>
+                    </select>
+                </div>
+                
+                <!-- Rating Filter -->
+                <div class="mb-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">Minimum Rating</h3>
+                    <select id="ratingFilter" class="w-full p-2 border rounded-lg">
+                        <option value="">All Ratings</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                        <option value="2">2+ Stars</option>
+                    </select>
+                </div>
+                
+                <!-- Sort By -->
+                <div class="mb-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">Sort By</h3>
+                    <select id="sortBy" class="w-full p-2 border rounded-lg">
+                        <option value="">Default</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="rating-desc">Highest Rating</option>
+                        <option value="name-asc">Name: A to Z</option>
+                    </select>
+                </div>
+                
+                <!-- Apply/Reset Buttons -->
+                <div class="flex gap-2">
+                    <button onclick="applyFilters()" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-all">
+                        Apply
+                    </button>
+                    <button onclick="resetFilters()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-all">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function toggleFilter() {
+        const filterMenu = document.getElementById('filterMenu');
+        filterMenu.classList.toggle('hidden');
+    }
+
+    function applyFilters() {
+        const priceRange = document.getElementById('priceRange').value;
+        const rating = document.getElementById('ratingFilter').value;
+        const sortBy = document.getElementById('sortBy').value;
+        const productCards = document.querySelectorAll('.grid > div');
+
+        productCards.forEach(card => {
+            let show = true;
+            
+            // Price Filter
+            if (priceRange) {
+                const price = parseInt(card.querySelector('.font-bold').textContent.replace(/[^0-9]/g, ''));
+                const [min, max] = priceRange.split('-').map(Number);
+                
+                if (max) {
+                    show = price >= min && price <= max;
+                } else if (priceRange === '200000+') {
+                    show = price >= 200000;
+                }
+            }
+
+            // Rating Filter
+            if (show && rating) {
+                const productRating = parseFloat(card.querySelector('.text-gray-500').textContent.replace(/[()]/g, ''));
+                show = productRating >= parseFloat(rating);
+            }
+
+            card.style.display = show ? '' : 'none';
+        });
+
+        // Sorting
+        if (sortBy) {
+            const container = document.querySelector('.grid');
+            const cards = Array.from(container.children);
+            
+            cards.sort((a, b) => {
+                if (sortBy === 'price-asc' || sortBy === 'price-desc') {
+                    const priceA = parseInt(a.querySelector('.font-bold').textContent.replace(/[^0-9]/g, ''));
+                    const priceB = parseInt(b.querySelector('.font-bold').textContent.replace(/[^0-9]/g, ''));
+                    return sortBy === 'price-asc' ? priceA - priceB : priceB - priceA;
+                } else if (sortBy === 'rating-desc') {
+                    const ratingA = parseFloat(a.querySelector('.text-gray-500').textContent.replace(/[()]/g, ''));
+                    const ratingB = parseFloat(b.querySelector('.text-gray-500').textContent.replace(/[()]/g, ''));
+                    return ratingB - ratingA;
+                } else if (sortBy === 'name-asc') {
+                    const nameA = a.querySelector('h3').textContent.toLowerCase();
+                    const nameB = b.querySelector('h3').textContent.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                }
+            });
+
+            cards.forEach(card => container.appendChild(card));
+        }
+
+        toggleFilter();
+    }
+
+    function resetFilters() {
+        document.getElementById('priceRange').value = '';
+        document.getElementById('ratingFilter').value = '';
+        document.getElementById('sortBy').value = '';
+        
+        const productCards = document.querySelectorAll('.grid > div');
+        productCards.forEach(card => {
+            card.style.display = '';
+        });
+        
+        toggleFilter();
+    }
+
+    // Close filter menu when clicking outside
+    document.addEventListener('click', function(e) {
+        const filterMenu = document.getElementById('filterMenu');
+        const filterButton = document.querySelector('button[onclick="toggleFilter()"]');
+        
+        if (!filterMenu.contains(e.target) && !filterButton.contains(e.target)) {
+            filterMenu.classList.add('hidden');
+        }
+    });
+
+    // Add search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const productCards = document.querySelectorAll('.grid > div');
+        let hasResults = false;
+
+        productCards.forEach(card => {
+            if (!card.querySelector('h3')) return; // Skip if not a product card
+            
+            const productName = card.querySelector('h3').textContent.toLowerCase();
+            const categories = Array.from(card.querySelectorAll('.bg-green-100'))
+                .map(cat => cat.textContent.toLowerCase());
+            
+            const matchName = productName.includes(searchTerm);
+            const matchCategory = categories.some(cat => cat.includes(searchTerm));
+
+            if (matchName || matchCategory) {
+                card.style.display = '';
+                hasResults = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Handle no results message
+        let noResultsMsg = document.querySelector('.no-results-message');
+        if (!hasResults) {
+            if (!noResultsMsg) {
+                noResultsMsg = document.createElement('p');
+                noResultsMsg.className = 'no-results-message col-span-full text-center text-gray-500 py-8';
+                noResultsMsg.textContent = 'No plants found matching your search.';
+                document.querySelector('.grid').appendChild(noResultsMsg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    });
+</script>
 </div>
     <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols- mt-5 lg:grid-cols-4 gap-6">
         <?php if (!empty($plants)) : ?>
