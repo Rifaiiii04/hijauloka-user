@@ -187,7 +187,7 @@
       </a>
     </li>
     <li>
-      <a href="#" class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
+      <a href="<?= base_url('wishlist/index') ?>" class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
         <i class="fas fa-heart text-lg"></i>
         <span class="text-[10px] mt-0.5">Wishlist</span>
       </a>
