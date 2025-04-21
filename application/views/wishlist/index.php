@@ -9,22 +9,35 @@
     <?php else: ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <?php foreach ($wishlist as $item): ?>
+                <?php 
+                if (!empty($item['gambar'])) {
+                    $gambarArr = explode(',', $item['gambar']);
+                    $gambar = trim($gambarArr[0]);
+                } else {
+                    $gambar = 'default.jpg';
+                }
+                ?>
                 <div class="bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
                     <div class="aspect-w-1 aspect-h-1">
-                        <img src="https://source.unsplash.com/800x600/?plant,<?= urlencode($item['name']) ?>" 
-                             alt="<?= $item['name'] ?>" 
+                        <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
+                             alt="<?= $item['nama_product']; ?>" 
                              class="w-full h-48 object-cover">
                     </div>
                     <div class="p-4 flex flex-col flex-1">
                         <div>
-                            <h3 class="text-base sm:text-xl font-semibold mb-2 line-clamp-1"><?= $item['name'] ?></h3>
-                            <?php if (!empty($item['categories'])): ?>
-                                <div class="flex flex-wrap gap-1 sm:gap-2 mb-3">
-                                    <?php foreach ($item['categories'] as $category): ?>
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $category ?></span>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
+                            <h3 class="text-base sm:text-xl font-semibold mb-2 line-clamp-1"><?= $item['nama_product']; ?></h3>
+                            <div class="flex flex-wrap gap-1 sm:gap-2 mb-3">
+                                <?php
+                                $this->db->select('c.nama_kategori');
+                                $this->db->from('product_category pc');
+                                $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+                                $this->db->where('pc.id_product', $item['id_product']);
+                                $product_categories = $this->db->get()->result_array();
+                                
+                                foreach ($product_categories as $cat) : ?>
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                         <div class="mt-auto">
                             <div class="flex items-center mb-2">
@@ -44,9 +57,9 @@
                                 <span class="text-gray-500 text-xs ml-1">(<?= number_format($rating, 1) ?>)</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm sm:text-lg font-bold">Rp<?= number_format(floatval($item['price'] ?? 0), 0, ',', '.') ?></span>
+                                <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($item['harga'], 0, ',', '.'); ?></span>
                                 <div class="flex gap-2">
-                                    <button onclick="removeFromWishlist(<?= $item['id'] ?? $item['id_produk'] ?? 0 ?>)" 
+                                    <button onclick="removeFromWishlist(<?= $item['id_product'] ?>)" 
                                             class="bg-red-100 text-red-600 p-2 sm:p-2.5 rounded-md hover:bg-red-200 transition-colors">
                                         <i class="fas fa-heart"></i>
                                     </button>
