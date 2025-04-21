@@ -47,4 +47,12 @@ class Wishlist_model extends CI_Model {
             return ['status' => 'success', 'action' => 'added'];
         }
     }
+
+    public function add_to_wishlist($user_id, $product_id) {
+        $data = [
+            'id_user' => $user_id,
+            'id_product' => $product_id
+        ];
+        return $this->db->insert('wishlist', $data);
+    }
 }
