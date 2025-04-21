@@ -31,7 +31,7 @@ class Plants extends CI_Controller {
         // Load view dengan data tanaman indoor
         $this->load->view('templates/header2', $data);
         $this->load->view('collection/indoor', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
 
     public function outdoor()
@@ -45,7 +45,7 @@ class Plants extends CI_Controller {
         // Load view dengan data tanaman outdoor
         $this->load->view('templates/header2', $data);
         $this->load->view('collection/outdoor', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
 
     public function mudah_dirawat()
@@ -59,7 +59,7 @@ class Plants extends CI_Controller {
         // Load view dengan data tanaman mudah dirawat
         $this->load->view('templates/header2', $data);
         $this->load->view('collection/mudah_dirawat', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
     public function florikultura()
     {
@@ -72,7 +72,7 @@ class Plants extends CI_Controller {
         // Load view dengan data tanaman mudah dirawat
         $this->load->view('templates/header2', $data);
         $this->load->view('collection/florikultura', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
 
     public function detail($id)
@@ -91,6 +91,6 @@ class Plants extends CI_Controller {
         // Load view dengan data detail produk
         $this->load->view('templates/header', $data);
         $this->load->view('plants/detail', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
 }

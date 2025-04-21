@@ -66,16 +66,16 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
 });
 </script>
 
-<div class="w-32 h-12 flex text-center justify-center items-center mb-20 mt-2">
+<div class="w-32 h-12 flex text-center justify-center items-center mb-4 mt-2">
         <a href="<?= base_url('plants/index') ?>" class="text-green-800 text-xl font-bold underline ">Kembali</a>
     </div>
 <div class="container mx-auto px-4 py-0 sm:py-8">
-<div class="mb-28 mt-3 text-center">
+<div class="mb-5 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
        Koleksi Indoor
         <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
     </h1><br>
-    <div class="flex items-center mt-10 justify-center gap-4">
+    <div class="flex items-center mt-5 justify-center gap-4">
         <input type="search" name="" id="searchInput" class="w-96 h-10 px-4 border border-gray-600 bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-800" placeholder="Search Plants....">
         
         <!-- Filter Button -->
