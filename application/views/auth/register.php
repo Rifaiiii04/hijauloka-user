@@ -52,7 +52,69 @@
             
             <h2 class="text-xl md:text-2xl font-bold text-center mb-6">Create Your Account</h2>
 
-            <form action="<?= base_url('auth/register') ?>" method="post" class="space-y-3">
+            <!-- Add loader HTML -->
+            <div id="registerLoader" class="fixed inset-0 bg-white/95 backdrop-blur-sm hidden items-center justify-center z-50">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative w-32 h-32">
+                        <div class="loader">
+                            <div class="absolute top-0 left-1/2 w-5 h-5 bg-green-800 rounded-full"></div>
+                            <div class="text-4xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">🌱</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-semibold text-green-800">Creating Your Account</h3>
+                        <p class="text-green-600/80">Please wait a moment...</p>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                .loader {
+                    position: relative;
+                    width: 120px;
+                    height: 120px;
+                }
+
+                .loader div:first-child {
+                    animation: grow 1s ease-in-out infinite;
+                }
+
+                @keyframes grow {
+                    0% {
+                        transform: translateX(-50%) scale(0);
+                        opacity: 0;
+                    }
+                    50% {
+                        transform: translateX(-50%) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(-50%) scale(0);
+                        opacity: 0;
+                    }
+                }
+            </style>
+
+            <!-- Update the form to include an ID and add the loader script -->
+            <form id="registerForm" action="<?= base_url('auth/register') ?>" method="post" class="space-y-3">
+
+            <!-- Add this script before closing body tag -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const registerForm = document.getElementById('registerForm');
+                    const loader = document.getElementById('registerLoader');
+
+                    registerForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        loader.classList.remove('hidden');
+                        loader.classList.add('flex');
+                        
+                        setTimeout(() => {
+                            this.submit();
+                        }, 2000);
+                    });
+                });
+            </script>
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1.5">Name</label>
                     <input type="text" name="nama" required

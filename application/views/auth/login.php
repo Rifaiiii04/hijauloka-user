@@ -49,31 +49,44 @@
                 <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
             </div>
             
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to PlantNet!</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to HijauLoka</h2>
 
             <!-- Add loader HTML after the snackbar notifications -->
-            <div id="loader" class="fixed inset-0 bg-black/30 backdrop-blur-[2px] hidden items-center justify-center z-50">
-                <div class="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-lg transform scale-95 opacity-0 transition-all duration-300 max-w-xs w-11/12">
-                    <div class="flex items-center gap-2 mb-2">
-                        <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Logo" class="w-8 h-8">
-                    </div>
-                    <div class="relative w-20 h-20">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-leaf text-4xl text-green-600 animate-pulse"></i>
-                        </div>
-                        <div class="absolute inset-0 border-4 border-dashed border-green-200 rounded-full animate-spin" style="animation-duration: 3s"></div>
-                    </div>
-                    <div class="text-center">
-                        <h2 class="text-lg font-medium text-green-800">Selamat Datang!</h2>
-                        <p class="text-green-600/80 text-sm">Sedang masuk ke akun Anda...</p>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <i class="fas fa-seedling text-green-500 text-xs animate-bounce"></i>
-                        <i class="fas fa-seedling text-green-600 text-sm animate-bounce" style="animation-delay: 0.2s"></i>
-                        <i class="fas fa-seedling text-green-700 text-xs animate-bounce" style="animation-delay: 0.4s"></i>
+            <div id="loader" class="fixed inset-0 bg-white/95 backdrop-blur-sm hidden items-center justify-center z-50">
+                <div class="relative w-32 h-32">
+                    <div class="loader">
+                        <div class="absolute top-0 left-1/2 w-5 h-5 bg-green-800 rounded-full"></div>
+                        <div class="text-4xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">🌱</div>
                     </div>
                 </div>
             </div>
+
+            <style>
+                .loader {
+                    position: relative;
+                    width: 120px;
+                    height: 120px;
+                }
+
+                .loader div:first-child {
+                    animation: grow 1s ease-in-out infinite;
+                }
+
+                @keyframes grow {
+                    0% {
+                        transform: translateX(-50%) scale(0);
+                        opacity: 0;
+                    }
+                    50% {
+                        transform: translateX(-50%) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(-50%) scale(0);
+                        opacity: 0;
+                    }
+                }
+            </style>
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -85,15 +98,9 @@
                         loader.classList.remove('hidden');
                         loader.classList.add('flex');
                         
-                        const modalContent = loader.querySelector('div[class*="bg-white"]');
-                        setTimeout(() => {
-                            modalContent.style.opacity = '1';
-                            modalContent.style.transform = 'scale(1)';
-                        }, 50);
-
                         setTimeout(() => {
                             this.submit();
-                        }, 2000);
+                        }, 2000); // 2 seconds delay to match logout
                     });
                 });
             </script>
