@@ -1,3 +1,6 @@
+<!-- At the top of the file, before the main content -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 <main
     class="px-3 py-20 pt-20 pb-24 bg-gradient-to-b from-green-50 to-green-100 font-sans"
     x-data="{ open: '' }"
@@ -40,9 +43,10 @@
                 >
                     <?php if (!empty($plants_subcategories)): ?>
                         <?php foreach ($plants_subcategories as $subcategory): ?>
+                            <!-- Update the hover classes in each dropdown item -->
                             <a
                                 href="<?= base_url('plants/' . strtolower(str_replace(' ', '_', $subcategory['nama_kategori']))) ?>"
-                                class="block px-7 py-4 text-white hover:bg-green-800 active:bg-green-900 border-b last:border-b-0 transition-all duration-150 text-lg font-medium"
+                                class="block px-7 py-4 text-white hover:bg-green-800/50 transition-all duration-150 text-lg font-medium border-b last:border-b-0"
                             >
                                 <?= $subcategory['nama_kategori'] ?>
                             </a>
