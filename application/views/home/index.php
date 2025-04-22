@@ -37,6 +37,21 @@ function toggleWishlist(button, productId) {
 
     const icon = button.querySelector('i');
     
+    // Toggle heart color immediately with animation
+    if (icon.classList.contains('text-red-500')) {
+        icon.classList.remove('text-red-500');
+        icon.classList.add('animate-heartbeat-out');
+    } else {
+        icon.classList.add('text-red-500');
+        icon.classList.add('animate-heartbeat');
+    }
+    
+    // Remove animation class after it completes
+    setTimeout(() => {
+        icon.classList.remove('animate-heartbeat', 'animate-heartbeat-out');
+    }, 500);
+
+    // Send AJAX request to server
     fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
         method: 'POST',
         headers: {
@@ -44,30 +59,57 @@ function toggleWishlist(button, productId) {
         },
         credentials: 'same-origin'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.action === 'added') {
-            icon.classList.add('text-red-500');
-            button.classList.add('active');
-        } else if (data.action === 'removed') {
-            icon.classList.remove('text-red-500');
-            button.classList.remove('active');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
     })
-    .catch(error => console.error('Error:', error));
+    .then(data => {
+        console.log('Wishlist updated:', data);
+        // No need to update UI here as we've already done it
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert the UI change if there was an error
+        if (icon.classList.contains('text-red-500')) {
+            icon.classList.remove('text-red-500');
+        } else {
+            icon.classList.add('text-red-500');
+        }
+    });
 }
-
-function closeLoginPrompt() {
-    const modal = document.getElementById('loginPrompt');
-    modal.classList.add('hidden');
-}
-
-document.getElementById('loginPrompt').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeLoginPrompt();
-    }
-});
 </script>
+
+<!-- Make sure these animation styles are in your page -->
+<style>
+    @keyframes heartbeat {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes heartbeat-out {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.7); }
+        100% { transform: scale(1); }
+    }
+    
+    .animate-heartbeat {
+        animation: heartbeat 0.5s ease-in-out;
+    }
+    
+    .animate-heartbeat-out {
+        animation: heartbeat-out 0.5s ease-in-out;
+    }
+    
+    /* Add this to make the heart transition smoother */
+    .fa-heart {
+        transition: color 0.2s ease-in-out;
+    }
+</style>
 
 <?php $this->load->view('templates/section')?>
 
@@ -215,13 +257,13 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
                             </div>
                         </div>
                         
-                        <!-- In your product loop, just keep this button -->
+                        <!-- In your product loop, replace the wishlist button with this -->
                         <button onclick="toggleWishlist(this, <?= $produk['id_product'] ?>)" 
                                 class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
                             <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
                         </button>
                         
-                        <!-- Add this before closing body tag -->
+                        <!-- Replace the toggleWishlist function with this improved version -->
                         <script>
                         function toggleWishlist(button, productId) {
                             <?php if (!$this->session->userdata('logged_in')): ?>
@@ -231,6 +273,21 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
                         
                             const icon = button.querySelector('i');
                         
+                            // Toggle heart color immediately with animation
+                            if (icon.classList.contains('text-red-500')) {
+                                icon.classList.remove('text-red-500');
+                                icon.classList.add('animate-heartbeat-out');
+                            } else {
+                                icon.classList.add('text-red-500');
+                                icon.classList.add('animate-heartbeat');
+                            }
+                            
+                            // Remove animation class after it completes
+                            setTimeout(() => {
+                                icon.classList.remove('animate-heartbeat', 'animate-heartbeat-out');
+                            }, 500);
+                        
+                            // Send AJAX request to server
                             fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
                                 method: 'POST',
                                 headers: {
@@ -238,31 +295,58 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
                                 },
                                 credentials: 'same-origin'
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.action === 'added') {
-                                    icon.classList.add('text-red-500');
-                                    button.classList.add('active');
-                                } else if (data.action === 'removed') {
-                                    icon.classList.remove('text-red-500');
-                                    button.classList.remove('active');
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
                                 }
+                                return response.json();
                             })
-                            .catch(error => console.error('Error:', error));
+                            .then(data => {
+                                console.log('Wishlist updated:', data);
+                                // No need to update UI here as we've already done it
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                // Revert the UI change if there was an error
+                                if (icon.classList.contains('text-red-500')) {
+                                    icon.classList.remove('text-red-500');
+                                } else {
+                                    icon.classList.add('text-red-500');
+                                }
+                            });
                         }
-                        
-                        function closeLoginPrompt() {
-                            const modal = document.getElementById('loginPrompt');
-                            modal.classList.add('hidden');
-                        }
-                        
-                        // Close modal when clicking outside
-                        document.getElementById('loginPrompt').addEventListener('click', function(e) {
-                            if (e.target === this) {
-                                closeLoginPrompt();
-                            }
-                        });
                         </script>
+                        
+                        <!-- Make sure these animation styles are in your page -->
+                        <style>
+                            @keyframes heartbeat {
+                                0% { transform: scale(1); }
+                                25% { transform: scale(1.3); }
+                                50% { transform: scale(1); }
+                                75% { transform: scale(1.3); }
+                                100% { transform: scale(1); }
+                            }
+                            
+                            @keyframes heartbeat-out {
+                                0% { transform: scale(1); }
+                                50% { transform: scale(0.7); }
+                                100% { transform: scale(1); }
+                            }
+                            
+                            .animate-heartbeat {
+                                animation: heartbeat 0.5s ease-in-out;
+                            }
+                            
+                            .animate-heartbeat-out {
+                                animation: heartbeat-out 0.5s ease-in-out;
+                            }
+                            
+                            /* Add this to make the heart transition smoother */
+                            .fa-heart {
+                                transition: color 0.2s ease-in-out;
+                            }
+                        </style>
+                        
                         <button class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
                             <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
                         </button>

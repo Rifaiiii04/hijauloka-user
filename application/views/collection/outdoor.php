@@ -25,6 +25,36 @@
     </div>
 </div>
 
+<!-- Add this style section after the login prompt modal -->
+<style>
+    @keyframes heartbeat {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes heartbeat-out {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.7); }
+        100% { transform: scale(1); }
+    }
+    
+    .animate-heartbeat {
+        animation: heartbeat 0.5s ease-in-out;
+    }
+    
+    .animate-heartbeat-out {
+        animation: heartbeat-out 0.5s ease-in-out;
+    }
+    
+    .fa-heart {
+        transition: color 0.2s ease-in-out;
+    }
+</style>
+
+<!-- Replace the toggleWishlist function with this improved version -->
 <script>
 function toggleWishlist(button, productId) {
     <?php if (!$this->session->userdata('logged_in')): ?>
@@ -34,6 +64,21 @@ function toggleWishlist(button, productId) {
 
     const icon = button.querySelector('i');
     
+    // Toggle heart color immediately with animation
+    if (icon.classList.contains('text-red-500')) {
+        icon.classList.remove('text-red-500');
+        icon.classList.add('animate-heartbeat-out');
+    } else {
+        icon.classList.add('text-red-500');
+        icon.classList.add('animate-heartbeat');
+    }
+    
+    // Remove animation class after it completes
+    setTimeout(() => {
+        icon.classList.remove('animate-heartbeat', 'animate-heartbeat-out');
+    }, 500);
+
+    // Send AJAX request to server
     fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
         method: 'POST',
         headers: {
@@ -41,17 +86,25 @@ function toggleWishlist(button, productId) {
         },
         credentials: 'same-origin'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.action === 'added') {
-            icon.classList.add('text-red-500');
-            button.classList.add('active');
-        } else if (data.action === 'removed') {
-            icon.classList.remove('text-red-500');
-            button.classList.remove('active');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
     })
-    .catch(error => console.error('Error:', error));
+    .then(data => {
+        console.log('Wishlist updated:', data);
+        // No need to update UI here as we've already done it
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert the UI change if there was an error
+        if (icon.classList.contains('text-red-500')) {
+            icon.classList.remove('text-red-500');
+        } else {
+            icon.classList.add('text-red-500');
+        }
+    });
 }
 
 function closeLoginPrompt() {

@@ -62,7 +62,80 @@
                             <div class="flex justify-between items-center">
                                 <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($item['harga'], 0, ',', '.'); ?></span>
                                 <div class="flex gap-2">
-                                    <button onclick="removeFromWishlist(<?= $item['id_product'] ?>)" 
+                                    <!-- Add this style section at the top of the file -->
+                                    <style>
+                                        @keyframes heartbeat-out {
+                                            0% { transform: scale(1); }
+                                            50% { transform: scale(0.7); }
+                                            100% { transform: scale(1); }
+                                        }
+                                        
+                                        .animate-heartbeat-out {
+                                            animation: heartbeat-out 0.5s ease-in-out;
+                                        }
+                                        
+                                        .card-fade-out {
+                                            animation: fadeOut 0.5s ease-in-out forwards;
+                                        }
+                                        
+                                        @keyframes fadeOut {
+                                            0% { opacity: 1; transform: scale(1); }
+                                            100% { opacity: 0; transform: scale(0.8); }
+                                        }
+                                    </style>
+                                    
+                                    <!-- Replace the existing script at the bottom with this improved version -->
+                                    <script>
+                                    function removeFromWishlist(productId, cardElement) {
+                                        // Get the parent card element
+                                        const card = cardElement.closest('.bg-white');
+                                        
+                                        // Add animation to the heart icon
+                                        const icon = cardElement.querySelector('i');
+                                        icon.classList.add('animate-heartbeat-out');
+                                        
+                                        // After a short delay, fade out the entire card
+                                        setTimeout(() => {
+                                            card.classList.add('card-fade-out');
+                                            
+                                            // After animation completes, send request to server
+                                            setTimeout(() => {
+                                                fetch('<?= base_url('wishlist/toggle/') ?>' + productId, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'X-Requested-With': 'XMLHttpRequest'
+                                                    },
+                                                    credentials: 'same-origin'
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    // Remove the card from DOM
+                                                    card.remove();
+                                                    
+                                                    // If this was the last item, show empty wishlist message
+                                                    const remainingCards = document.querySelectorAll('.grid > .bg-white');
+                                                    if (remainingCards.length === 0) {
+                                                        const grid = document.querySelector('.grid');
+                                                        grid.innerHTML = `
+                                                            <div class="text-center py-8 col-span-full">
+                                                                <p class="text-gray-500">Your wishlist is empty</p>
+                                                                <a href="<?= base_url() ?>" class="inline-block mt-4 text-green-600 hover:text-green-700">Continue Shopping</a>
+                                                            </div>
+                                                        `;
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error:', error);
+                                                    // If there's an error, reload the page
+                                                    window.location.reload();
+                                                });
+                                            }, 500);
+                                        }, 200);
+                                    }
+                                    </script>
+                                    
+                                    <!-- Update the button in the card to use the new function -->
+                                    <button onclick="removeFromWishlist(<?= $item['id_product'] ?>, this)" 
                                             class="bg-red-100 text-red-600 p-2 sm:p-2.5 rounded-md hover:bg-red-200 transition-colors">
                                         <i class="fas fa-heart"></i>
                                     </button>
@@ -78,11 +151,3 @@
         </div>
     <?php endif; ?>
 </div>
-
-<script>
-function removeFromWishlist(productId) {
-    if (confirm('Are you sure you want to remove this item from your wishlist?')) {
-        window.location.href = '<?= base_url('wishlist/remove/') ?>' + productId;
-    }
-}
-</script>
