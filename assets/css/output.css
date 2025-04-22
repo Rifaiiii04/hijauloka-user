@@ -1040,6 +1040,9 @@
   .bg-white\/10 {
     background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
   }
+  .bg-white\/80 {
+    background-color: color-mix(in oklab, var(--color-white) 80%, transparent);
+  }
   .bg-white\/95 {
     background-color: color-mix(in oklab, var(--color-white) 95%, transparent);
   }
@@ -1485,6 +1488,16 @@
     --tw-outline-style: none;
     outline-style: none;
   }
+  .group-hover\:scale-110 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        --tw-scale-x: 110%;
+        --tw-scale-y: 110%;
+        --tw-scale-z: 110%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
   .group-hover\:text-green-600 {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
@@ -1806,6 +1819,11 @@
   .focus\:ring-green-400 {
     &:focus {
       --tw-ring-color: var(--color-green-400);
+    }
+  }
+  .focus\:ring-green-600 {
+    &:focus {
+      --tw-ring-color: var(--color-green-600);
     }
   }
   .focus\:ring-green-800 {

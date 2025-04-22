@@ -160,12 +160,15 @@ function toggleWishlist(button, productId) {
 
 <!-- Untuk Anda section -->
 <div class="mt-16">
-    <div class="text-center mb-12">
-        <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
-            Untuk Anda
-            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
-        </h1>
-        <p class="text-gray-600 mt-3">Temukan koleksi tanaman hias terbaru untuk Anda</p>
+    <div class="flex justify-between items-start mb-12 px-4">
+        <div class="text-center flex-1">
+            <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
+                Untuk Anda
+                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+            </h1>
+            <p class="text-gray-600 mt-3">Temukan koleksi tanaman hias terbaru untuk Anda</p>
+        </div>
+        <!-- Filter button remains unchanged -->
     </div>
     
     <div class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -360,3 +363,55 @@ function toggleWishlist(button, productId) {
 </main>
 
 <?php $this->load->view('templates/footer'); ?>
+
+<script>
+function toggleUntukAndaFilter() {
+    const filterMenu = document.getElementById('untukAndaFilterMenu');
+    filterMenu.classList.toggle('hidden');
+}
+
+function applyUntukAndaFilters() {
+    const sortBy = document.getElementById('untukAndaSortBy').value;
+    const container = document.getElementById('untukAndaProductsContainer');
+    const cards = Array.from(container.children);
+    
+    if (sortBy) {
+        cards.sort((a, b) => {
+            if (sortBy === 'price-asc' || sortBy === 'price-desc') {
+                const priceA = parseInt(a.querySelector('.font-bold').textContent.replace(/[^0-9]/g, ''));
+                const priceB = parseInt(b.querySelector('.font-bold').textContent.replace(/[^0-9]/g, ''));
+                return sortBy === 'price-asc' ? priceA - priceB : priceB - priceA;
+            } else if (sortBy === 'rating-desc') {
+                const ratingA = parseFloat(a.querySelector('.text-gray-500').textContent.replace(/[()]/g, ''));
+                const ratingB = parseFloat(b.querySelector('.text-gray-500').textContent.replace(/[()]/g, ''));
+                return ratingB - ratingA;
+            } else if (sortBy === 'name-asc') {
+                const nameA = a.querySelector('h3').textContent.toLowerCase();
+                const nameB = b.querySelector('h3').textContent.toLowerCase();
+                return nameA.localeCompare(nameB);
+            }
+            return 0;
+        });
+        
+        cards.forEach(card => container.appendChild(card));
+    }
+    
+    document.getElementById('untukAndaFilterMenu').classList.add('hidden');
+}
+
+function resetUntukAndaFilters() {
+    document.getElementById('untukAndaSortBy').value = '';
+    location.reload(); // This will reset the products to their original order
+    document.getElementById('untukAndaFilterMenu').classList.add('hidden');
+}
+
+// Close filter dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const filterMenu = document.getElementById('untukAndaFilterMenu');
+    const filterButton = document.querySelector('button[onclick="toggleUntukAndaFilter()"]');
+    
+    if (filterMenu && !filterMenu.contains(event.target) && event.target !== filterButton && !filterButton.contains(event.target)) {
+        filterMenu.classList.add('hidden');
+    }
+});
+</script>
