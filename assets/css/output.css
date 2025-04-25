@@ -314,6 +314,9 @@
   .left-1\/2 {
     left: calc(1/2 * 100%);
   }
+  .left-3 {
+    left: calc(var(--spacing) * 3);
+  }
   .left-4 {
     left: calc(var(--spacing) * 4);
   }
@@ -373,6 +376,9 @@
   }
   .mt-0\.5 {
     margin-top: calc(var(--spacing) * 0.5);
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
@@ -512,6 +518,9 @@
   .h-1\.5 {
     height: calc(var(--spacing) * 1.5);
   }
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -644,9 +653,6 @@
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
-  .w-\[220px\] {
-    width: 220px;
-  }
   .w-full {
     width: 100%;
   }
@@ -667,9 +673,6 @@
   }
   .max-w-sm {
     max-width: var(--container-sm);
-  }
-  .min-w-full {
-    min-width: 100%;
   }
   .flex-1 {
     flex: 1;
@@ -742,6 +745,9 @@
   }
   .resize {
     resize: both;
+  }
+  .appearance-none {
+    appearance: none;
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -1040,9 +1046,6 @@
   .bg-white\/10 {
     background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
   }
-  .bg-white\/80 {
-    background-color: color-mix(in oklab, var(--color-white) 80%, transparent);
-  }
   .bg-white\/95 {
     background-color: color-mix(in oklab, var(--color-white) 95%, transparent);
   }
@@ -1184,11 +1187,17 @@
   .pt-20 {
     padding-top: calc(var(--spacing) * 20);
   }
+  .pr-4 {
+    padding-right: calc(var(--spacing) * 4);
+  }
   .pb-4 {
     padding-bottom: calc(var(--spacing) * 4);
   }
   .pb-24 {
     padding-bottom: calc(var(--spacing) * 24);
+  }
+  .pl-10 {
+    padding-left: calc(var(--spacing) * 10);
   }
   .text-center {
     text-align: center;
@@ -1293,6 +1302,9 @@
   }
   .text-gray-200\/90 {
     color: color-mix(in oklab, var(--color-gray-200) 90%, transparent);
+  }
+  .text-gray-400 {
+    color: var(--color-gray-400);
   }
   .text-gray-500 {
     color: var(--color-gray-500);
@@ -1487,23 +1499,6 @@
   .outline-none {
     --tw-outline-style: none;
     outline-style: none;
-  }
-  .group-hover\:scale-110 {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        --tw-scale-x: 110%;
-        --tw-scale-y: 110%;
-        --tw-scale-z: 110%;
-        scale: var(--tw-scale-x) var(--tw-scale-y);
-      }
-    }
-  }
-  .group-hover\:text-green-600 {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        color: var(--color-green-600);
-      }
-    }
   }
   .after\:absolute {
     &::after {
@@ -1786,14 +1781,6 @@
       }
     }
   }
-  .hover\:shadow-xl {
-    &:hover {
-      @media (hover: hover) {
-        --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-      }
-    }
-  }
   .hover\:after\:w-full {
     &:hover {
       @media (hover: hover) {
@@ -1802,6 +1789,11 @@
           width: 100%;
         }
       }
+    }
+  }
+  .focus\:border-green-500 {
+    &:focus {
+      border-color: var(--color-green-500);
     }
   }
   .focus\:ring-0 {
@@ -1819,11 +1811,6 @@
   .focus\:ring-green-400 {
     &:focus {
       --tw-ring-color: var(--color-green-400);
-    }
-  }
-  .focus\:ring-green-600 {
-    &:focus {
-      --tw-ring-color: var(--color-green-600);
     }
   }
   .focus\:ring-green-800 {
@@ -1895,11 +1882,6 @@
       width: calc(var(--spacing) * 52);
     }
   }
-  .sm\:w-\[280px\] {
-    @media (width >= 40rem) {
-      width: 280px;
-    }
-  }
   .sm\:w-auto {
     @media (width >= 40rem) {
       width: auto;
@@ -1930,11 +1912,6 @@
       gap: calc(var(--spacing) * 2);
     }
   }
-  .sm\:gap-6 {
-    @media (width >= 40rem) {
-      gap: calc(var(--spacing) * 6);
-    }
-  }
   .sm\:p-2\.5 {
     @media (width >= 40rem) {
       padding: calc(var(--spacing) * 2.5);
@@ -1958,11 +1935,6 @@
   .sm\:px-2 {
     @media (width >= 40rem) {
       padding-inline: calc(var(--spacing) * 2);
-    }
-  }
-  .sm\:px-4 {
-    @media (width >= 40rem) {
-      padding-inline: calc(var(--spacing) * 4);
     }
   }
   .sm\:px-6 {
