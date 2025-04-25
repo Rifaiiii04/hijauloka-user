@@ -106,15 +106,8 @@
           <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
         </a>
       </li>
-      <?php if ($this->session->userdata('logged_in')): ?>
-        <li>
-          <div class="flex items-center gap-2">
-            <a href="<?= base_url('profile') ?>" class="text-white p-2">
-              <i class="fas fa-user text-lg"></i>
-            </a>
-          </div>
-        </li>
-      <?php else: ?>
+      <!-- Removed Profile Icon -->
+      <?php if (!$this->session->userdata('logged_in')): ?>
         <li>
           <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-3 py-1.5 rounded-lg text-sm">
             Login
@@ -134,33 +127,28 @@
     </div>
   </div>
 
-  <ul class="flex items-center gap-1.5">
-    <li class="relative top-1 right-2">
-      <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-        <i class="fas fa-shopping-cart text-base"></i>
-        <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
-      </a>
-    </li>
-    <li class="relative top-1 right-2">
-      <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-        <i class="fas fa-bell text-base"></i>
-        <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">7</span>
-      </a>
-    </li>
+  <ul class="flex items-center gap-3">
     <?php if ($this->session->userdata('logged_in')): ?>
-      <li>
-        <a href="<?= base_url('profile') ?>" class="text-white p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-          <i class="fas fa-user text-base"></i>
+      <li class="relative">
+        <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-shopping-cart text-base"></i>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
         </a>
       </li>
-      <li>
-        <a href="#" onclick="handleLogout(event)" class="text-white p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-          <i class="fas fa-sign-out-alt text-base"></i>
+      <li class="relative">
+        <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-bell text-base"></i>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">7</span>
+        </a>
+      </li>
+      <li class="relative">
+        <a href="<?= base_url('wishlist/index') ?>" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-heart text-base"></i>
         </a>
       </li>
     <?php else: ?>
       <li>
-        <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-2.5 py-1 rounded-lg text-xs">
+        <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-3 py-1.5 rounded-lg text-sm">
           Login
         </a>
       </li>
@@ -171,6 +159,7 @@
 <!-- Mobile Bottom Navigation -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-green-800 shadow-lg z-50">
   <ul class="grid grid-cols-4 gap-1 p-1">
+    <!-- Removed Wishlist from Bottom Navigation -->
     <li>
       <a href="<?= base_url('home') ?>" class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
         <i class="fas fa-home text-lg"></i>
@@ -189,13 +178,10 @@
         <span class="text-[10px] mt-0.5">Popular</span>
       </a>
     </li>
-    <!-- Mobile Bottom Navigation - Update wishlist link -->
     <li>
-        <a href="<?= $this->session->userdata('logged_in') ? base_url('wishlist/index') : '#' ?>" 
-           onclick="<?= !$this->session->userdata('logged_in') ? 'document.getElementById(\'loginPrompt\').classList.remove(\'hidden\'); return false;' : '' ?>" 
-           class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
-            <i class="fas fa-heart text-lg"></i>
-            <span class="text-[10px] mt-0.5">Wishlist</span>
+        <a href="<?= base_url('profile/index') ?>" class="flex flex-col items-center justify-center py-2 text-white opacity-90 hover:opacity-100">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px] mt-0.5">Profile</span>
         </a>
     </li>
   </ul>
