@@ -20,22 +20,27 @@
         <div class="md:flex">
             <!-- Product Images -->
             <div class="md:w-1/2 p-4">
-                <div class="relative aspect-w-1 aspect-h-1">
+                <div class="relative h-[500px]">
                     <?php 
-                    $images = explode(',', $product['gambar']);
-                    $mainImage = trim($images[0]);
+                    $mainImage = $product['gambar'];
+                    if (strpos($mainImage, ',') !== false) {
+                        $images = array_map('trim', explode(',', $mainImage));
+                        $mainImage = $images[0];
+                    }
                     ?>
                     <img src="http://localhost/hijauloka/uploads/<?= $mainImage ?>" 
                          alt="<?= $product['nama_product'] ?>" 
-                         class="w-full h-96 object-cover rounded-lg">
+                         class="w-full h-full object-contain rounded-lg">
                 </div>
                 
-                <?php if (count($images) > 1): ?>
-                <div class="grid grid-cols-4 gap-2 mt-4">
+                <?php if (isset($images) && count($images) > 1): ?>
+                <div class="grid grid-cols-4 gap-4 mt-4">
                     <?php foreach($images as $image): ?>
-                    <img src="http://localhost/hijauloka/uploads/<?= trim($image) ?>" 
-                         alt="Product thumbnail" 
-                         class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
+                    <div class="relative h-24">
+                        <img src="http://localhost/hijauloka/uploads/<?= $image ?>" 
+                             alt="Product thumbnail" 
+                             class="w-full h-full object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
+                    </div>
                     <?php endforeach; ?>
                 </div>
                 <?php endif; ?>
@@ -79,9 +84,21 @@
                     <p class="text-gray-600"><?= nl2br($product['desk_product']) ?></p>
                 </div>
 
+                <!-- Plant Care Instructions Section -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Cara Merawat Tanaman</h2>
+                    <div class="bg-gray-50 rounded-lg p-6 text-center">
+                        <div class="text-gray-400 mb-2">
+                            <i class="fas fa-seedling text-4xl"></i>
+                        </div>
+                        <p class="text-gray-600 font-medium">Coming Soon!</p>
+                        <p class="text-sm text-gray-500 mt-2">Panduan perawatan tanaman dengan ilustrasi akan tersedia segera.</p>
+                    </div>
+                </div>
+
                 <?php if ($product['cara_rawat_video']): ?>
                 <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-2">Cara Merawat</h2>
+                    <h2 class="text-xl font-semibold mb-2">Video Cara Merawat</h2>
                     <div class="aspect-w-16 aspect-h-9">
                         <iframe src="<?= $product['cara_rawat_video'] ?>" 
                                 frameborder="0" 
@@ -117,6 +134,57 @@
         </div>
     </div>
 </main>
+
+<!-- Reviews and Comments Section -->
+<section class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Ulasan Pembeli</h2>
+    
+    <!-- Review Statistics -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div class="flex items-center gap-8">
+            <div class="text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-2"><?= number_format($rating, 1) ?></div>
+                <div class="flex text-yellow-400 justify-center mb-1">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <i class="fas fa-star"></i>
+                    <?php endfor; ?>
+                </div>
+                <div class="text-gray-500 text-sm">Dari 0 ulasan</div>
+            </div>
+            <div class="flex-1">
+                <div class="space-y-2">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                    <div class="flex items-center gap-4">
+                        <div class="flex text-yellow-400">
+                            <?php for ($j = 1; $j <= $i; $j++): ?>
+                                <i class="fas fa-star"></i>
+                            <?php endfor; ?>
+                        </div>
+                        <div class="flex-1">
+                            <div class="h-2 bg-gray-200 rounded-full">
+                                <div class="h-2 bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 w-12 text-right">0</div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments List -->
+    <div class="space-y-6">
+        <!-- Placeholder for when no comments exist -->
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div class="text-gray-400 mb-2">
+                <i class="far fa-comment-dots text-4xl"></i>
+            </div>
+            <p class="text-gray-600 font-medium">Belum ada ulasan</p>
+            <p class="text-sm text-gray-500 mt-2">Jadilah yang pertama memberikan ulasan untuk produk ini</p>
+        </div>
+    </div>
+</section>
 
 <script>
 function updateQuantity(change) {
