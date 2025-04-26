@@ -131,4 +131,23 @@ class Product_model extends CI_Model {
 
         return $result;
     }
+
+    // Add new method for getting product details
+    public function get_product_by_id($id) {
+        $this->db->select('p.*, GROUP_CONCAT(c.nama_kategori) as categories');
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product', 'left');
+        $this->db->join('category c', 'c.id_kategori = pc.id_kategori', 'left');
+        $this->db->where('p.id_product', $id);
+        $this->db->group_by('p.id_product');
+        
+        $result = $this->db->get()->row_array();
+        
+        if ($result) {
+            $result['categories'] = $result['categories'] ? explode(',', $result['categories']) : [];
+            $result['gambar'] = explode(',', $result['gambar']);
+        }
+        
+        return $result;
+    }
 }
