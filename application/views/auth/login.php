@@ -48,7 +48,7 @@
             <div class="flex md:hidden justify-center mb-6">
                 <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
             </div>
-s            
+          
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to HijauLoka</h2>
 
             <!-- Add loader HTML after the snackbar notifications -->

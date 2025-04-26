@@ -1,6 +1,6 @@
 <?php $this->load->view('templates/header'); ?>
 
-<main class="container mx-auto px-4 py-8 mt-28">
+<main class="container mx-auto px-4 py-8 mt-10 md:mt-20">
     <!-- Breadcrumb -->
     <div class="mb-6">
         <nav class="text-gray-600">
