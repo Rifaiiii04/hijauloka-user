@@ -45,14 +45,6 @@
   <div class="flex items-center">
     <!-- Desktop Icons -->
     <ul class="hidden md:flex items-center gap-6 text-white mr-4">
-      <!-- Search -->
-      <li>
-        <div class="flex items-center bg-green-700/50 rounded-lg px-3 py-2">
-          <input type="text" placeholder="Cari..." class="bg-transparent border-none outline-none text-white placeholder-gray-300 w-40">
-          <i class="fas fa-search ml-2"></i>
-        </div>
-      </li>
-      
       <!-- Cart -->
       <li>
         <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
@@ -94,17 +86,11 @@
     <!-- Mobile Icons -->
     <ul class="flex md:hidden items-center gap-3">
       <li>
-        <a href="#" class="text-white p-2">
-          <i class="fas fa-search text-lg"></i>
-        </a>
-      </li>
-      <li>
         <a href="#" class="text-white relative p-2">
           <i class="fas fa-shopping-cart text-lg"></i>
           <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
         </a>
       </li>
-      <!-- Removed Profile Icon -->
       <?php if (!$this->session->userdata('logged_in')): ?>
         <li>
           <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-3 py-1.5 rounded-lg text-sm">
@@ -113,41 +99,39 @@
         </li>
       <?php endif; ?>
     </ul>
+  </div>
 </nav>
 
 <!-- Mobile Navigation Header -->
-<nav class="md:hidden bg-green-800 flex items-center justify-between px-3 py-2 fixed top-0 w-screen z-50 shadow-lg">
-  <div class="flex items-center gap-2">
-    <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Logo" class="w-7 h-7">
-    <div class="flex items-center bg-green-700/50 rounded-lg px-2.5 py-1.5">
-      <input type="text" placeholder="Cari..." class="bg-transparent border-none outline-none text-white placeholder-gray-300 w-28 text-sm">
-      <i class="fas fa-search text-white ml-1.5 text-sm"></i>
-    </div>
+<nav class="md:hidden bg-green-800 flex items-center justify-between px-4 py-3 fixed w-screen z-50 shadow-lg">
+  <div class="flex items-center gap-3">
+    <img src="<?= base_url('assets/img/logo1.png') ?>" alt="Logo" class="w-8 h-8">
+    <span class="text-white font-semibold text-lg">HijauLoka</span>
   </div>
 
-  <ul class="flex items-center gap-3">
+  <ul class="flex items-center gap-4 mt-2">
     <?php if ($this->session->userdata('logged_in')): ?>
       <li class="relative">
-        <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-          <i class="fas fa-shopping-cart text-base"></i>
+        <a href="#" class="text-white relative p-2 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-shopping-cart text-xl"></i>
           <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
         </a>
       </li>
       <li class="relative">
-        <a href="#" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-          <i class="fas fa-bell text-base"></i>
+        <a href="#" class="text-white relative p-2 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-bell text-xl"></i>
           <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">7</span>
         </a>
       </li>
       <li class="relative">
-        <a href="<?= base_url('wishlist/index') ?>" class="text-white relative p-1.5 hover:bg-green-700/50 rounded-lg transition-colors">
-          <i class="fas fa-heart text-base"></i>
+        <a href="<?= base_url('wishlist/index') ?>" class="text-white relative p-2 hover:bg-green-700/50 rounded-lg transition-colors">
+          <i class="fas fa-heart text-xl"></i>
         </a>
       </li>
     <?php else: ?>
       <li>
-        <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-3 py-1.5 rounded-lg text-sm">
-          Login
+        <a href="<?= base_url('auth') ?>" class="text-white bg-green-700/50 px-4 py-2 rounded-lg text-sm">
+          Masuk
         </a>
       </li>
     <?php endif; ?>

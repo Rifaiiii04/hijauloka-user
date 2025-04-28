@@ -9,9 +9,26 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $this->load->model('Product_model');
-        $data['produk_terlaris'] = $this->Product_model->get_best_sellers();
-        $data['produk_terbaru'] = $this->Product_model->get_latest_products();
+        $this->load->model('product_model');
+        $this->load->model('wishlist_model');
+        
+        $data['produk_terbaru'] = $this->product_model->get_latest_products();
+        
+        // Get categories and ratings for each product
+        foreach ($data['produk_terbaru'] as &$produk) {
+            $produk['categories'] = $this->product_model->get_product_categories($produk['id_product']);
+            $produk['rating'] = $this->product_model->get_product_rating($produk['id_product']);
+            
+            // Check if product is in user's wishlist
+            $produk['is_wishlisted'] = false;
+            if ($this->session->userdata('logged_in')) {
+                $produk['is_wishlisted'] = $this->wishlist_model->is_wishlisted(
+                    $this->session->userdata('id_user'),
+                    $produk['id_product']
+                );
+            }
+        }
+        
         $this->load->view('home/index', $data);
     }
 }

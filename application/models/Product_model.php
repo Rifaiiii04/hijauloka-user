@@ -150,4 +150,21 @@ class Product_model extends CI_Model {
         
         return $result;
     }
+
+    public function get_product_categories($product_id) {
+        $this->db->select('c.id_kategori, c.nama_kategori');
+        $this->db->from('product_category pc');
+        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
+        $this->db->where('pc.id_product', $product_id);
+        return $this->db->get()->result_array();
+    }
+
+    public function get_product_rating($product_id) {
+        $this->db->select('COALESCE(AVG(rating), 0) as rating');
+        $this->db->from('review_rating'); // Changed from 'reviews' to 'review_rating'
+        $this->db->where('id_product', $product_id);
+        $this->db->where('stts_review', 'disetujui'); // Only count approved reviews
+        $result = $this->db->get()->row();
+        return $result ? $result->rating : 0;
+    }
 }
