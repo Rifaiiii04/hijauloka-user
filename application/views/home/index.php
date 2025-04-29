@@ -115,7 +115,7 @@ function toggleWishlist(button, productId) {
 
 <!-- Untuk Anda section -->
 <!-- Main section -->
-<div class="mt-28">
+<div class="mt-72">
     <div class="flex justify-between items-start mb-12 px-4">
         <div class="text-center flex-1">
             <h1 id="scrollEskplor" class="font-bold text-4xl text-green-800 relative inline-block pb-4">

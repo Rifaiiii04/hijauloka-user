@@ -1,32 +1,40 @@
 <!-- Hero Section -->
-<section class="relative md:top-20 top-10 overflow-hidden" style="height: 85vh;">
-  <!-- Background Image with Parallax -->
-  <div class="absolute inset-0">
-    <img src="<?= base_url('assets/plant/hero-bg.png') ;?>" 
-         class="w-full h-full object-cover scale-105 motion-safe:animate-subtle-zoom brightness-[0.85]" 
-         alt="Background" />
-    <div class="absolute inset-0 bg-black/50"></div>
-  </div>
-
-  <!-- Content -->
-  <div class="relative h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
-    <div class="text-center text-white animate-fade-in max-w-4xl">
-      <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 text-sm uppercase tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">
-        Tanaman Hias Berkualitas
-      </span>
-      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 tracking-tight drop-shadow-xl">
-        Hijaukan Ruangan Anda dengan <span class="inline-block px-4 py-1 rounded-full bg-green-800/40 text-green-300 tracking-[0.15em] mb-3 backdrop-blur-sm border border-green-600/20">HijauLoka</span>
-      </h1>
-      <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
-        Koleksi tanaman hias terbaik untuk mempercantik interior rumah Anda
-      </p>
-      <a href="#scrollEskplor" 
-         class="inline-flex items-center px-6 py-3 cursor-pointer bg-green-600 text-white text-lg font-medium rounded-full transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5">
-        Eksplor Sekarang
-      </a>
-    </div>
-  </div>
-</section>
+<!-- Hero Section -->
+<script
+			type="module"
+			src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
+		></script>
+<section
+			class="relative md:top-22 mb-10 top-20 overflow-hidden flex h-[550px] mx-auto w-[1200px]"
+		>
+			<div class="w-1/2 flex relative left-10 flex-col">
+				<h1 class="md:text-xl text-md text-black/70 ml-1 mt-5">
+					Selamat Datang Di
+					<span class="text-green-800 font-bold justify">HijauLoka</span>
+				</h1>
+				<h2 class="mt-5 font-bold md:text-6xl text-5xl w-52">
+					Bring <span class="text-green-800">Nature</span> Into Your Home
+				</h2>
+				<div class="w-72 md:w-96 mt-5 h-0.5 bg-black/60"></div>
+				<button
+					class="mt-5 bg-green-700 w-48 rounded-full text-white shadow-lg shadow-black/20 h-14 hover:bg-green-200 hover:text-green-700 font-semibold transition-all duration-300 cursor-pointer"
+				>
+					Eksplor Sekarang
+				</button>
+			</div>
+			<div class="w-1/2">
+				<model-viewer
+					alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
+					src="<?= site_url('assets/models/plant2.glb')?> " 
+					ar
+					shadow-intensity="1"
+					camera-controls
+					auto-rotate
+					touch-action="pan-y"
+					class="w-full h-[500px] hidden sm:flex items-center justify-center"
+				></model-viewer>
+			</div>
+		</section>
 
 <style>
 @keyframes subtle-zoom {
