@@ -20,7 +20,7 @@
       <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto font-light text-gray-200/90 drop-shadow-md">
         Koleksi tanaman hias terbaik untuk mempercantik interior rumah Anda
       </p>
-      <a href="#produk_section" 
+      <a href="#scrollEskplor" 
          class="inline-flex items-center px-6 py-3 cursor-pointer bg-green-600 text-white text-lg font-medium rounded-full transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5">
         Eksplor Sekarang
       </a>

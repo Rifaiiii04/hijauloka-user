@@ -118,18 +118,17 @@ function toggleWishlist(button, productId) {
 <div class="mt-28">
     <div class="flex justify-between items-start mb-12 px-4">
         <div class="text-center flex-1">
-            <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
+            <h1 id="scrollEskplor" class="font-bold text-4xl text-green-800 relative inline-block pb-4">
                 Rekomendasi Terbaik
                 <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-green-600"></div>
             </h1>
         </div>
-        
-        <!-- Filter and sort controls would go here -->
     </div>
-    
+
     <!-- Product container -->
     <div id="untukAndaProductsContainer" class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <?php foreach ($produk_terbaru as $produk) : ?>
+            <!-- Product cards continue... -->
             <?php 
             if (!empty($produk['gambar'])) {
                 $gambarArr = explode(',', $produk['gambar']);
@@ -140,7 +139,7 @@ function toggleWishlist(button, productId) {
             ?>
             
             <!-- Product Card -->
-            <div class="product-card bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
+            <div  class="product-card bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
                 <!-- Image and title link -->
                 <a href="<?= base_url('product/detail/' . $produk['id_product']) ?>" class="block">
                     <div class="aspect-w-1 aspect-h-1">
@@ -389,4 +388,18 @@ document.addEventListener('click', function(event) {
     }
 });
 
+</script>
+<!-- Add this function to your existing script section -->
+<script>
+function closeLoginPrompt() {
+    const modal = document.getElementById('loginPrompt');
+    modal.classList.add('hidden');
+}
+
+// Add click outside modal to close
+document.getElementById('loginPrompt').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLoginPrompt();
+    }
+});
 </script>
