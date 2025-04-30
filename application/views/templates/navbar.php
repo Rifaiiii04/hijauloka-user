@@ -64,16 +64,13 @@
       <!-- User Section -->
       <li class="relative">
         <?php if ($this->session->userdata('logged_in')): ?>
-          <div class="flex items-center gap-3 bg-green-700/50 px-4 py-2 rounded-lg">
-            <div class="flex items-center gap-2 cursor-pointer">     
-              <a href="<?= base_url('profile') ?>" class="text-black hover:text-gray-200 transition-colors">
-              <span class="text-sm font-medium"><?= $this->session->userdata('nama') ?></span>
-                <i class="fas fa-user"></i>
-              </a>
-              <a href="#" onclick="handleLogout(event)" class="text-green-800 hover:text-red-300 transition-colors">
-                <i class="fas fa-sign-out-alt"></i>
-              </a>
-            </div>
+          <div class="flex items-center gap-3">
+            <a href="<?= base_url('profile') ?>" class="flex items-center gap-2 px-4 py-2 rounded-lg text-green-800 hover:text-gray-200 transition-colors">
+              <i class="fas fa-user"></i>
+            </a>
+            <a href="#" onclick="handleLogout(event)" class="flex items-center gap-2 bg-red-500/50 px-4 py-2 rounded-lg text-green-800 hover:text-red-700 transition-colors">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
           </div>
         <?php else: ?>
           <a href="<?= base_url('auth') ?>" class="flex items-center gap-2 bg-white/10 px-4 py-2 text-green-800 rounded-lg hover:bg-green-700/50 transition-all duration-300">
