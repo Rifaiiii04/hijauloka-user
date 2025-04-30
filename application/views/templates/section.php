@@ -5,7 +5,7 @@
 			src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
 		></script>
 <section
-			class="relative md:top-22 mb-10 top-20 overflow-hidden flex h-[550px] mx-auto w-[1200px]"
+			class="relative md:top-22 mb-10 top-20 overflow-hidden flex h-[550px] mx-auto w-[1000px]"
 		>
 			<div class="w-1/2 flex relative left-10 flex-col">
 				<h1 class="md:text-xl text-md text-black/70 ml-1 mt-5">
@@ -22,7 +22,7 @@
 					Eksplor Sekarang
 				</button>
 			</div>
-			<div class="w-1/2">
+			<div class="w-1/2  hidden md:flex">
 				<model-viewer
 					alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
 					src="<?= site_url('assets/models/plant2.glb')?> " 
@@ -31,7 +31,7 @@
 					camera-controls
 					auto-rotate
 					touch-action="pan-y"
-					class="w-full h-[500px] hidden sm:flex items-center justify-center"
+					class="w-full h-[500px] items-center justify-center"
 				></model-viewer>
 			</div>
 		</section>

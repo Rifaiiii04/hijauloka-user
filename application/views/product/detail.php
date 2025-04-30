@@ -1,9 +1,9 @@
 <?php $this->load->view('templates/header'); ?>
 
-<main class="container mx-auto px-4 py-8 mt-10 md:mt-20">
+<main class="container mx-auto px-1 py-1 mt-4 md:mt-20 max-w-5xl">
     <!-- Breadcrumb -->
-    <div class="mb-6">
-        <nav class="text-gray-600">
+    <div class="mb-1">
+        <nav class="text-[10px] text-gray-600">
             <ol class="list-none p-0 inline-flex">
                 <li class="flex items-center">
                     <a href="<?= base_url() ?>" class="hover:text-green-600">Beranda</a>
@@ -16,11 +16,11 @@
         </nav>
     </div>
 
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="md:flex">
+    <div class="bg-white rounded shadow py-2 overflow-hidden">
+        <div class="md:flex md:space-x-4">
             <!-- Product Images -->
-            <div class="md:w-1/2 p-4">
-                <div class="relative h-[500px]">
+            <div class="md:w-2/5 p-1">
+                <div class="relative h-[250px]">
                     <?php 
                     $mainImage = $product['gambar'];
                     if (strpos($mainImage, ',') !== false) {
@@ -34,9 +34,9 @@
                 </div>
                 
                 <?php if (isset($images) && count($images) > 1): ?>
-                <div class="grid grid-cols-4 gap-4 mt-4">
+                <div class="grid grid-cols-4 gap-0.5 mt-0.5">
                     <?php foreach($images as $image): ?>
-                    <div class="relative h-24">
+                    <div class="relative h-14 left-1.5 gap-5">
                         <img src="http://localhost/hijauloka/uploads/<?= $image ?>" 
                              alt="Product thumbnail" 
                              class="w-full h-full object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
@@ -47,19 +47,19 @@
             </div>
 
             <!-- Product Info -->
-            <div class="md:w-1/2 p-6">
-                <div class="flex flex-wrap gap-2 mb-4">
+            <div class="md:w-3/5 p-2 space-y-1.5">
+                <div class="flex flex-wrap gap-0.5">
                     <?php foreach($categories as $category): ?>
-                        <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                        <span class="px-1.5 py-0.5 bg-green-100 text-green-800 text-[10px] rounded-full">
                             <?= $category['nama_kategori'] ?>
                         </span>
                     <?php endforeach; ?>
                 </div>
 
-                <h1 class="text-3xl font-bold text-gray-900 mb-4"><?= $product['nama_product'] ?></h1>
+                <h1 class="text-lg font-bold text-gray-900"><?= $product['nama_product'] ?></h1>
                 
-                <div class="flex items-center mb-4">
-                    <div class="flex text-yellow-400">
+                <div class="flex items-center">
+                    <div class="flex text-yellow-400 text-xs">
                         <?php 
                         $rating = floatval($product['rating'] ?? 0);
                         for ($i = 1; $i <= 5; $i++): ?>
@@ -72,121 +72,219 @@
                             <?php endif; ?>
                         <?php endfor; ?>
                     </div>
-                    <span class="text-gray-500 ml-2">(<?= number_format($rating, 1) ?>)</span>
+                    <span class="text-gray-500 text-[10px] ml-1">(<?= number_format($rating, 1) ?>)</span>
                 </div>
 
-                <p class="text-3xl font-bold text-green-600 mb-6">
+                <p class="text-lg font-bold text-green-600">
                     Rp<?= number_format($product['harga'], 0, ',', '.') ?>
                 </p>
 
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-2">Deskripsi Tanaman</h2>
-                    <p class="text-gray-600"><?= nl2br($product['desk_product']) ?></p>
+                <div>
+                    <h2 class="text-sm font-semibold">Deskripsi Tanaman</h2>
+                    <p class="text-[11px] text-gray-600"><?= nl2br($product['desk_product']) ?></p>
                 </div>
 
-                <!-- Plant Care Instructions Section -->
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-4">Cara Merawat Tanaman</h2>
-                    <div class="bg-gray-50 rounded-lg p-6 text-center">
-                        <div class="text-gray-400 mb-2">
-                            <i class="fas fa-seedling text-4xl"></i>
+                <!-- Plant Care Instructions -->
+                <div>
+                    <h2 class="text-sm font-semibold">Cara Merawat Tanaman</h2>
+                    <div class="bg-gray-50 rounded p-2 text-center">
+                        <div class="text-gray-400">
+                            <i class="fas fa-seedling text-lg"></i>
                         </div>
-                        <p class="text-gray-600 font-medium">Coming Soon!</p>
-                        <p class="text-sm text-gray-500 mt-2">Panduan perawatan tanaman dengan ilustrasi akan tersedia segera.</p>
+                        <p class="text-[11px] text-gray-600 font-medium">Coming Soon!</p>
+                        <p class="text-[10px] text-gray-500">Panduan perawatan tanaman dengan ilustrasi akan tersedia segera.</p>
                     </div>
                 </div>
 
-                <?php if ($product['cara_rawat_video']): ?>
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-2">Video Cara Merawat</h2>
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe src="<?= $product['cara_rawat_video'] ?>" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                                class="rounded-lg"></iframe>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center border rounded-lg">
-                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800" onclick="updateQuantity(-1)">-</button>
+                <!-- Quantity and Actions -->
+                <div class="flex items-center gap-1.5 pt-1">
+                    <div class="flex items-center border rounded">
+                        <button class="px-2 py-0.5 text-gray-600 text-xs" onclick="updateQuantity(-1)">-</button>
                         <input type="number" id="quantity" value="1" min="1" max="<?= $product['stok'] ?>"
-                               class="w-16 text-center border-x py-2">
-                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800" onclick="updateQuantity(1)">+</button>
+                               class="w-8 text-center border-x py-0.5 text-xs">
+                        <button class="px-2 py-0.5 text-gray-600 text-xs" onclick="updateQuantity(1)">+</button>
                     </div>
-                    <span class="text-gray-500">Stok: <?= $product['stok'] ?></span>
+                    <span class="text-[10px] text-gray-500">Stok: <?= $product['stok'] ?></span>
                 </div>
 
-                <div class="flex gap-4 mt-6">
+                <div class="flex gap-1.5 pt-1">
                     <button onclick="addToCart(<?= $product['id_product'] ?>)" 
-                            class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors">
-                        <i class="fas fa-shopping-cart mr-2"></i>
+                            class="flex-1 bg-green-600 text-white py-1.5 px-3 rounded text-xs hover:bg-green-700">
+                        <i class="fas fa-shopping-cart text-[10px] mr-1"></i>
                         Tambah ke Keranjang
                     </button>
                     <button onclick="toggleWishlist(this, <?= $product['id_product'] ?>)" 
-                            class="p-3 border rounded-lg hover:bg-gray-50 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
-                        <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : 'text-gray-400' ?>"></i>
+                            class="p-1.5 border rounded">
+                        <i class="fas fa-heart text-xs <?= $is_wishlisted ? 'text-red-500' : 'text-gray-400' ?>"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Reviews Section (similarly updated) -->
+    <section class="px-2 py-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-3">Ulasan Pembeli</h2>
+        
+        <!-- Review Statistics -->
+        <div class="bg-white rounded-md shadow p-4 mb-4">
+            <div class="flex items-center gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-gray-900 mb-2"><?= number_format($rating, 1) ?></div>
+                    <div class="flex text-yellow-400 justify-center mb-1">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fas fa-star"></i>
+                        <?php endfor; ?>
+                    </div>
+                    <div class="text-gray-500 text-sm">Dari 0 ulasan</div>
+                </div>
+                <div class="flex-1">
+                    <div class="space-y-2">
+                        <?php for ($i = 5; $i >= 1; $i--): ?>
+                        <div class="flex items-center gap-4">
+                            <div class="flex text-yellow-400">
+                                <?php for ($j = 1; $j <= $i; $j++): ?>
+                                    <i class="fas fa-star"></i>
+                                <?php endfor; ?>
+                            </div>
+                            <div class="flex-1">
+                                <div class="h-2 bg-gray-200 rounded-full">
+                                    <div class="h-2 bg-yellow-400 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="text-gray-500 w-12 text-right">0</div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments List -->
+        <div class="space-y-4">
+            <div class="bg-white rounded-md shadow p-4 text-center">
+                <div class="text-gray-400 mb-1">
+                    <i class="far fa-comment-dots text-2xl"></i>
+                </div>
+                <p class="text-sm text-gray-600 font-medium">Belum ada ulasan</p>
+                <p class="text-xs text-gray-500 mt-1">Jadilah yang pertama memberikan ulasan untuk produk ini</p>
+            </div>
+        </div>
+    </section>
 </main>
 
-<!-- Reviews and Comments Section -->
-<section class="container mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">Ulasan Pembeli</h2>
+<!-- Add this after header -->
+<!-- Login Prompt Modal -->
+<div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl">
+        <div class="text-center mb-6">
+            <i class="fas fa-lock text-4xl text-green-600 mb-4"></i>
+            <h3 class="text-2xl font-semibold text-gray-900">Login Required</h3>
+            <p class="text-gray-600 mt-2">Please login or create an account to add items to your wishlist</p>
+        </div>
+        <div class="space-y-3">
+            <a href="<?= base_url('auth') ?>" class="flex items-center justify-center gap-2 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-all">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login to Your Account</span>
+            </a>
+            <a href="<?= base_url('auth/register') ?>" class="flex items-center justify-center gap-2 w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-all">
+                <i class="fas fa-user-plus"></i>
+                <span>Create New Account</span>
+            </a>
+            <button onclick="closeLoginPrompt()" class="w-full text-gray-500 hover:text-gray-700 py-2">Maybe Later</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add these styles -->
+<style>
+    @keyframes heartbeat {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
     
-    <!-- Review Statistics -->
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <div class="flex items-center gap-8">
-            <div class="text-center">
-                <div class="text-4xl font-bold text-gray-900 mb-2"><?= number_format($rating, 1) ?></div>
-                <div class="flex text-yellow-400 justify-center mb-1">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <i class="fas fa-star"></i>
-                    <?php endfor; ?>
-                </div>
-                <div class="text-gray-500 text-sm">Dari 0 ulasan</div>
-            </div>
-            <div class="flex-1">
-                <div class="space-y-2">
-                    <?php for ($i = 5; $i >= 1; $i--): ?>
-                    <div class="flex items-center gap-4">
-                        <div class="flex text-yellow-400">
-                            <?php for ($j = 1; $j <= $i; $j++): ?>
-                                <i class="fas fa-star"></i>
-                            <?php endfor; ?>
-                        </div>
-                        <div class="flex-1">
-                            <div class="h-2 bg-gray-200 rounded-full">
-                                <div class="h-2 bg-yellow-400 rounded-full" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div class="text-gray-500 w-12 text-right">0</div>
-                    </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-        </div>
-    </div>
+    @keyframes heartbeat-out {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.7); }
+        100% { transform: scale(1); }
+    }
+    
+    .animate-heartbeat {
+        animation: heartbeat 0.5s ease-in-out;
+    }
+    
+    .animate-heartbeat-out {
+        animation: heartbeat-out 0.5s ease-in-out;
+    }
+    
+    .fa-heart {
+        transition: color 0.2s ease-in-out;
+    }
+</style>
 
-    <!-- Comments List -->
-    <div class="space-y-6">
-        <!-- Placeholder for when no comments exist -->
-        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-            <div class="text-gray-400 mb-2">
-                <i class="far fa-comment-dots text-4xl"></i>
-            </div>
-            <p class="text-gray-600 font-medium">Belum ada ulasan</p>
-            <p class="text-sm text-gray-500 mt-2">Jadilah yang pertama memberikan ulasan untuk produk ini</p>
-        </div>
-    </div>
-</section>
-
+<!-- Update the wishlist toggle function -->
 <script>
+function toggleWishlist(button, productId) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    const icon = button.querySelector('i');
+    
+    if (icon.classList.contains('text-red-500')) {
+        icon.classList.remove('text-red-500');
+        icon.classList.add('animate-heartbeat-out');
+    } else {
+        icon.classList.add('text-red-500');
+        icon.classList.add('animate-heartbeat');
+    }
+    
+    setTimeout(() => {
+        icon.classList.remove('animate-heartbeat', 'animate-heartbeat-out');
+    }, 500);
+
+    fetch('<?= base_url('wishlist/toggle/') ?>' + productId, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error('Error:', error);
+        if (icon.classList.contains('text-red-500')) {
+            icon.classList.remove('text-red-500');
+        } else {
+            icon.classList.add('text-red-500');
+        }
+    });
+}
+
+function closeLoginPrompt() {
+    document.getElementById('loginPrompt').classList.add('hidden');
+}
+
+document.getElementById('loginPrompt').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLoginPrompt();
+    }
+});
+</script>
+
+<!-- In your Product Controller, add this to the detail method -->
+<?php
+// Add this to get wishlist status
+$is_wishlisted = $this->session->userdata('logged_in') ? 
+    $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $product['id_product']) : 
+    false;
+$data['is_wishlisted'] = $is_wishlisted;
+?>
+
 function updateQuantity(change) {
     const input = document.getElementById('quantity');
     const newValue = parseInt(input.value) + change;
