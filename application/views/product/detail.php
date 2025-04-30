@@ -113,6 +113,11 @@
                         <i class="fas fa-shopping-cart text-[10px] mr-1"></i>
                         Tambah ke Keranjang
                     </button>
+                    <button onclick="buyNow(<?= $product['id_product'] ?>)"
+                            class="flex-1 bg-blue-600 text-white py-1.5 px-3 rounded text-xs hover:bg-blue-700">
+                        <i class="fas fa-bolt text-[10px] mr-1"></i>
+                        Beli Sekarang
+                    </button>
                     <button onclick="toggleWishlist(this, <?= $product['id_product'] ?>)" 
                             class="p-1.5 border rounded">
                         <i class="fas fa-heart text-xs <?= $is_wishlisted ? 'text-red-500' : 'text-gray-400' ?>"></i>
@@ -284,7 +289,7 @@ $is_wishlisted = $this->session->userdata('logged_in') ?
     false;
 $data['is_wishlisted'] = $is_wishlisted;
 ?>
-
+<script>
 function updateQuantity(change) {
     const input = document.getElementById('quantity');
     const newValue = parseInt(input.value) + change;
@@ -293,9 +298,58 @@ function updateQuantity(change) {
     }
 }
 
-function addToCart(productId) {
+function buyNow(productId) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
     const quantity = document.getElementById('quantity').value;
-    // Add your cart logic here
+    
+    // Show loading state
+    const button = document.querySelector('button[onclick="buyNow(' + productId + ')"]');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px] mr-1"></i> Processing...';
+    button.disabled = true;
+
+    // Add to cart first
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: 'id_product=' + productId + '&quantity=' + quantity
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        if (data.success) {
+            // Redirect to checkout
+            window.location.href = '<?= base_url('checkout') ?>';
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.message || 'Something went wrong!'
+            });
+        }
+    })
+    .catch(error => {
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!'
+        });
+        console.error('Error:', error);
+    });
 }
 </script>
 
