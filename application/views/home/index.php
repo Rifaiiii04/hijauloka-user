@@ -123,29 +123,30 @@ function toggleWishlist(button, productId) {
 
 <!-- Top 10 Product -->
 <section class="px-4 py-8">
-    <h2 class="text-2xl font-bold text-green-800 mb-4">Featured Products</h2>
+    <h2 class="text-2xl font-bold text-center text-green-800 mb-4">Rekomendasi Terbaik</h2>
     <div class="relative">
-        <div class="overflow-x-auto scrollbar-hide">
-            <div class="flex gap-4 pb-4" style="min-width: min-content;">
+        <div class="overflow-x-auto scrollbar-hide ">
+            <div class="flex gap-4 pb-4 bg-blue-500">
                 <?php foreach ($featured_products as $product): ?>
                     <?php 
+                    // Process image first
+                    $productImage = 'default.jpg';
                     if (!empty($product['gambar'])) {
                         $gambarArr = explode(',', $product['gambar']);
-                        $gambarProduct = trim($gambarArr[0]);
-                    } else {
-                        $gambarProduct = 'default.jpg'; 
+                        $productImage = trim($gambarArr[0]);
                     }
                     ?>
-                    <div class="w-[280px] flex-shrink-0">
+                    <div class="w-72 flex-shrink-0">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <a href="<?= base_url('product/detail/' . $product['id_product']) ?>">
-                                <img src="http://localhost/hijauloka/uploads/<?= $gambarProduct ?>" 
+                                <img src="http://localhost/hijauloka/uploads/<?= $productImage ?>" 
                                      alt="<?= $product['nama_product'] ?>"
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover hover:scale-110 transition-all duration-300">
                             </a>
                             <div class="p-4">
                                 <h3 class="font-semibold text-lg mb-2"><?= $product['nama_product'] ?></h3>
-                                <div class="flex items-center mb-2">
+                                <!-- Rest of the card content stays the same -->
+                                <div class="flex items-center mb-2 flex-shrink-0">
                                     <div class="flex text-yellow-400">
                                         <?php 
                                         $rating = floatval($product['rating'] ?? 0);
@@ -155,15 +156,15 @@ function toggleWishlist(button, productId) {
                                     </div>
                                     <span class="text-gray-500 text-sm ml-2">(<?= number_format($rating, 1) ?>)</span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div class="mt-auto flex justify-between items-center flex-shrink-0">
                                     <span class="text-green-600 font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
                                     <div class="flex gap-2">
                                         <button onclick="toggleWishlist(this, <?= $product['id_product'] ?>)" 
-                                                class="wishlist-btn text-gray-600 hover:text-red-500">
-                                            <i class="fas fa-heart"></i>
+                                                class="wishlist-btn p-2 text-gray-600 bg-gray-100 rounded-md hover:text-red-500">
+                                            <i class="fas fa-heart <?= isset($product['is_wishlisted']) && $product['is_wishlisted'] ? 'text-red-500' : '' ?>"></i>
                                         </button>
                                         <button onclick="handleCartClick(event, <?= $product['id_product'] ?>)" 
-                                                class="text-green-600 hover:text-green-700">
+                                                class="p-2 text-white bg-green-600 rounded-md">
                                             <i class="fas fa-shopping-cart"></i>
                                         </button>
                                     </div>
@@ -177,95 +178,14 @@ function toggleWishlist(button, productId) {
     </div>
 </section>
 
-<!-- Main section -->
-<div class="mt-72">
-    <div id="produk_section" class="flex justify-between items-start mb-12 px-4">
-        <div class="text-center flex-1">
-            <h1 id="scrollEskplor" class="font-bold text-4xl text-green-800 relative inline-block pb-4">
-                Rekomendasi Terbaik
-                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-green-600"></div>
-            </h1>
-        </div>
-    </div>
-
-    <!-- Product container -->
-    <div id="untukAndaProductsContainer" class="h-full p-2 sm:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <?php foreach ($produk_terbaru as $produk) : ?>
-            <!-- Product cards continue... -->
-            <?php 
-            if (!empty($produk['gambar'])) {
-                $gambarArr = explode(',', $produk['gambar']);
-                $gambar = trim($gambarArr[0]);
-            } else {
-                $gambar = 'default.jpg'; 
-            }
-            ?>
-            
-            <!-- Product Card -->
-            <div  class="product-card bg-white rounded-lg overflow-hidden shadow h-full flex flex-col">
-                <!-- Image and title link -->
-                <a href="<?= base_url('product/detail/' . $produk['id_product']) ?>" class="block">
-                    <div class="aspect-w-1 aspect-h-1">
-                        <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
-                             alt="<?= $produk['nama_product']; ?>" 
-                             class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-300">
-                    </div>
-                    <div class="p-3 sm:p-4">
-                        <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= $produk['nama_product']; ?></h3>
-                        <!-- Categories -->
-                        <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                            <?php if(isset($produk['categories']) && is_array($produk['categories'])): ?>
-                                <?php foreach ($produk['categories'] as $category) : ?>
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                        <?= $category['nama_kategori'] ?>
-                                    </span>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Separate div for price, rating, and buttons -->
-                <div class="p-3 sm:p-4 mt-auto">
-                    <div class="flex items-center mb-2">
-                        <!-- Rating stars -->
-                        <div class="flex text-yellow-400">
-                            <?php 
-                            $rating = isset($produk['rating']) ? floatval($produk['rating']) : 0;
-                            for ($i = 1; $i <= 5; $i++) : 
-                            ?>
-                                <?php if ($i <= $rating) : ?>
-                                    <i class="fas fa-star"></i>
-                                <?php elseif ($i - 0.5 <= $rating) : ?>
-                                    <i class="fas fa-star-half-alt"></i>
-                                <?php else : ?>
-                                    <i class="far fa-star"></i>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-                        </div>
-                        <span class="text-gray-500 text-xs ml-1">(<?= number_format($rating, 1) ?>)</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($produk['harga'], 0, ',', '.'); ?></span>
-                        <div class="flex gap-2">
-                            <button onclick="toggleWishlist(this, <?= $produk['id_product'] ?>)" 
-                                    class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $produk['is_wishlisted'] ? 'active' : '' ?>">
-                                <i class="fas fa-heart <?= $produk['is_wishlisted'] ? 'text-red-500' : '' ?>"></i>
-                            </button>
-                            <button onclick="handleCartClick(event, <?= $produk['id_product'] ?>)" 
-                                    class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
+<!-- Kategori Section -->
+ <section>
+  
+ </section>
 </div>
 </main>
 
-<?php $this->load->view('templates/footer'); ?>
+
 
 <script>
 function toggleUntukAndaFilter() {

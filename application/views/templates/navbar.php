@@ -18,16 +18,16 @@
                         <span>Beranda</span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="<?= base_url('plants/index') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
                         <i class="fas fa-leaf"></i>
                         <span>Koleksi</span>
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="<?= base_url('popular') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
-                        <i class="fas fa-star"></i>
-                        <span>Populer</span>
+                        <i class="fas fa-shop"></i>
+                        <span>Shop</span>
                     </a>
                 </li>
                 <li>
