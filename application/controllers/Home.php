@@ -6,12 +6,11 @@ class Home extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('wishlist_model');
+        $this->load->model('Product_model', 'product_model');
+        $this->load->model('Cart_model', 'cart_model');
     }
 
     public function index() {
-        $this->load->model('Product_model', 'product_model');
-        $this->load->model('Cart_model', 'cart_model');
-        
         $user_id = $this->session->userdata('logged_in') ? $this->session->userdata('id_user') : null;
         
         $data = [

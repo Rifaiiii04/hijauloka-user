@@ -172,12 +172,11 @@ class Product_model extends CI_Model {
         return $result ? $result->rating : 0;
     }
 
-    public function get_featured_products($limit = 10) {
-        $this->db->select('p.*, fp.position');
-        $this->db->from('product p');
-        $this->db->join('featured_products fp', 'p.id_product = fp.id_product');
-        $this->db->order_by('fp.position', 'ASC');
-        $this->db->limit($limit);
+    public function get_featured_products() {
+        $this->db->select('product.*, featured_products.position');
+        $this->db->from('featured_products');
+        $this->db->join('product', 'product.id_product = featured_products.id_product');
+        $this->db->order_by('featured_products.position', 'ASC');
         return $this->db->get()->result_array();
     }
 }
