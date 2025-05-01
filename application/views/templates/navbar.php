@@ -2,7 +2,8 @@
     <div class="flex items-center">
         <div class="logo flex md:flex items-center">
             <a href="<?= base_url() ?>" class="flex items-center gap-2 md:gap-3">
-                <span class="text-green-800 font-semibold text-base md:text-lg ml-8">HijauLoka</span>
+                <img src="<?= base_url('assets/img/logoicon.png') ?>" alt="" class="w-16 h-16">
+                <!-- <span class="text-green-800 font-semibold text-base md:text-lg ml-8">HijauLoka</span> -->
             </a>
         </div>
     </div>
