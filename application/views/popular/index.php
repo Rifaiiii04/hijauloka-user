@@ -123,10 +123,10 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
 
 <div class="mb-12 mt-28 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
-        Produk Populer
+        Katalog Tanaman
         <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
     </h1>
-    <p class="text-gray-600 mt-3">Tanaman hias yang paling banyak diminati</p>
+    <p class="text-gray-600 mt-3">Temukan berbagai koleksi tanaman hias pilihan untuk rumah Anda</p>
 </div>
 
 <!-- Category Filter -->
