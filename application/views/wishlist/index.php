@@ -80,3 +80,76 @@
         </div>
     <?php endif; ?>
 </div>
+
+<!-- Add this after the main container div -->
+<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
+        <div class="text-center mb-4">
+            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
+            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
+            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
+        </div>
+        <button onclick="closeCartNotification()" 
+                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
+            Lanjut Belanja
+        </button>
+    </div>
+</div>
+
+<!-- Add these styles -->
+<style>
+    @keyframes bounce-once {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .animate-bounce-once {
+        animation: bounce-once 0.5s ease-in-out;
+    }
+</style>
+
+<!-- Add these scripts -->
+<script>
+function handleCartClick(event, productId) {
+    event.preventDefault();
+    
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `id_product=${productId}&jumlah=1`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('cartNotification').classList.remove('hidden');
+            setTimeout(() => {
+                closeCartNotification();
+            }, 2000);
+        } else {
+            alert(data.message || 'Gagal menambahkan ke keranjang');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Gagal menambahkan ke keranjang');
+    });
+}
+
+function closeCartNotification() {
+    document.getElementById('cartNotification').classList.add('hidden');
+}
+
+// Close notification when clicking outside
+document.getElementById('cartNotification').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeCartNotification();
+    }
+});
+</script>
