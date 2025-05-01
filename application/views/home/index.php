@@ -158,10 +158,16 @@ function toggleWishlist(button, productId) {
                                 </div>
                                 <div class="mt-auto flex justify-between items-center flex-shrink-0">
                                     <span class="text-green-600 font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
+                                    <!-- In the featured products loop, update the wishlist button section -->
                                     <div class="flex gap-2">
+                                        <?php 
+                                        $is_wishlisted = $this->session->userdata('logged_in') ? 
+                                            $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $product['id_product']) : 
+                                            false;
+                                        ?>
                                         <button onclick="toggleWishlist(this, <?= $product['id_product'] ?>)" 
                                                 class="wishlist-btn p-2 text-gray-600 bg-gray-100 rounded-md hover:text-red-500">
-                                            <i class="fas fa-heart <?= isset($product['is_wishlisted']) && $product['is_wishlisted'] ? 'text-red-500' : '' ?>"></i>
+                                            <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
                                         </button>
                                         <button onclick="handleCartClick(event, <?= $product['id_product'] ?>)" 
                                                 class="p-2 text-white bg-green-600 rounded-md hover:bg-green-700 active:bg-green-800">
