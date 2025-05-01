@@ -126,50 +126,49 @@ function toggleWishlist(button, productId) {
     <h2 class="text-2xl font-bold text-green-800 mb-4">Featured Products</h2>
     <div class="relative">
         <div class="overflow-x-auto scrollbar-hide">
-            <div class="flex gap-4 pb-4">
+            <div class="flex gap-4 pb-4" style="min-width: min-content;">
                 <?php foreach ($featured_products as $product): ?>
                     <?php 
                     if (!empty($product['gambar'])) {
                         $gambarArr = explode(',', $product['gambar']);
-                        $gambar = trim($gambarArr[0]);
+                        $gambarProduct = trim($gambarArr[0]);
                     } else {
-                        $gambar = 'default.jpg'; 
+                        $gambarProduct = 'default.jpg'; 
                     }
                     ?>
-                    <div class="flex-none w-64">
+                    <div class="w-[280px] flex-shrink-0">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <a href="<?= base_url('product/detail/' . $product['id_product']) ?>">
-                                <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
+                                <img src="http://localhost/hijauloka/uploads/<?= $gambarProduct ?>" 
                                      alt="<?= $product['nama_product'] ?>"
                                      class="w-full h-48 object-cover">
-                                <div class="p-4">
-                                    <h3 class="font-semibold text-lg mb-2 line-clamp-1"><?= $product['nama_product'] ?></h3>
-                                    <div class="flex items-center mb-2">
-                                        <div class="flex text-yellow-400">
-                                            <?php 
-                                            $rating = floatval($product['rating'] ?? 0);
-                                            for ($i = 1; $i <= 5; $i++): 
-                                            ?>
-                                                <?php if ($i <= $rating): ?>
-                                                    <i class="fas fa-star"></i>
-                                                <?php elseif ($i - 0.5 <= $rating): ?>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                <?php else: ?>
-                                                    <i class="far fa-star"></i>
-                                                <?php endif; ?>
-                                            <?php endfor; ?>
-                                        </div>
-                                        <span class="text-gray-500 text-sm ml-1">(<?= number_format($rating, 1) ?>)</span>
+                            </a>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2"><?= $product['nama_product'] ?></h3>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        <?php 
+                                        $rating = floatval($product['rating'] ?? 0);
+                                        for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="far fa-star"></i>
+                                        <?php endfor; ?>
                                     </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-green-600 font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
+                                    <span class="text-gray-500 text-sm ml-2">(<?= number_format($rating, 1) ?>)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-green-600 font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
+                                    <div class="flex gap-2">
+                                        <button onclick="toggleWishlist(this, <?= $product['id_product'] ?>)" 
+                                                class="wishlist-btn text-gray-600 hover:text-red-500">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
                                         <button onclick="handleCartClick(event, <?= $product['id_product'] ?>)" 
-                                                class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors">
+                                                class="text-green-600 hover:text-green-700">
                                             <i class="fas fa-shopping-cart"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
