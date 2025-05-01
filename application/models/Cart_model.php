@@ -20,8 +20,12 @@ class Cart_model extends CI_Model {
     }
 
     public function get_cart_count($user_id) {
-        return $this->db->where('id_user', $user_id)
-                       ->from('cart')
-                       ->count_all_results();
+        if (!$user_id) return 0;
+        
+        $this->db->select('COUNT(id_cart) as total');
+        $this->db->where('id_user', $user_id);
+        $result = $this->db->get('cart')->row();
+        
+        return $result->total ?? 0;
     }
 }

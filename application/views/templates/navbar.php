@@ -45,12 +45,17 @@
             <!-- Desktop Icons -->
             <ul class="hidden md:flex items-center gap-3 text-white mr-4">
                 <!-- Cart -->
+                <!-- For desktop cart icon -->
                 <li>
                     <a href="<?= base_url('cart') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
                         <i class="fas fa-shopping-cart text-sm text-green-800"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                            <?= $this->cart_model->get_cart_count($this->session->userdata('id_user')) ?? '0' ?>
+                        </span>
                     </a>
                 </li>
+                
+                <!-- For mobile cart icon -->
     
                 <!-- Notifications -->
                 <li>

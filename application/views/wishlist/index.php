@@ -153,3 +153,32 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     }
 });
 </script>
+
+<!-- Add this script section -->
+<script>
+function removeFromWishlist(productId, button) {
+    fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Remove the entire product card from the wishlist
+        const productCard = button.closest('.bg-white');
+        productCard.remove();
+
+        // Check if there are any items left in the wishlist
+        const remainingItems = document.querySelectorAll('.grid > div').length;
+        if (remainingItems === 0) {
+            location.reload(); // Reload to show empty wishlist message
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to remove item from wishlist');
+    });
+}
+</script>

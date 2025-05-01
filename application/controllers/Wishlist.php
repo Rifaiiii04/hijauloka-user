@@ -8,6 +8,7 @@ class Wishlist extends CI_Controller {
         parent::__construct();
         $this->load->model('wishlist_model');
         $this->load->model('product_model');
+        $this->load->model('cart_model');
         $this->load->library('session');
         
         // Check if user is logged in

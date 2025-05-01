@@ -130,6 +130,6 @@ $autoload['language'] = array();
 | You can also supply an alternative model name to be assigned
 | in the controller:
 |
-|	$autoload['model'] = array('first_model' => 'first');
+|	$autoload['models'] = array('cart_model');
 */
-$autoload['model'] = array();
+$autoload['models'] = array('cart_model');
