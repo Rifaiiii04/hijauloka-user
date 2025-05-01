@@ -109,14 +109,78 @@ function toggleWishlist(button, productId) {
     .fa-heart {
         transition: color 0.2s ease-in-out;
     }
+
+    .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
 </style>
 
 <?php $this->load->view('templates/section')?>
 
-<!-- Untuk Anda section -->
+<!-- Top 10 Product -->
+<section class="px-4 py-8">
+    <h2 class="text-2xl font-bold text-green-800 mb-4">Featured Products</h2>
+    <div class="relative">
+        <div class="overflow-x-auto scrollbar-hide">
+            <div class="flex gap-4 pb-4">
+                <?php foreach ($featured_products as $product): ?>
+                    <?php 
+                    if (!empty($product['gambar'])) {
+                        $gambarArr = explode(',', $product['gambar']);
+                        $gambar = trim($gambarArr[0]);
+                    } else {
+                        $gambar = 'default.jpg'; 
+                    }
+                    ?>
+                    <div class="flex-none w-64">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <a href="<?= base_url('product/detail/' . $product['id_product']) ?>">
+                                <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
+                                     alt="<?= $product['nama_product'] ?>"
+                                     class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-lg mb-2 line-clamp-1"><?= $product['nama_product'] ?></h3>
+                                    <div class="flex items-center mb-2">
+                                        <div class="flex text-yellow-400">
+                                            <?php 
+                                            $rating = floatval($product['rating'] ?? 0);
+                                            for ($i = 1; $i <= 5; $i++): 
+                                            ?>
+                                                <?php if ($i <= $rating): ?>
+                                                    <i class="fas fa-star"></i>
+                                                <?php elseif ($i - 0.5 <= $rating): ?>
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                <?php else: ?>
+                                                    <i class="far fa-star"></i>
+                                                <?php endif; ?>
+                                            <?php endfor; ?>
+                                        </div>
+                                        <span class="text-gray-500 text-sm ml-1">(<?= number_format($rating, 1) ?>)</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-green-600 font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
+                                        <button onclick="handleCartClick(event, <?= $product['id_product'] ?>)" 
+                                                class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Main section -->
 <div class="mt-72">
-    <div class="flex justify-between items-start mb-12 px-4">
+    <div id="produk_section" class="flex justify-between items-start mb-12 px-4">
         <div class="text-center flex-1">
             <h1 id="scrollEskplor" class="font-bold text-4xl text-green-800 relative inline-block pb-4">
                 Rekomendasi Terbaik

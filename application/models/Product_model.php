@@ -6,12 +6,16 @@ class Product_model extends CI_Model {
         parent::__construct();
     }
 
-    public function get_latest_products() {
-        $this->db->select('id_product, nama_product, harga, gambar, rating, desk_product');
-        $this->db->from('product');
-        $this->db->where('stok >', 0);
-        $this->db->order_by('id_product', 'DESC');
-        $this->db->limit(10);
+    public function get_latest_products($limit = 8, $user_id = null) {
+        $this->db->select('p.*, IF(w.id_wishlist IS NOT NULL, 1, 0) as is_wishlisted');
+        $this->db->from('product p');
+        if ($user_id) {
+            $this->db->join('wishlist w', "w.id_product = p.id_product AND w.id_user = $user_id", 'left');
+        } else {
+            $this->db->join('wishlist w', "w.id_product = p.id_product AND w.id_user IS NULL", 'left');
+        }
+        $this->db->order_by('p.id_product', 'DESC');
+        $this->db->limit($limit);
         return $this->db->get()->result_array();
     }
 
@@ -166,5 +170,14 @@ class Product_model extends CI_Model {
         $this->db->where('stts_review', 'disetujui'); // Only count approved reviews
         $result = $this->db->get()->row();
         return $result ? $result->rating : 0;
+    }
+
+    public function get_featured_products($limit = 10) {
+        $this->db->select('p.*, fp.position');
+        $this->db->from('product p');
+        $this->db->join('featured_products fp', 'p.id_product = fp.id_product');
+        $this->db->order_by('fp.position', 'ASC');
+        $this->db->limit($limit);
+        return $this->db->get()->result_array();
     }
 }

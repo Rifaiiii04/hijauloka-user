@@ -9,26 +9,19 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $this->load->model('product_model');
-        $this->load->model('wishlist_model');
+        $this->load->model('Product_model', 'product_model');
+        $this->load->model('Cart_model', 'cart_model');
         
-        $data['produk_terbaru'] = $this->product_model->get_latest_products();
+        $user_id = $this->session->userdata('logged_in') ? $this->session->userdata('id_user') : null;
         
-        // Get categories and ratings for each product
-        foreach ($data['produk_terbaru'] as &$produk) {
-            $produk['categories'] = $this->product_model->get_product_categories($produk['id_product']);
-            $produk['rating'] = $this->product_model->get_product_rating($produk['id_product']);
-            
-            // Check if product is in user's wishlist
-            $produk['is_wishlisted'] = false;
-            if ($this->session->userdata('logged_in')) {
-                $produk['is_wishlisted'] = $this->wishlist_model->is_wishlisted(
-                    $this->session->userdata('id_user'),
-                    $produk['id_product']
-                );
-            }
-        }
+        $data = [
+            'cart_count' => $user_id ? $this->cart_model->get_cart_count($user_id) : 0,
+            'produk_terbaru' => $this->product_model->get_latest_products(8, $user_id),
+            'featured_products' => $this->product_model->get_featured_products()
+        ];
         
+        $this->load->view('templates/header', $data);
         $this->load->view('home/index', $data);
+        $this->load->view('templates/footer');
     }
 }

@@ -16,11 +16,11 @@
 					Bring <span class="text-green-800">Nature</span> Into Your Home
 				</h2>
 				<div class="w-72 md:w-96 mt-5 h-0.5 bg-black/60"></div>
-				<button
-					class="mt-5 bg-green-700 w-48 rounded-full text-white shadow-lg shadow-black/20 h-14 hover:bg-green-200 hover:text-green-700 font-semibold transition-all duration-300 cursor-pointer"
+				<a href="#produk_section"
+					class="mt-5 text-center flex items-center justify-center bg-green-700 w-48 rounded-full text-white shadow-lg shadow-black/20 h-14 hover:bg-green-200 hover:text-green-700 font-semibold transition-all duration-300 cursor-pointer"
 				>
 					Eksplor Sekarang
-				</button>
+				</a>
 			</div>
 			<div class="w-1/2  hidden md:flex">
 				<model-viewer
