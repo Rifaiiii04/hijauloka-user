@@ -126,7 +126,7 @@ function toggleWishlist(button, productId) {
     <h2 class="text-2xl font-bold text-center text-green-800 mb-4">Rekomendasi Terbaik</h2>
     <div class="relative">
         <div class="overflow-x-auto scrollbar-hide ">
-            <div class="flex gap-4 pb-4 bg-blue-500">
+            <div class="flex gap-4 pb-4">
                 <?php foreach ($featured_products as $product): ?>
                     <?php 
                     // Process image first
@@ -219,6 +219,27 @@ function toggleWishlist(button, productId) {
     </div>
 </section>
 </div>
+
+<!-- blog -->
+<section class="mt-10">
+    <div class="ml-10 flex justify-between" >
+        <div style="width: 500px;">
+        <h1 class="text-2xl font-bold text-green-800">Postingan Blog terbaru kami</h1>
+        <p class="text-black/70 text-sm mt-5">Sebuah blog bertujuan untuk menginformasikan, mendidik, menghibur tentang topik seputar tanaman</p>
+    </div>
+    <a href="#" class="w-32 p-3 h-10 text-white rounded-xl text-center flex justify-center items-center bg-green-800 mr-10">Lihat Semua</a>
+</div>
+<div class="w-full p-10 flex gap-5 ">
+    <div class="w-1/2 rounded-xl flex justify-center items-center">
+        <div class="bg-gradient-t from-green-600 to-green-600/20">a</div>
+        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="rounded-xl">
+    </div>
+    <div class="w-1/2 rounded-xl  flex justify-center items-center"">
+    <div class="bg-gradient-t from-green-600 to-green-600/20">a</div>
+        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="rounded-xl">
+    </div>
+</div>
+ </section>
 </main>
 
 
@@ -495,3 +516,4 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     }
 });
 </script>
+
