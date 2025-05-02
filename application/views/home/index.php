@@ -123,7 +123,7 @@ function toggleWishlist(button, productId) {
 
 <!-- Top 10 Product -->
 <section class="px-4 py-8">
-    <h2 class="text-2xl font-bold text-center text-green-800 mb-4">Rekomendasi Terbaik</h2>
+    <h2 class="text-2xl font-bold text-green-800 mb-4">Rekomendasi Terbaik</h2>
     <div class="relative">
         <div class="overflow-x-auto scrollbar-hide ">
             <div class="flex gap-4 pb-4">
@@ -186,7 +186,7 @@ function toggleWishlist(button, productId) {
 
 <!-- Kategori Section -->
 <section class="px-4 py-8">
-    <h2 class="text-2xl font-bold text-center text-green-800 mb-6">Kategori</h2>
+    <h2 class="text-2xl font-bold  text-green-800 mb-6">Kategori</h2>
     <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
         <!-- Plants Category -->
         <div class="relative h-[400px] bg-green-800 rounded-xl overflow-hidden">
@@ -229,16 +229,129 @@ function toggleWishlist(button, productId) {
     </div>
     <a href="#" class="w-32 p-3 h-10 text-white rounded-xl text-center flex justify-center items-center bg-green-800 mr-10">Lihat Semua</a>
 </div>
-<div class="w-full p-10 flex gap-5 ">
+<div class="w-full flex gap-3 mt-5 mx-auto relative" style="width: 1200px; height:400px;">
     <div class="w-1/2 rounded-xl flex justify-center items-center">
-        <div class="bg-gradient-t from-green-600 to-green-600/20">a</div>
-        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="rounded-xl">
+        <div class="absolute bg-gradient-to-t from-green-800 to-green-800/0 z-50 w-1/2 h-36 bottom-0 rounded-lg">
+            <h1 class="ml-5 text-2xl relative top-10 font-bold text-white w-96">Lorem Impsum Dolor Sit Amet</h1>
+            <p class="flex gap-10 relative top-14 text-white font-semibold text-lg ml-5">
+                <span>By Muhamad Rifai</span>
+                <span>20 Mei, 2023</span>
+            </p>
+        </div>
+        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="w-full h-full rounded-xl z-20">
     </div>
-    <div class="w-1/2 rounded-xl  flex justify-center items-center"">
-    <div class="bg-gradient-t from-green-600 to-green-600/20">a</div>
-        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="rounded-xl">
+    <div class="w-1/2 rounded-xl  flex justify-center items-center">
+    <div class="absolute bg-gradient-to-t from-green-800 to-green-800/0 z-50 w-1/2 h-36 bottom-0 rounded-lg">
+        <h1 class="ml-5 text-2xl relative top-10 font-bold text-white w-96">Lorem Impsum Dolor Sit Amet</h1>
+        <p class="flex gap-10 relative top-14 text-white font-semibold text-lg ml-5">
+            <span>By Muhamad Rifai</span>
+            <span>20 Mei, 2023</span>
+        </p>
+    </div>
+        <img src="<?= base_url('assets/img/news2.png') ?>" alt="" class="w-full h-full rounded-xl z-20">
     </div>
 </div>
+
+<!-- Small news section moved here -->
+<div class="flex mx-auto mt-5 items-center justify-center" style="width: 1350px; height: 150px; padding: 5px;">
+    <div class="flex gap-3">   
+        <!-- card -->
+        <div style="width:180px;" class="rounded-xl">
+            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
+        </div>
+        <div>
+            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
+            <p class="mt-6 flex gap-5 text-sm">
+                <span>By Dea Amelia</span>
+                <span>•</span>
+                <span>18 April, 2025</span>
+            </p>
+        </div>
+        <div style="width:180px;" class="rounded-xl">
+            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
+        </div>
+        <div>
+            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
+            <p class="mt-6 flex gap-5 text-sm">
+                <span>By Dea Amelia</span>
+                <span>•</span>
+                <span>18 April, 2025</span>
+            </p>
+        </div>
+        <div style="width:180px;" class="rounded-xl">
+            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
+        </div>
+        <div>
+            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
+            <p class="mt-6 flex gap-5 text-sm">
+                <span>By Dea Amelia</span>
+                <span>•</span>
+                <span>18 April, 2025</span>
+            </p>
+        </div>
+    </div> 
+</div>
+<!-- After the blog section, add a "Why Choose Us" section -->
+<section class="py-16 bg-green-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-green-800 mb-12">Mengapa Memilih HijauLoka?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Feature 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-leaf text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-800">Tanaman Berkualitas</h3>
+                <p class="text-gray-600">Semua tanaman kami dirawat dengan teliti dan dipilih dari sumber terbaik untuk memastikan kesehatan dan pertumbuhan optimal.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-truck text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-800">Pengiriman Aman</h3>
+                <p class="text-gray-600">Kami menggunakan metode pengiriman khusus untuk memastikan tanaman Anda tiba dalam kondisi segar dan sehat.</p>
+            </div>
+            
+            <!-- Feature 3 - Changed from Dukungan Ahli -->
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-800">Garansi Tanaman</h3>
+                <p class="text-gray-600">Kami memberikan garansi penggantian untuk tanaman yang tidak tumbuh dengan baik dalam 14 hari setelah pembelian.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add a call-to-action section -->
+<section class="py-16 bg-green-800 text-white relative overflow-hidden">
+    <!-- Decorative plant elements -->
+    <div class="absolute -left-16 -bottom-10 opacity-10">
+        <i class="fas fa-leaf text-9xl transform rotate-45"></i>
+    </div>
+    <div class="absolute right-16 top-10 opacity-10">
+        <i class="fas fa-seedling text-8xl"></i>
+    </div>
+    
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <h2 class="text-4xl font-bold mb-6">Hijaukan Rumah Anda Sekarang!</h2>
+        <p class="text-lg mb-8 max-w-2xl mx-auto">Temukan koleksi tanaman pilihan kami untuk menciptakan ruangan yang lebih segar, sehat, dan indah untuk Anda dan keluarga.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="<?= base_url('popular') ?>" class="inline-block bg-white text-green-800 font-bold px-8 py-4 rounded-lg hover:bg-green-100 transition-all transform hover:-translate-y-1 hover:shadow-lg">
+                <i class="fas fa-shopping-cart mr-2"></i> Belanja Sekarang
+            </a>
+            <!-- <a href="<?= base_url('category') ?>" class="inline-block bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-lg hover:bg-white/10 transition-all transform hover:-translate-y-1 hover:shadow-lg">
+                <i class="fas fa-th-large mr-2"></i> Lihat Kategori
+            </a> -->
+        </div>
+    </div>
+</section>
+
+
  </section>
 </main>
 
