@@ -184,36 +184,164 @@ function toggleWishlist(button, productId) {
     </div>
 </section>
 
-<!-- Kategori Section -->
-<section class="px-4 py-8">
-    <h2 class="text-2xl font-bold  text-green-800 mb-6">Kategori</h2>
-    <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
-        <!-- Plants Category -->
-        <div class="relative h-[400px] bg-green-800 rounded-xl overflow-hidden">
-            <a href="<?= base_url('category/plants') ?>" class="block h-full">
-                <div class="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 class="text-xl font-semibold text-white">Plants</h3>
-                </div>
+<!-- Kategori Section - Improved UI -->
+<section class="px-4 py-12 ">
+    <div class="container mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-green-800 mb-2">Kategori Tanaman</h2>
+                <p class="text-gray-600">Temukan berbagai jenis tanaman sesuai kebutuhan Anda</p>
+            </div>
+            <a href="<?= base_url('category') ?>" class="text-green-700 hover:text-green-900 font-medium flex items-center">
+                Lihat Semua <i class="fas fa-arrow-right ml-2"></i>
             </a>
         </div>
-
-        <div class="grid grid-rows-2 gap-4">
-            <!-- Seeds Category -->
-            <div class="relative h-[190px] bg-green-800 rounded-xl overflow-hidden">
-                <a href="<?= base_url('category/seeds') ?>" class="block h-full">
-                    <div class="absolute bottom-0 left-0 right-0 p-4">
-                        <h3 class="text-xl font-semibold text-white">Seeds</h3>
-                    </div>
-                </a>
+        
+        <div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <!-- Plants Category -->
+            <div class="relative h-[400px] rounded-xl overflow-hidden shadow-lg group">
+                <img src="<?= base_url('assets/img/plantcategory.png') ?>" alt="Plants" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-10px]">
+                    <h3 class="text-2xl font-bold text-white mb-2">Plants</h3>
+                    <p class="text-green-100 mb-4">Koleksi tanaman hias indoor & outdoor</p>
+                    <a href="<?= base_url('category/plants') ?>" class="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
+                        <i class="fas fa-leaf mr-2"></i> Jelajahi
+                    </a>
+                </div>
             </div>
 
-            <!-- Pots Category -->
-            <div class="relative h-[190px] bg-green-800 rounded-xl overflow-hidden">
-                <a href="<?= base_url('category/pots') ?>" class="block h-full">
-                    <div class="absolute bottom-0 left-0 right-0 p-4">
-                        <h3 class="text-xl font-semibold text-white">Pots</h3>
+            <div class="grid grid-rows-2 gap-6">
+                <!-- Seeds Category -->
+                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group">
+                    <img src="<?= base_url('assets/img/seedscategory.png') ?>" alt="Seeds" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
+                        <h3 class="text-xl font-bold text-white mb-1">Seeds</h3>
+                        <a href="<?= base_url('category/seeds') ?>" class="inline-block text-green-100 hover:text-white transition-colors">
+                            <i class="fas fa-seedling mr-1"></i> Lihat Koleksi
+                        </a>
                     </div>
-                </a>
+                </div>
+
+                <!-- Pots Category -->
+                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group">
+                    <img src="<?= base_url('assets/img/category-pots.png') ?>" alt="Pots" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
+                        <h3 class="text-xl font-bold text-white mb-1">Pots</h3>
+                        <a href="<?= base_url('category/pots') ?>" class="inline-block text-green-100 hover:text-white transition-colors">
+                            <i class="fas fa-box mr-1"></i> Lihat Koleksi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Section - Improved UI -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+            <div class="max-w-xl">
+                <h2 class="text-3xl font-bold text-green-800 mb-3">Postingan Blog Terbaru</h2>
+                <p class="text-gray-600">Tips perawatan tanaman, inspirasi dekorasi, dan panduan berkebun untuk membantu Anda merawat tanaman dengan baik</p>
+            </div>
+            <a href="#" class="mt-4 md:mt-0 px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center">
+                <span>Lihat Semua</span>
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- Featured Blog Posts -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Featured Post 1 -->
+            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative">
+                <img src="<?= base_url('assets/img/news1.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8">
+                    <div class="flex items-center text-green-100 mb-3">
+                        <!-- <img src="<?= base_url('assets/img/avatar.jpg') ?>" alt="Author" class="w-8 h-8 rounded-full mr-3 border-2 border-white"> -->
+                        <span>By Muhamad Rifai</span>
+                        <span class="mx-3">•</span>
+                        <span>20 Mei, 2023</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">Cara Merawat Tanaman Hias Indoor dengan Mudah</h3>
+                    <p class="text-green-100 mb-4 line-clamp-2">Pelajari tips dan trik merawat tanaman hias indoor agar tetap segar dan indah sepanjang tahun.</p>
+                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors">
+                        <span>Baca Selengkapnya</span>
+                        <i class="fas fa-long-arrow-alt-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Featured Post 2 -->
+            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative">
+                <img src="<?= base_url('assets/img/news2.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8">
+                    <div class="flex items-center text-green-100 mb-3">
+                        <!-- <img src="<?= base_url('assets/img/avatar.jpg') ?>" alt="Author" class="w-8 h-8 rounded-full mr-3 border-2 border-white"> -->
+                        <span>By Muhamad Rifai</span>
+                        <span class="mx-3">•</span>
+                        <span>20 Mei, 2023</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">10 Tanaman yang Cocok untuk Pemula</h3>
+                    <p class="text-green-100 mb-4 line-clamp-2">Baru memulai hobi berkebun? Ini dia 10 tanaman yang mudah dirawat dan cocok untuk pemula.</p>
+                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors">
+                        <span>Baca Selengkapnya</span>
+                        <i class="fas fa-long-arrow-alt-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Small Blog Posts -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Small Post 1 -->
+            <div class="flex gap-4 group">
+                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">Panduan Lengkap Menanam Sayuran di Rumah</h3>
+                    <p class="text-sm text-gray-500 flex items-center">
+                        <span>By Dea Amelia</span>
+                        <span class="mx-2">•</span>
+                        <span>18 April, 2023</span>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Small Post 2 -->
+            <div class="flex gap-4 group">
+                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">5 Tanaman Pembersih Udara untuk Kamar Tidur</h3>
+                    <p class="text-sm text-gray-500 flex items-center">
+                        <span>By Dea Amelia</span>
+                        <span class="mx-2">•</span>
+                        <span>12 April, 2023</span>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Small Post 3 -->
+            <div class="flex gap-4 group">
+                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">Cara Mengatasi Hama pada Tanaman Hias</h3>
+                    <p class="text-sm text-gray-500 flex items-center">
+                        <span>By Dea Amelia</span>
+                        <span class="mx-2">•</span>
+                        <span>5 April, 2023</span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -222,77 +350,8 @@ function toggleWishlist(button, productId) {
 
 <!-- blog -->
 <section class="mt-10">
-    <div class="ml-10 flex justify-between" >
-        <div style="width: 500px;">
-        <h1 class="text-2xl font-bold text-green-800">Postingan Blog terbaru kami</h1>
-        <p class="text-black/70 text-sm mt-5">Sebuah blog bertujuan untuk menginformasikan, mendidik, menghibur tentang topik seputar tanaman</p>
-    </div>
-    <a href="#" class="w-32 p-3 h-10 text-white rounded-xl text-center flex justify-center items-center bg-green-800 mr-10">Lihat Semua</a>
-</div>
-<div class="w-full flex gap-3 mt-5 mx-auto relative" style="width: 1200px; height:400px;">
-    <div class="w-1/2 rounded-xl flex justify-center items-center">
-        <div class="absolute bg-gradient-to-t from-green-800 to-green-800/0 z-50 w-1/2 h-36 bottom-0 rounded-lg">
-            <h1 class="ml-5 text-2xl relative top-10 font-bold text-white w-96">Lorem Impsum Dolor Sit Amet</h1>
-            <p class="flex gap-10 relative top-14 text-white font-semibold text-lg ml-5">
-                <span>By Muhamad Rifai</span>
-                <span>20 Mei, 2023</span>
-            </p>
-        </div>
-        <img src="<?= base_url('assets/img/news1.png') ?>" alt="" class="w-full h-full rounded-xl z-20">
-    </div>
-    <div class="w-1/2 rounded-xl  flex justify-center items-center">
-    <div class="absolute bg-gradient-to-t from-green-800 to-green-800/0 z-50 w-1/2 h-36 bottom-0 rounded-lg">
-        <h1 class="ml-5 text-2xl relative top-10 font-bold text-white w-96">Lorem Impsum Dolor Sit Amet</h1>
-        <p class="flex gap-10 relative top-14 text-white font-semibold text-lg ml-5">
-            <span>By Muhamad Rifai</span>
-            <span>20 Mei, 2023</span>
-        </p>
-    </div>
-        <img src="<?= base_url('assets/img/news2.png') ?>" alt="" class="w-full h-full rounded-xl z-20">
-    </div>
-</div>
-
-<!-- Small news section moved here -->
-<div class="flex mx-auto mt-5 items-center justify-center" style="width: 1350px; height: 150px; padding: 5px;">
-    <div class="flex gap-3">   
-        <!-- card -->
-        <div style="width:180px;" class="rounded-xl">
-            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
-        </div>
-        <div>
-            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
-            <p class="mt-6 flex gap-5 text-sm">
-                <span>By Dea Amelia</span>
-                <span>•</span>
-                <span>18 April, 2025</span>
-            </p>
-        </div>
-        <div style="width:180px;" class="rounded-xl">
-            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
-        </div>
-        <div>
-            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
-            <p class="mt-6 flex gap-5 text-sm">
-                <span>By Dea Amelia</span>
-                <span>•</span>
-                <span>18 April, 2025</span>
-            </p>
-        </div>
-        <div style="width:180px;" class="rounded-xl">
-            <img src="<?= base_url('assets/img/news1.png')?>" alt="" class="w-full rounded-xl">
-        </div>
-        <div>
-            <h1 class="font-semibold text-black/40" style="width:250px;">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
-            <p class="mt-6 flex gap-5 text-sm">
-                <span>By Dea Amelia</span>
-                <span>•</span>
-                <span>18 April, 2025</span>
-            </p>
-        </div>
-    </div> 
-</div>
 <!-- After the blog section, add a "Why Choose Us" section -->
-<section class="py-16 bg-green-50">
+<section class="py-16 ">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center text-green-800 mb-12">Mengapa Memilih HijauLoka?</h2>
         
