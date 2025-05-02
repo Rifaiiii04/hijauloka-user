@@ -185,9 +185,39 @@ function toggleWishlist(button, productId) {
 </section>
 
 <!-- Kategori Section -->
- <section>
-  
- </section>
+<section class="px-4 py-8">
+    <h2 class="text-2xl font-bold text-center text-green-800 mb-6">Kategori</h2>
+    <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
+        <!-- Plants Category -->
+        <div class="relative h-[400px] bg-green-800 rounded-xl overflow-hidden">
+            <a href="<?= base_url('category/plants') ?>" class="block h-full">
+                <div class="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 class="text-xl font-semibold text-white">Plants</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="grid grid-rows-2 gap-4">
+            <!-- Seeds Category -->
+            <div class="relative h-[190px] bg-green-800 rounded-xl overflow-hidden">
+                <a href="<?= base_url('category/seeds') ?>" class="block h-full">
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-xl font-semibold text-white">Seeds</h3>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Pots Category -->
+            <div class="relative h-[190px] bg-green-800 rounded-xl overflow-hidden">
+                <a href="<?= base_url('category/pots') ?>" class="block h-full">
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-xl font-semibold text-white">Pots</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 </main>
 
