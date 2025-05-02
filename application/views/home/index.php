@@ -2,7 +2,7 @@
 
 <!-- Login Prompt Modal - Place this right after header -->
 <div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
+    <div class=" rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
         <div class="text-center mb-6">
             <i class="fas fa-lock text-4xl text-green-600 mb-4"></i>
             <h3 class="text-2xl font-semibold text-gray-900">Login Required</h3>
@@ -184,54 +184,61 @@ function toggleWishlist(button, productId) {
     </div>
 </section>
 
-<!-- Kategori Section - Improved UI -->
-<section class="px-4 py-12 ">
+<!-- Kategori Section - Enhanced UX -->
+<section class="px-4 py-12">
     <div class="container mx-auto">
         <div class="flex items-center justify-between mb-8">
             <div>
                 <h2 class="text-3xl font-bold text-green-800 mb-2">Kategori Tanaman</h2>
                 <p class="text-gray-600">Temukan berbagai jenis tanaman sesuai kebutuhan Anda</p>
             </div>
-            <a href="<?= base_url('category') ?>" class="text-green-700 hover:text-green-900 font-medium flex items-center">
-                Lihat Semua <i class="fas fa-arrow-right ml-2"></i>
+            <a href="<?= base_url('category') ?>" class="text-green-700 hover:text-green-900 font-medium flex items-center group transition-all duration-300">
+                <span>Lihat Semua</span>
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
         
-        <div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <!-- Plants Category -->
-            <div class="relative h-[400px] rounded-xl overflow-hidden shadow-lg group">
+            <div class="relative h-[400px] rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
                 <img src="<?= base_url('assets/img/plantcategory.png') ?>" alt="Plants" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-10px]">
                     <h3 class="text-2xl font-bold text-white mb-2">Plants</h3>
                     <p class="text-green-100 mb-4">Koleksi tanaman hias indoor & outdoor</p>
-                    <a href="<?= base_url('category/plants') ?>" class="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
-                        <i class="fas fa-leaf mr-2"></i> Jelajahi
+                    <a href="<?= base_url('category/plants') ?>" class="inline-flex items-center bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
+                        <i class="fas fa-leaf mr-2"></i> 
+                        <span>Jelajahi</span>
+                        <i class="fas fa-chevron-right ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
                     </a>
                 </div>
             </div>
 
             <div class="grid grid-rows-2 gap-6">
                 <!-- Seeds Category -->
-                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group">
+                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
                     <img src="<?= base_url('assets/img/seedscategory.png') ?>" alt="Seeds" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                         <h3 class="text-xl font-bold text-white mb-1">Seeds</h3>
-                        <a href="<?= base_url('category/seeds') ?>" class="inline-block text-green-100 hover:text-white transition-colors">
-                            <i class="fas fa-seedling mr-1"></i> Lihat Koleksi
+                        <a href="<?= base_url('category/seeds') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
+                            <i class="fas fa-seedling mr-1"></i> 
+                            <span>Lihat Koleksi</span>
+                            <i class="fas fa-chevron-right ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Pots Category -->
-                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group">
+                <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
                     <img src="<?= base_url('assets/img/category-pots.png') ?>" alt="Pots" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                         <h3 class="text-xl font-bold text-white mb-1">Pots</h3>
-                        <a href="<?= base_url('category/pots') ?>" class="inline-block text-green-100 hover:text-white transition-colors">
-                            <i class="fas fa-box mr-1"></i> Lihat Koleksi
+                        <a href="<?= base_url('category/pots') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
+                            <i class="fas fa-box mr-1"></i> 
+                            <span>Lihat Koleksi</span>
+                            <i class="fas fa-chevron-right ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
                         </a>
                     </div>
                 </div>
@@ -240,58 +247,56 @@ function toggleWishlist(button, productId) {
     </div>
 </section>
 
-<!-- Blog Section - Improved UI -->
-<section class="py-16">
+<!-- Blog Section - Enhanced UX -->
+<section class="py-16 ">
     <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
             <div class="max-w-xl">
                 <h2 class="text-3xl font-bold text-green-800 mb-3">Postingan Blog Terbaru</h2>
                 <p class="text-gray-600">Tips perawatan tanaman, inspirasi dekorasi, dan panduan berkebun untuk membantu Anda merawat tanaman dengan baik</p>
             </div>
-            <a href="#" class="mt-4 md:mt-0 px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center">
+            <a href="#" class="mt-4 md:mt-0 px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center group">
                 <span>Lihat Semua</span>
-                <i class="fas fa-arrow-right ml-2"></i>
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
         
         <!-- Featured Blog Posts -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <!-- Featured Post 1 -->
-            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative">
+            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
                 <img src="<?= base_url('assets/img/news1.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8">
+                <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                     <div class="flex items-center text-green-100 mb-3">
-                        <!-- <img src="<?= base_url('assets/img/avatar.jpg') ?>" alt="Author" class="w-8 h-8 rounded-full mr-3 border-2 border-white"> -->
                         <span>By Muhamad Rifai</span>
                         <span class="mx-3">•</span>
                         <span>20 Mei, 2023</span>
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">Cara Merawat Tanaman Hias Indoor dengan Mudah</h3>
                     <p class="text-green-100 mb-4 line-clamp-2">Pelajari tips dan trik merawat tanaman hias indoor agar tetap segar dan indah sepanjang tahun.</p>
-                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors">
+                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
                         <span>Baca Selengkapnya</span>
-                        <i class="fas fa-long-arrow-alt-right ml-2"></i>
+                        <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
                     </a>
                 </div>
             </div>
             
             <!-- Featured Post 2 -->
-            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative">
+            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
                 <img src="<?= base_url('assets/img/news2.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8">
+                <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                     <div class="flex items-center text-green-100 mb-3">
-                        <!-- <img src="<?= base_url('assets/img/avatar.jpg') ?>" alt="Author" class="w-8 h-8 rounded-full mr-3 border-2 border-white"> -->
                         <span>By Muhamad Rifai</span>
                         <span class="mx-3">•</span>
                         <span>20 Mei, 2023</span>
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">10 Tanaman yang Cocok untuk Pemula</h3>
                     <p class="text-green-100 mb-4 line-clamp-2">Baru memulai hobi berkebun? Ini dia 10 tanaman yang mudah dirawat dan cocok untuk pemula.</p>
-                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors">
+                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
                         <span>Baca Selengkapnya</span>
-                        <i class="fas fa-long-arrow-alt-right ml-2"></i>
+                        <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
                     </a>
                 </div>
             </div>
@@ -300,7 +305,7 @@ function toggleWishlist(button, productId) {
         <!-- Small Blog Posts -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Small Post 1 -->
-            <div class="flex gap-4 group">
+            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
                     <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
@@ -311,11 +316,15 @@ function toggleWishlist(button, productId) {
                         <span class="mx-2">•</span>
                         <span>18 April, 2023</span>
                     </p>
+                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>Baca</span>
+                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
             </div>
             
             <!-- Small Post 2 -->
-            <div class="flex gap-4 group">
+            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
                     <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
@@ -326,11 +335,15 @@ function toggleWishlist(button, productId) {
                         <span class="mx-2">•</span>
                         <span>12 April, 2023</span>
                     </p>
+                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>Baca</span>
+                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
             </div>
             
             <!-- Small Post 3 -->
-            <div class="flex gap-4 group">
+            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
                     <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
@@ -341,351 +354,168 @@ function toggleWishlist(button, productId) {
                         <span class="mx-2">•</span>
                         <span>5 April, 2023</span>
                     </p>
+                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>Baca</span>
+                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-</div>
 
-<!-- blog -->
-<section class="mt-10">
-<!-- After the blog section, add a "Why Choose Us" section -->
-<section class="py-16 ">
+<!-- Why Choose Us Section - Enhanced UX -->
+<section class="py-16 bg-gray-50">
     <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-green-800 mb-12">Mengapa Memilih HijauLoka?</h2>
+        <h2 class="text-3xl font-bold text-center text-green-800 mb-4">Mengapa Memilih HijauLoka?</h2>
+        <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Kami berkomitmen memberikan pengalaman berbelanja tanaman terbaik dengan kualitas produk dan layanan yang terpercaya</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <!-- Feature 1 -->
-            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full -mr-12 -mt-12 transition-all duration-300 group-hover:scale-150"></div>
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 group-hover:bg-green-200 transition-colors">
                     <i class="fas fa-leaf text-2xl text-green-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800">Tanaman Berkualitas</h3>
-                <p class="text-gray-600">Semua tanaman kami dirawat dengan teliti dan dipilih dari sumber terbaik untuk memastikan kesehatan dan pertumbuhan optimal.</p>
+                <h3 class="text-xl font-semibold mb-3 text-green-800 relative z-10">Tanaman Berkualitas</h3>
+                <p class="text-gray-600 relative z-10">Semua tanaman kami dirawat dengan teliti dan dipilih dari sumber terbaik untuk memastikan kesehatan dan pertumbuhan optimal.</p>
+                <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity relative z-10">
+                    <a href="#" class="text-green-600 inline-flex items-center">
+                        <span>Pelajari Lebih Lanjut</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
             </div>
             
             <!-- Feature 2 -->
-            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full -mr-12 -mt-12 transition-all duration-300 group-hover:scale-150"></div>
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 group-hover:bg-green-200 transition-colors">
                     <i class="fas fa-truck text-2xl text-green-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800">Pengiriman Aman</h3>
-                <p class="text-gray-600">Kami menggunakan metode pengiriman khusus untuk memastikan tanaman Anda tiba dalam kondisi segar dan sehat.</p>
+                <h3 class="text-xl font-semibold mb-3 text-green-800 relative z-10">Pengiriman Aman</h3>
+                <p class="text-gray-600 relative z-10">Kami menggunakan metode pengiriman khusus untuk memastikan tanaman Anda tiba dalam kondisi segar dan sehat.</p>
+                <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity relative z-10">
+                    <a href="#" class="text-green-600 inline-flex items-center">
+                        <span>Pelajari Lebih Lanjut</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
             </div>
             
-            <!-- Feature 3 - Changed from Dukungan Ahli -->
-            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <!-- Feature 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-md text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full -mr-12 -mt-12 transition-all duration-300 group-hover:scale-150"></div>
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 group-hover:bg-green-200 transition-colors">
                     <i class="fas fa-shield-alt text-2xl text-green-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800">Garansi Tanaman</h3>
-                <p class="text-gray-600">Kami memberikan garansi penggantian untuk tanaman yang tidak tumbuh dengan baik dalam 14 hari setelah pembelian.</p>
+                <h3 class="text-xl font-semibold mb-3 text-green-800 relative z-10">Garansi Tanaman</h3>
+                <p class="text-gray-600 relative z-10">Kami memberikan garansi penggantian untuk tanaman yang tidak tumbuh dengan baik dalam 14 hari setelah pembelian.</p>
+                <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity relative z-10">
+                    <a href="#" class="text-green-600 inline-flex items-center">
+                        <span>Pelajari Lebih Lanjut</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Add a call-to-action section -->
-<section class="py-16 bg-green-800 text-white relative overflow-hidden">
-    <!-- Decorative plant elements -->
-    <div class="absolute -left-16 -bottom-10 opacity-10">
+<!-- Call-to-action Section - Enhanced UX -->
+<section class="py-16 bg-gradient-to-br from-green-800 to-green-900 text-white relative overflow-hidden">
+    <!-- Decorative plant elements with animation -->
+    <div class="absolute -left-16 -bottom-10 opacity-10 animate-float-slow">
         <i class="fas fa-leaf text-9xl transform rotate-45"></i>
     </div>
-    <div class="absolute right-16 top-10 opacity-10">
+    <div class="absolute right-16 top-10 opacity-10 animate-float">
         <i class="fas fa-seedling text-8xl"></i>
+    </div>
+    <div class="absolute left-1/4 top-1/3 opacity-5 animate-float-reverse">
+        <i class="fas fa-spa text-6xl"></i>
     </div>
     
     <div class="container mx-auto px-4 text-center relative z-10">
-        <h2 class="text-4xl font-bold mb-6">Hijaukan Rumah Anda Sekarang!</h2>
-        <p class="text-lg mb-8 max-w-2xl mx-auto">Temukan koleksi tanaman pilihan kami untuk menciptakan ruangan yang lebih segar, sehat, dan indah untuk Anda dan keluarga.</p>
+        <span class="inline-block px-4 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-4">Mulai Perjalanan Hijau Anda</span>
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Hijaukan Rumah Anda <span class="text-green-300">Sekarang!</span></h2>
+        <p class="text-lg mb-8 max-w-2xl mx-auto text-green-50">Temukan koleksi tanaman pilihan kami untuk menciptakan ruangan yang lebih segar, sehat, dan indah untuk Anda dan keluarga.</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="<?= base_url('popular') ?>" class="inline-block bg-white text-green-800 font-bold px-8 py-4 rounded-lg hover:bg-green-100 transition-all transform hover:-translate-y-1 hover:shadow-lg">
-                <i class="fas fa-shopping-cart mr-2"></i> Belanja Sekarang
+            <a href="<?= base_url('popular') ?>" class="inline-block bg-white text-green-800 font-bold px-8 py-4 rounded-lg hover:bg-green-100 transition-all transform hover:-translate-y-1 hover:shadow-lg group">
+                <div class="flex items-center justify-center">
+                    <i class="fas fa-shopping-cart mr-2 group-hover:animate-bounce-once"></i>
+                    <span>Belanja Sekarang</span>
+                </div>
             </a>
             <!-- <a href="<?= base_url('category') ?>" class="inline-block bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-lg hover:bg-white/10 transition-all transform hover:-translate-y-1 hover:shadow-lg">
-                <i class="fas fa-th-large mr-2"></i> Lihat Kategori
+                <div class="flex items-center justify-center">
+                    <i class="fas fa-th-large mr-2"></i>
+                    <span>Lihat Kategori</span>
+                </div>
             </a> -->
+        </div>
+        
+        <!-- Testimonial preview -->
+        <div class="mt-12 max-w-4xl mx-auto bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+            <div class="flex items-center justify-center mb-4">
+                <!-- <div class="flex -space-x-2">
+                    <img src="<?= base_url('assets/img/avatar1.jpg') ?>" alt="Customer" class="w-10 h-10 rounded-full border-2 border-green-500">
+                    <img src="<?= base_url('assets/img/avatar2.jpg') ?>" alt="Customer" class="w-10 h-10 rounded-full border-2 border-green-500">
+                    <img src="<?= base_url('assets/img/avatar3.jpg') ?>" alt="Customer" class="w-10 h-10 rounded-full border-2 border-green-500">
+                </div> -->
+                <!-- <div class="ml-4 text-left">
+                    <p class="text-sm font-medium">Bergabung dengan <span class="font-bold">1000+</span> pelanggan puas</p>
+                    <div class="flex text-yellow-300 mt-1">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span class="ml-1 text-white text-xs">(4.9/5)</span>
+                    </div>
+                </div> -->
+            </div>
+            <p class="italic">"Tanaman dari HijauLoka selalu dalam kondisi prima. Pengiriman cepat dan aman. Sangat merekomendasikan untuk pecinta tanaman!"</p>
         </div>
     </div>
 </section>
 
-
- </section>
-</main>
-
-
-
-<script>
-function toggleUntukAndaFilter() {
-    const filterMenu = document.getElementById('untukAndaFilterMenu');
-    filterMenu.classList.toggle('hidden');
-}
-
-// --- Price Slider and Input Synchronization ---
-const minPriceInput = document.getElementById('minPrice');
-const maxPriceInput = document.getElementById('maxPrice');
-const minPriceSlider = document.getElementById('minPriceSlider');
-const maxPriceSlider = document.getElementById('maxPriceSlider');
-const minPriceLabel = document.getElementById('minPriceLabel');
-const maxPriceLabel = document.getElementById('maxPriceLabel');
-const priceGap = 10000; // Minimum gap between min and max
-
-function formatCurrency(value) {
-    return 'Rp' + parseInt(value).toLocaleString('id-ID');
-}
-
-function setupPriceSync() {
-    // Initial label setup
-    minPriceLabel.textContent = formatCurrency(minPriceSlider.value);
-    maxPriceLabel.textContent = formatCurrency(maxPriceSlider.value);
-
-    minPriceSlider.addEventListener('input', () => {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
-
-        if (maxVal - minVal < priceGap) {
-            minVal = maxVal - priceGap;
-            if (minVal < parseInt(minPriceSlider.min)) {
-                minVal = parseInt(minPriceSlider.min);
-            }
-            minPriceSlider.value = minVal;
-        }
-        minPriceInput.value = minVal;
-        minPriceLabel.textContent = formatCurrency(minVal);
-        // applyCombinedFilters(); // Optional: Apply filters immediately on slider change
-    });
-
-    maxPriceSlider.addEventListener('input', () => {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
-
-        if (maxVal - minVal < priceGap) {
-            maxVal = minVal + priceGap;
-             if (maxVal > parseInt(maxPriceSlider.max)) {
-                maxVal = parseInt(maxPriceSlider.max);
-            }
-            maxPriceSlider.value = maxVal;
-        }
-        maxPriceInput.value = maxVal;
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-        // applyCombinedFilters(); // Optional: Apply filters immediately on slider change
-    });
-
-    minPriceInput.addEventListener('input', () => {
-        let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value);
-
-        if (minVal < parseInt(minPriceSlider.min)) minVal = parseInt(minPriceSlider.min);
-        if (maxVal - minVal < priceGap) {
-            minVal = maxVal - priceGap;
-            if (minVal < parseInt(minPriceSlider.min)) minVal = parseInt(minPriceSlider.min);
-        }
-        if (minVal > parseInt(minPriceSlider.max)) minVal = parseInt(minPriceSlider.max) - priceGap;
-
-        minPriceSlider.value = minVal;
-        minPriceInput.value = minVal; // Correct the input if needed
-        minPriceLabel.textContent = formatCurrency(minVal);
-        // applyCombinedFilters(); // Optional: Apply filters immediately on input change
-    });
-
-    maxPriceInput.addEventListener('input', () => {
-        let minVal = parseInt(minPriceInput.value);
-        let maxVal = parseInt(maxPriceInput.value) || 1000000;
-
-        if (maxVal > parseInt(maxPriceSlider.max)) maxVal = parseInt(maxPriceSlider.max);
-        if (maxVal - minVal < priceGap) {
-            maxVal = minVal + priceGap;
-             if (maxVal > parseInt(maxPriceSlider.max)) maxVal = parseInt(maxPriceSlider.max);
-        }
-         if (maxVal < parseInt(maxPriceSlider.min)) maxVal = parseInt(maxPriceSlider.min) + priceGap;
-
-        maxPriceSlider.value = maxVal;
-        maxPriceInput.value = maxVal; // Correct the input if needed
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-        // applyCombinedFilters(); // Optional: Apply filters immediately on input change
-    });
-}
-
-// --- Combined Filter and Search Function ---
-function applyCombinedFilters() {
-    const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
-    const minPrice = parseInt(minPriceInput.value) || 0;
-    const maxPrice = parseInt(maxPriceInput.value) || 1000000;
-    const minRating = parseFloat(document.getElementById('untukAndaRatingFilter').value) || 0;
-    const sortBy = document.getElementById('untukAndaSortBy').value;
-    const container = document.getElementById('untukAndaProductsContainer');
-    const cards = Array.from(container.querySelectorAll('.product-card')); // Select by class
-
-    let visibleCards = cards.filter(card => {
-        const price = parseInt(card.dataset.price);
-        const rating = parseFloat(card.dataset.rating);
-        const name = card.dataset.name.toLowerCase();
-        const categories = Array.from(card.querySelectorAll('.text-green-800')).map(cat => cat.textContent.toLowerCase());
-
-        // Check filters
-        const priceMatch = price >= minPrice && price <= maxPrice;
-        const ratingMatch = rating >= minRating;
-        const searchMatch = searchTerm === '' || name.includes(searchTerm) || categories.some(cat => cat.includes(searchTerm));
-
-        const show = priceMatch && ratingMatch && searchMatch;
-        card.style.display = show ? '' : 'none'; // Show/hide immediately
-        return show; // Return if the card should be considered for sorting
-    });
-
-    // Sorting
-    if (sortBy) {
-        visibleCards.sort((a, b) => {
-            const priceA = parseInt(a.dataset.price);
-            const priceB = parseInt(b.dataset.price);
-            const ratingA = parseFloat(a.dataset.rating);
-            const ratingB = parseFloat(b.dataset.rating);
-            const nameA = a.dataset.name.toLowerCase();
-            const nameB = b.dataset.name.toLowerCase();
-
-            switch (sortBy) {
-                case 'price-asc': return priceA - priceB;
-                case 'price-desc': return priceB - priceA;
-                case 'rating-desc': return ratingB - ratingA;
-                case 'name-asc': return nameA.localeCompare(nameB);
-                default: return 0;
-            }
-        });
-
-        // Reorder DOM elements
-        visibleCards.forEach(card => container.appendChild(card));
-    }
-
-    // Hide filter menu after applying (optional, keep if you want immediate feedback)
-    // document.getElementById('untukAndaFilterMenu').classList.add('hidden');
-}
-
-// --- Functions to trigger combined filter ---
-function applyUntukAndaFilters() {
-    applyCombinedFilters();
-    document.getElementById('untukAndaFilterMenu').classList.add('hidden'); // Close menu on Apply
-}
-
-function resetUntukAndaFilters() {
-    // Reset inputs and sliders
-    minPriceInput.value = 0;
-    maxPriceInput.value = 1000000;
-    minPriceSlider.value = 0;
-    maxPriceSlider.value = 1000000;
-    minPriceLabel.textContent = formatCurrency(0);
-    maxPriceLabel.textContent = formatCurrency(1000000);
-    document.getElementById('untukAndaRatingFilter').value = '';
-    document.getElementById('untukAndaSortBy').value = '';
-    document.getElementById('searchProduct').value = ''; // Reset search
-
-    // Re-apply filters to show all cards
-    applyCombinedFilters();
-    document.getElementById('untukAndaFilterMenu').classList.add('hidden'); // Close menu on Reset
-}
-
-// --- Event Listeners ---
-document.addEventListener('DOMContentLoaded', () => {
-    setupPriceSync();
-    // Initial filter application if needed (e.g., if filters can be pre-set)
-    // applyCombinedFilters();
-});
-
-// Close filter dropdown when clicking outside
-document.addEventListener('click', function(event) {
-    const filterMenu = document.getElementById('untukAndaFilterMenu');
-    const filterButton = document.querySelector('button[onclick="toggleUntukAndaFilter()"]');
-
-    if (filterMenu && !filterMenu.classList.contains('hidden') && !filterMenu.contains(event.target) && event.target !== filterButton && !filterButton.contains(event.target)) {
-        filterMenu.classList.add('hidden');
-    }
-});
-
-</script>
-<!-- Add this function to your existing script section -->
-<script>
-function closeLoginPrompt() {
-    const modal = document.getElementById('loginPrompt');
-    modal.classList.add('hidden');
-}
-
-// Add click outside modal to close
-document.getElementById('loginPrompt').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeLoginPrompt();
-    }
-});
-</script>
-
-<!-- Add this notification modal after the login prompt modal -->
-<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
-        <div class="text-center mb-4">
-            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
-            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
-            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
-        </div>
-        <button onclick="closeCartNotification()" 
-                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
-            Lanjut Belanja
-        </button>
-    </div>
-</div>
-
-<!-- Add these styles -->
+<!-- Add these animations to your existing style section -->
 <style>
-    @keyframes bounce-once {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
+    /* Add to your existing animations */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
     }
-    .animate-bounce-once {
+    
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0) rotate(45deg); }
+        50% { transform: translateY(-20px) rotate(45deg); }
+    }
+    
+    @keyframes float-reverse {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(15px); }
+    }
+    
+    @keyframes bounce-once {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+    
+    .animate-float-reverse {
+        animation: float-reverse 7s ease-in-out infinite;
+    }
+    
+    .group-hover\:animate-bounce-once:hover {
         animation: bounce-once 0.5s ease-in-out;
     }
 </style>
-
-<!-- Update the handleCartClick function -->
-<script>
-function handleCartClick(event, productId) {
-    event.preventDefault();
-    
-    <?php if (!$this->session->userdata('logged_in')): ?>
-        document.getElementById('loginPrompt').classList.remove('hidden');
-        return;
-    <?php endif; ?>
-
-    fetch('<?= base_url('cart/add') ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `id_product=${productId}&jumlah=1`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('cartNotification').classList.remove('hidden');
-            setTimeout(() => {
-                closeCartNotification();
-            }, 2000);
-        } else {
-            alert(data.message || 'Gagal menambahkan ke keranjang');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Gagal menambahkan ke keranjang');
-    });
-}
-
-function closeCartNotification() {
-    document.getElementById('cartNotification').classList.add('hidden');
-}
-
-// Close notification when clicking outside
-document.getElementById('cartNotification').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeCartNotification();
-    }
-});
-</script>
 
