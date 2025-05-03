@@ -220,20 +220,128 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
-    <div class="relative">
-        <input type="text" 
-               id="searchProduct" 
-               placeholder="Cari tanaman..." 
-               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-        <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    <div class="flex items-center justify-between">
+        <div class="relative flex-grow">
+            <input type="text" 
+                   id="searchProduct" 
+                   placeholder="Cari tanaman..." 
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <!-- Mobile Filter Button -->
+        <button id="mobileFilterBtn" class="md:hidden ml-4 p-2 bg-green-600 text-white rounded-lg">
+            <i class="fas fa-filter"></i>
+        </button>
     </div>
 </div>
 
 <!-- Replace the main content section with this new layout -->
 <main class="container mx-auto px-4">
     <div class="flex flex-col md:flex-row gap-6">
-        <!-- Sidebar Filters -->
-        <div class="w-full md:w-64 flex-shrink-0">
+        <!-- Mobile Filter Sidebar -->
+        <div id="mobileFilterSidebar" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden">
+            <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-lg text-green-800">Filter Produk</h3>
+                        <button id="closeMobileFilter" class="p-2 text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-y-auto h-[calc(100vh-8rem)]">
+                        <!-- Price Range Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
+                            <div class="px-2">
+                                <div class="flex justify-between mb-2">
+                                    <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
+                                    <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
+                                    <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
+                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                                    <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
+                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                                </div>
+                                <div class="flex gap-2 items-center">
+                                    <input type="number" id="minPrice" placeholder="Min" value="0"
+                                           class="w-full p-2 text-sm border rounded-md">
+                                    <span class="text-gray-400">-</span>
+                                    <input type="number" id="maxPrice" placeholder="Max" value="1000000"
+                                           class="w-full p-2 text-sm border rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-3">Kategori</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+                                <?php foreach ($categories as $category): ?>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" name="category" value="<?= $category['id_kategori'] ?>" 
+                                           class="category-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                                           <?= ($selected_category == $category['id_kategori']) ? 'checked' : '' ?>>
+                                    <span class="text-gray-700"><?= $category['nama_kategori'] ?></span>
+                                </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Rating Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-3">Rating</h4>
+                            <div class="space-y-2">
+                                <?php for($i = 5; $i >= 1; $i--): ?>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" name="rating" value="<?= $i ?>" 
+                                           class="rating-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500">
+                                    <div class="flex text-yellow-400">
+                                        <?php for($j = 1; $j <= 5; $j++): ?>
+                                            <?php if($j <= $i): ?>
+                                                <i class="fas fa-star"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-star"></i>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <?php if($i == 5): ?>
+                                        <span class="text-sm text-gray-600">& Up</span>
+                                    <?php endif; ?>
+                                </label>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Sort By -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-3">Urutkan</h4>
+                            <select id="sortBy" class="w-full p-2 border rounded-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="popular">Popularitas</option>
+                                <option value="price_low">Harga: Rendah ke Tinggi</option>
+                                <option value="price_high">Harga: Tinggi ke Rendah</option>
+                                <option value="rating">Rating Tertinggi</option>
+                                <option value="newest">Terbaru</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Apply/Reset Buttons -->
+                        <div class="flex gap-2">
+                            <button id="resetFilters" class="w-1/2 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">
+                                Reset
+                            </button>
+                            <button id="applyFilters" class="w-1/2 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                                Terapkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Filters -->
+        <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-4 sticky top-24">
                 <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2">Filter Produk</h3>
                 
@@ -328,7 +436,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         
         <!-- Product Grid -->
         <div class="flex-grow">
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <?php foreach ($produk_populer as $produk) : ?>
                     <?php 
                     if (!empty($produk['gambar'])) {
@@ -649,6 +757,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial filter
     filterProducts();
 });
+
+// Mobile filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+    const mobileFilterSidebar = document.getElementById('mobileFilterSidebar');
+    const closeMobileFilter = document.getElementById('closeMobileFilter');
+    
+    mobileFilterBtn.addEventListener('click', () => {
+        mobileFilterSidebar.classList.remove('hidden');
+    });
+    
+    closeMobileFilter.addEventListener('click', () => {
+        mobileFilterSidebar.classList.add('hidden');
+    });
+    
+    // Close mobile filter when clicking outside
+    mobileFilterSidebar.addEventListener('click', (e) => {
+        if (e.target === mobileFilterSidebar) {
+            mobileFilterSidebar.classList.add('hidden');
+        }
+    });
+    
+    // ... rest of your existing script ...
+});
 </script>
 
 <style>
@@ -684,6 +816,31 @@ input[type="range"]::-moz-range-thumb {
 /* Checkbox styling */
 .category-checkbox, .rating-checkbox {
     accent-color: #22c55e;
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+    .product-card {
+        height: auto;
+    }
+    
+    .product-card img {
+        height: 120px;
+        object-fit: cover;
+    }
+    
+    .product-card h3 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    .product-card .price {
+        font-size: 0.875rem;
+    }
+    
+    .product-card .rating {
+        font-size: 0.75rem;
+    }
 }
 </style>
 
