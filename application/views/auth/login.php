@@ -39,14 +39,14 @@
     <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row p-4 md:p-8 w-full max-w-4xl mx-4">
         <!-- Left Section: Plant Image and Title -->
         <div class="hidden md:w-1/2 md:flex md:flex-col md:items-center md:justify-center">
-            <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
+            <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
         </div>
 
         <!-- Right Section: Login Form -->
         <div class="w-full md:w-1/2 px-4 md:px-8">
             <!-- Mobile Logo -->
             <div class="flex md:hidden justify-center mb-6">
-                <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
+                <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
             </div>
           
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to HijauLoka</h2>

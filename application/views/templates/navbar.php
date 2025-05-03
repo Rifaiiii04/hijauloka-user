@@ -106,7 +106,7 @@
     </nav>
     
     <!-- Mobile Navigation Header -->
-    <nav class="md:hidden bg-white w-full flex items-center bottom-5 rounded-b-full justify-between px-4 py-3 fixed  z-50">
+    <nav class="md:hidden bg-white w-full flex items-center rounded-b-md justify-between px-4 py-3 fixed z-50">
         <div class="flex items-center gap-3">
         <img src="<?= base_url('assets/img/logoicon.png') ?>" alt="" class="w-10 h-10">
         </div>

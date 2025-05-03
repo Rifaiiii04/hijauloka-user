@@ -40,14 +40,14 @@
     <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row p-4 md:p-6 w-full max-w-4xl mx-4">
         <!-- Left Section -->
         <div class="hidden md:flex md:w-1/2 md:flex-col md:items-center md:justify-center">
-            <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-52 h-52 object-cover">
+            <img src="<?= base_url('assets/')?>img/hijauloka.pbg" alt="Plant Image" class="rounded-full w-52 h-52 object-cover">
         </div>
 
         <!-- Right Section -->
         <div class="w-full md:w-1/2 px-4 md:px-6">
             <!-- Mobile Logo -->
             <div class="flex md:hidden justify-center mb-8">
-                <img src="<?= base_url('assets/')?>img/hijauloka.jpg" alt="Plant Image" class="rounded-full w-28 h-28 object-cover">
+                <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="Plant Image" class="rounded-full w-28 h-28 object-cover">
             </div>
             
             <h2 class="text-xl md:text-2xl font-bold text-center mb-6">Create Your Account</h2>
