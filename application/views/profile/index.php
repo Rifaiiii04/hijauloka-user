@@ -31,23 +31,27 @@
         <div class="max-w-2xl mx-auto space-y-4">
             <!-- Order Status -->
             <div class="bg-white rounded-lg shadow p-4">
-                <!-- Bagian status pesanan -->
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">Status Pesanan Saat Ini</h2>
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-gray-800">Status Pesanan Saat Ini</h2>
+                    <a href="<?= base_url('orders') ?>" class="text-green-600 hover:text-green-700 text-sm flex items-center gap-1">
+                        <i class="fas fa-eye"></i> Lihat Detail
+                    </a>
+                </div>
                 <div class="grid grid-cols-4 gap-2 text-center text-sm">
                     <div class="p-2 rounded bg-gray-50">
-                        <div class="text-xl font-bold text-green-600 mb-1">0</div>
+                        <div class="text-xl font-bold text-yellow-500 mb-1"><?= $order_counts['pending'] ?></div>
                         <div class="text-gray-600">Menunggu</div>
                     </div>
                     <div class="p-2 rounded bg-gray-50">
-                        <div class="text-xl font-bold text-green-600 mb-1">0</div>
+                        <div class="text-xl font-bold text-blue-500 mb-1"><?= $order_counts['diproses'] ?></div>
                         <div class="text-gray-600">Diproses</div>
                     </div>
                     <div class="p-2 rounded bg-gray-50">
-                        <div class="text-xl font-bold text-green-600 mb-1">0</div>
+                        <div class="text-xl font-bold text-indigo-500 mb-1"><?= $order_counts['dikirim'] ?></div>
                         <div class="text-gray-600">Dikirim</div>
                     </div>
                     <div class="p-2 rounded bg-gray-50">
-                        <div class="text-xl font-bold text-green-600 mb-1">0</div>
+                        <div class="text-xl font-bold text-green-500 mb-1"><?= $order_counts['selesai'] ?></div>
                         <div class="text-gray-600">Selesai</div>
                     </div>
                 </div>
@@ -130,9 +134,15 @@
                                 <div class="font-medium text-gray-800">#<?= $order['order_id'] ?></div>
                                 <div class="text-gray-600"><?= $order['date'] ?></div>
                             </div>
-                            <div class="text-right text-sm">
-                                <div class="font-medium text-gray-800">Rp <?= number_format($order['total'], 0, ',', '.') ?></div>
-                                <div class="text-green-600"><?= $order['status'] ?></div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-right text-sm">
+                                    <div class="font-medium text-gray-800">Rp <?= number_format($order['total'], 0, ',', '.') ?></div>
+                                    <div class="text-green-600"><?= $order['status'] ?></div>
+                                </div>
+                                <a href="<?= base_url('orders/detail/' . $order['order_id']) ?>" 
+                                   class="px-3 py-1.5 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
+                                    <i class="fas fa-eye mr-1"></i>Detail
+                                </a>
                             </div>
                         </div>
                         <?php endforeach; ?>

@@ -14,6 +14,27 @@ class Profile extends CI_Controller {
         $user_id = $this->session->userdata('id_user');
         $data['user'] = $this->db->get_where('user', ['id_user' => $user_id])->row_array();
         $data['shipping_addresses'] = $this->db->get_where('shipping_addresses', ['user_id' => $user_id])->result_array();
+        
+        // Get order status counts
+        $this->db->select('stts_pemesanan, COUNT(*) as count');
+        $this->db->from('orders');
+        $this->db->where('id_user', $user_id);
+        $this->db->group_by('stts_pemesanan');
+        $status_counts = $this->db->get()->result_array();
+        
+        // Initialize counts
+        $data['order_counts'] = [
+            'pending' => 0,
+            'diproses' => 0,
+            'dikirim' => 0,
+            'selesai' => 0
+        ];
+        
+        // Update counts from database
+        foreach ($status_counts as $status) {
+            $data['order_counts'][$status['stts_pemesanan']] = $status['count'];
+        }
+        
         $this->load->view('profile/index', $data);
     }
 

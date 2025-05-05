@@ -25,7 +25,8 @@ class Checkout extends CI_Controller {
             'tgl_pemesanan' => date('Y-m-d H:i:s'),
             'stts_pemesanan' => 'pending',
             'total_harga' => $total,
-            'stts_pembayaran' => $metode == 'cod' ? 'belum_dibayar' : 'lunas'
+            'stts_pembayaran' => $metode == 'cod' ? 'belum_dibayar' : 'lunas',
+            'id_admin' => 1
         ];
         $this->db->insert('orders', $order_data);
         $id_order = $this->db->insert_id();
