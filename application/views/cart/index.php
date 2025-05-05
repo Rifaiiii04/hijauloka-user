@@ -79,10 +79,12 @@
                     <span class="text-green-700">Rp<?= number_format($total ?? 0, 0, ',', '.') ?></span>
                 </div>
                 
-                <button class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-medium">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Lanjut ke Pembayaran</span>
-                </button>
+                <form action="<?= base_url('checkout/metode') ?>" method="get">
+                    <button type="submit" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-medium">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Lanjut ke Pembayaran</span>
+                    </button>
+                </form>
             </div>
         </div>
     <?php endif; ?>
