@@ -230,6 +230,65 @@
     }
 </style>
 
+// First, let's add the CSS for our custom notification
+</style>
+
+<!-- Add custom notification styles -->
+<style>
+    .custom-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        max-width: 300px;
+        background-color: white;
+        border-left: 4px solid #10b981;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+        padding: 16px;
+        transform: translateX(400px);
+        transition: transform 0.3s ease-out;
+        z-index: 9999;
+    }
+    
+    .custom-notification.show {
+        transform: translateX(0);
+    }
+    
+    .custom-notification.error {
+        border-left-color: #ef4444;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+    }
+    
+    .notification-icon {
+        margin-right: 12px;
+        font-size: 20px;
+    }
+    
+    .notification-icon.success {
+        color: #10b981;
+    }
+    
+    .notification-icon.error {
+        color: #ef4444;
+    }
+    
+    .notification-text h4 {
+        margin: 0 0 4px 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .notification-text p {
+        margin: 0;
+        font-size: 14px;
+        color: #6b7280;
+    }
+</style>
+
 <!-- Update the wishlist toggle function -->
 <script>
 function toggleWishlist(button, productId) {
@@ -298,6 +357,107 @@ function updateQuantity(change) {
     }
 }
 
+function addToCart(productId) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    const quantity = document.getElementById('quantity').value;
+    console.log('Adding to cart:', productId, 'Quantity:', quantity);
+    
+    // Show loading state
+    const button = document.querySelector('button[onclick="addToCart(' + productId + ')"]');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px] mr-1"></i> Menambahkan...';
+    button.disabled = true;
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', quantity);
+
+    // Add to cart via AJAX
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        if (data.success) {
+            // Show custom notification
+            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
+            
+            // Update cart counter if it exists
+            const cartCounter = document.querySelector('.cart-counter');
+            if (cartCounter && data.cartCount) {
+                cartCounter.textContent = data.cartCount;
+                cartCounter.classList.remove('hidden');
+            }
+        } else {
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
+    });
+}
+
+// Add this function to show custom notifications
+function showNotification(type, title, message) {
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
+    
+    // Create notification content
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon ${type}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            </div>
+            <div class="notification-text">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+        </div>
+    `;
+    
+    // Add to document
+    document.body.appendChild(notification);
+    
+    // Show notification with a slight delay
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
 function buyNow(productId) {
     <?php if (!$this->session->userdata('logged_in')): ?>
         document.getElementById('loginPrompt').classList.remove('hidden');
@@ -312,14 +472,15 @@ function buyNow(productId) {
     button.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px] mr-1"></i> Processing...';
     button.disabled = true;
 
+    // Create form data
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', quantity);
+
     // Add to cart first
     fetch('<?= base_url('cart/add') ?>', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: 'id_product=' + productId + '&quantity=' + quantity
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -331,11 +492,7 @@ function buyNow(productId) {
             // Redirect to checkout
             window.location.href = '<?= base_url('checkout') ?>';
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data.message || 'Something went wrong!'
-            });
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
         }
     })
     .catch(error => {
@@ -343,11 +500,7 @@ function buyNow(productId) {
         button.innerHTML = originalText;
         button.disabled = false;
         
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!'
-        });
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
         console.error('Error:', error);
     });
 }

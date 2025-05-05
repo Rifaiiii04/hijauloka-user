@@ -147,8 +147,7 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
     }
 </style>
 
-<!-- Add these functions to the existing script section -->
-<script>
+<!-- Replace the handleCartClick function with this improved version
 function handleCartClick(event, productId) {
     event.preventDefault();
     
@@ -156,6 +155,12 @@ function handleCartClick(event, productId) {
         document.getElementById('loginPrompt').classList.remove('hidden');
         return;
     <?php endif; ?>
+
+    // Show loading state
+    const button = event.currentTarget;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
 
     fetch('<?= base_url('cart/add') ?>', {
         method: 'POST',
@@ -165,7 +170,12 @@ function handleCartClick(event, productId) {
         },
         body: `id_product=${productId}&jumlah=1`
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             document.getElementById('cartNotification').classList.remove('hidden');
@@ -173,15 +183,23 @@ function handleCartClick(event, productId) {
                 closeCartNotification();
             }, 2000);
         } else {
-            alert(data.message || 'Gagal menambahkan ke keranjang');
+            // Show error message
+            const errorMessage = data.message || 'Gagal menambahkan ke keranjang';
+            alert(errorMessage);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Gagal menambahkan ke keranjang');
+        alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalContent;
+        button.disabled = false;
     });
 }
 
+// Add this function to handle cart notification
 function closeCartNotification() {
     document.getElementById('cartNotification').classList.add('hidden');
 }
@@ -191,8 +209,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     if (e.target === this) {
         closeCartNotification();
     }
-});
-</script>
+}); -->
 
 <div class="mb-12 mt-28 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
@@ -524,7 +541,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                                             class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
                                         <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
                                     </button>
-                                    <button onclick="handleCartClick(event, <?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>)"
+                                    <button onclick="addToCartCard(<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>, this)"
                                             class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
                                         <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
                                     </button>
@@ -781,6 +798,87 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ... rest of your existing script ...
 });
+
+// 1. Tambahkan fungsi showNotification jika belum ada
+function showNotification(type, title, message) {
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon ${type}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            </div>
+            <div class="notification-text">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// 2. Tambahkan fungsi addToCartCard
+function addToCartCard(productId, button) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', 1);
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        if (data.success) {
+            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
+        } else {
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
+        }
+    })
+    .catch(error => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
+    });
+}
+
+// 3. Ganti tombol keranjang pada card produk
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.product-card .fa-shopping-cart').forEach(function(icon) {
+        const button = icon.closest('button');
+        if (button) {
+            button.onclick = function() {
+                addToCartCard(button.closest('.product-card').getAttribute('data-id'), button);
+            };
+        }
+    });
+});
+
+// 4. Tambahkan style notifikasi jika belum ada
 </script>
 
 <style>
@@ -841,6 +939,51 @@ input[type="range"]::-moz-range-thumb {
     .product-card .rating {
         font-size: 0.75rem;
     }
+}
+
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 300px;
+    background-color: white;
+    border-left: 4px solid #10b981;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    padding: 16px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease-out;
+    z-index: 9999;
+}
+.custom-notification.show {
+    transform: translateX(0);
+}
+.custom-notification.error {
+    border-left-color: #ef4444;
+}
+.notification-content {
+    display: flex;
+    align-items: center;
+}
+.notification-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+.notification-icon.success {
+    color: #10b981;
+}
+.notification-icon.error {
+    color: #ef4444;
+}
+.notification-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+.notification-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
 }
 </style>
 

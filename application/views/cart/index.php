@@ -1,3 +1,4 @@
+<?php $this->load->view('templates/header') ?>
 <div class="container mx-auto px-4 py-8 mt-16 max-w-5xl">
     <h1 class="text-2xl font-bold text-green-800 mb-6">Keranjang Belanja</h1>
 
@@ -58,17 +59,29 @@
 
             <!-- Order Summary -->
             <div class="bg-white rounded-lg shadow-md p-6 h-fit">
-                <h2 class="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
-                <div class="flex justify-between mb-2">
-                    <span>Total Barang</span>
-                    <span><?= count($cart_items) ?></span>
+                <h2 class="text-xl font-semibold mb-4 text-green-800">Ringkasan Pesanan</h2>
+                <div class="space-y-3 mb-4">
+                    <div class="flex justify-between items-center pb-2">
+                        <span class="text-gray-600">Total Barang</span>
+                        <span class="font-medium"><?= count($cart_items) ?> item</span>
+                    </div>
+                    
+                    <div class="border-t border-dashed border-gray-200 pt-3 mt-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Subtotal</span>
+                            <span class="font-medium">Rp<?= number_format($total ?? 0, 0, ',', '.') ?></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+                
+                <div class="flex justify-between font-bold text-lg border-t border-gray-200 pt-4 mt-4">
                     <span>Total</span>
-                    <span class="text-green-600">Rp<?= number_format($total, 0, ',', '.') ?></span>
+                    <span class="text-green-700">Rp<?= number_format($total ?? 0, 0, ',', '.') ?></span>
                 </div>
-                <button class="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
-                    Lanjut ke Pembayaran
+                
+                <button class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-medium">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Lanjut ke Pembayaran</span>
                 </button>
             </div>
         </div>
@@ -128,3 +141,4 @@ function removeItem(cartId) {
     });
 }
 </script>
+<?php $this->load->view('templates/footer') ?>;

@@ -79,6 +79,84 @@ function toggleWishlist(button, productId) {
         }
     });
 }
+
+function addToCartCard(productId, button) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', 1);
+
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        if (data.success) {
+            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
+        } else {
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
+        }
+    })
+    .catch(error => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
+    });
+}
+
+// Tambahkan fungsi showNotification jika belum ada
+function showNotification(type, title, message) {
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
+    
+    // Create notification content
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon ${type}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            </div>
+            <div class="notification-text">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+        </div>
+    `;
+    
+    // Add to document
+    document.body.appendChild(notification);
+    
+    // Show notification with a slight delay
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
 </script>
 
 <!-- Make sure these animation styles are in your page -->
@@ -116,6 +194,51 @@ function toggleWishlist(button, productId) {
 }
 .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Chrome, Safari and Opera */
+}
+
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 300px;
+    background-color: white;
+    border-left: 4px solid #10b981;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    padding: 16px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease-out;
+    z-index: 9999;
+}
+.custom-notification.show {
+    transform: translateX(0);
+}
+.custom-notification.error {
+    border-left-color: #ef4444;
+}
+.notification-content {
+    display: flex;
+    align-items: center;
+}
+.notification-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+.notification-icon.success {
+    color: #10b981;
+}
+.notification-icon.error {
+    color: #ef4444;
+}
+.notification-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+.notification-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
 }
 </style>
 
@@ -169,9 +292,9 @@ function toggleWishlist(button, productId) {
                                                 class="wishlist-btn p-2 text-gray-600 bg-gray-100 rounded-md hover:text-red-500">
                                             <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
                                         </button>
-                                        <button onclick="handleCartClick(event, <?= $product['id_product'] ?>)" 
-                                                class="p-2 text-white bg-green-600 rounded-md hover:bg-green-700 active:bg-green-800">
-                                            <i class="fas fa-shopping-cart"></i>
+                                        <button onclick="addToCartCard(<?= isset($product['id_product']) ? $product['id_product'] : '0' ?>, this)" 
+                                                class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                                            <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -185,9 +308,10 @@ function toggleWishlist(button, productId) {
 </section>
 
 <!-- Kategori Section - Enhanced UX -->
-<section class="px-4 py-12">
+<section class="px-4 py-12 bg-gray-50">
     <div class="container mx-auto">
-        <div class="flex items-center justify-between mb-8">
+        <!-- Desktop Header -->
+        <div class="hidden md:flex items-center justify-between mb-8">
             <div>
                 <h2 class="text-3xl font-bold text-green-800 mb-2">Kategori Tanaman</h2>
                 <p class="text-gray-600">Temukan berbagai jenis tanaman sesuai kebutuhan Anda</p>
@@ -198,7 +322,16 @@ function toggleWishlist(button, productId) {
             </a>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <!-- Mobile Header -->
+        <div class="flex md:hidden items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-green-800">Kategori Tanaman</h2>
+            <a href="<?= base_url('category') ?>" class="text-green-700 text-sm hover:text-green-900 font-medium flex items-center">
+                Lihat <i class="fas fa-chevron-right ml-1 text-xs"></i>
+            </a>
+        </div>
+        
+        <!-- Desktop Layout -->
+        <div class="hidden md:grid grid-cols-2 gap-6 max-w-5xl mx-auto">
             <!-- Plants Category -->
             <div class="relative h-[400px] rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
                 <img src="<?= base_url('assets/img/plantcategory.png') ?>" alt="Plants" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
@@ -241,6 +374,66 @@ function toggleWishlist(button, productId) {
                             <i class="fas fa-chevron-right ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Layout -->
+        <div class="grid md:hidden grid-cols-1 gap-4">
+            <!-- Plants Category -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+                <a href="<?= base_url('category/plants') ?>" class="block">
+                    <div class="relative h-[180px]">
+                        <img src="<?= base_url('assets/img/plantcategory.png') ?>" alt="Plants" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4">
+                            <h3 class="text-xl font-bold text-white">Plants</h3>
+                            <p class="text-white/80 text-sm">Koleksi tanaman hias indoor & outdoor</p>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <button class="flex items-center text-green-700 text-sm font-medium">
+                            <i class="fas fa-leaf mr-2"></i> Jelajahi
+                        </button>
+                    </div>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Seeds Category -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+                    <a href="<?= base_url('category/seeds') ?>" class="block">
+                        <div class="relative h-[120px]">
+                            <img src="<?= base_url('assets/img/seedscategory.png') ?>" alt="Seeds" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-3">
+                                <h3 class="text-lg font-bold text-white">Seeds</h3>
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            <button class="flex items-center text-green-700 text-sm font-medium">
+                                <span>Lihat</span>
+                            </button>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Pots Category -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+                    <a href="<?= base_url('category/pots') ?>" class="block">
+                        <div class="relative h-[120px]">
+                            <img src="<?= base_url('assets/img/category-pots.png') ?>" alt="Pots" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-3">
+                                <h3 class="text-lg font-bold text-white">Pots</h3>
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            <button class="flex items-center text-green-700 text-sm font-medium">
+                                <span>Lihat</span>
+                            </button>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

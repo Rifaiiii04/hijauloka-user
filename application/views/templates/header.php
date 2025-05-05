@@ -104,6 +104,8 @@
         opacity: 1;
       }
     </style>
+    <!-- Add this in the head section if it's not already there -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body class="bg-slate-100 overflow-x-hidden font-poppins">
     <!-- Add Loader HTML -->

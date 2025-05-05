@@ -2,30 +2,52 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cart_model extends CI_Model {
-    public function get_cart_items($user_id) {
-        $this->db->select('cart.*, product.nama_product, product.harga, product.gambar');
+    
+    public function get_cart_items($id_user) {
+        $this->db->select('cart.*, product.nama_product, product.harga, product.gambar, product.stok');
         $this->db->from('cart');
         $this->db->join('product', 'product.id_product = cart.id_product');
-        $this->db->where('cart.id_user', $user_id);
+        $this->db->where('cart.id_user', $id_user);
+        $query = $this->db->get();
         
-        return $this->db->get()->result_array();
+        return $query->result_array();
     }
-
-    public function update_quantity($cart_id, $quantity) {
-        return $this->db->update('cart', ['jumlah' => $quantity], ['id_cart' => $cart_id]);
-    }
-
-    public function remove_item($cart_id) {
-        return $this->db->delete('cart', ['id_cart' => $cart_id]);
-    }
-
-    public function get_cart_count($user_id) {
-        if (!$user_id) return 0;
+    
+    public function get_cart_item($id_user, $id_product) {
+        $this->db->where('id_user', $id_user);
+        $this->db->where('id_product', $id_product);
+        $query = $this->db->get('cart');
         
-        $this->db->select('COUNT(id_cart) as total');
-        $this->db->where('id_user', $user_id);
-        $result = $this->db->get('cart')->row();
+        return $query->row_array();
+    }
+    
+    public function add_to_cart($id_user, $id_product, $quantity) {
+        $data = array(
+            'id_user' => $id_user,
+            'id_product' => $id_product,
+            'jumlah' => $quantity
+        );
         
-        return $result->total ?? 0;
+        return $this->db->insert('cart', $data);
+    }
+    
+    public function update_cart_item($id_cart, $quantity) {
+        $this->db->where('id_cart', $id_cart);
+        return $this->db->update('cart', array('jumlah' => $quantity));
+    }
+    
+    public function remove_from_cart($id_cart) {
+        $this->db->where('id_cart', $id_cart);
+        return $this->db->delete('cart');
+    }
+    
+    public function get_cart_count($id_user) {
+        $this->db->where('id_user', $id_user);
+        return $this->db->count_all_results('cart');
+    }
+    
+    public function clear_cart($id_user) {
+        $this->db->where('id_user', $id_user);
+        return $this->db->delete('cart');
     }
 }
