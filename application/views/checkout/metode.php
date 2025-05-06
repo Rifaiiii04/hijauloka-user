@@ -48,7 +48,7 @@
     </div>
 
     <!-- Metode Pembayaran -->
-    <form action="<?= base_url('checkout/proses_checkout') ?>" method="post" class="bg-white rounded-lg shadow-md p-4 space-y-4">
+    <form id="checkoutForm" action="<?= base_url('checkout/proses_checkout') ?>" method="post" class="bg-white rounded-lg shadow-md p-4 space-y-4">
         <div class="font-semibold text-green-700 mb-2">Metode Pembayaran</div>
         <label class="flex items-center gap-3 cursor-pointer">
             <input type="radio" name="metode_pembayaran" value="dana" required class="accent-green-600">
@@ -62,9 +62,9 @@
             <input type="radio" name="metode_pembayaran" value="cod" class="accent-green-600">
             <span class="font-medium">Bayar di Tempat (COD)</span>
         </label>
-        <button type="submit" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-bold flex items-center justify-center gap-2">
+        <button type="submit" id="submitBtn" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-bold flex items-center justify-center gap-2">
             <i class="fas fa-credit-card"></i>
-            Buat Pesanan
+            <span>Buat Pesanan</span>
         </button>
     </form>
 </div>
@@ -111,6 +111,32 @@
     </div>
 </div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 hidden">
+    <div class="bg-white/90 rounded-2xl p-8 flex flex-col items-center gap-4 animate-fade-in relative overflow-hidden">
+        <!-- Decorative Plants -->
+        <div class="absolute -left-4 -bottom-4 text-green-500 text-6xl">
+            <i class="fas fa-leaf transform -rotate-45"></i>
+        </div>
+        <div class="absolute -right-4 -top-4 text-green-500 text-6xl">
+            <i class="fas fa-seedling transform rotate-45"></i>
+        </div>
+        <div class="absolute -right-4 -bottom-4 text-green-500 text-5xl">
+            <i class="fas fa-leaf transform rotate-12"></i>
+        </div>
+        
+        <!-- Loading Spinner -->
+        <div class="relative w-16 h-16">
+            <div class="absolute inset-0 border-4 border-green-200 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-green-600 rounded-full animate-spin border-t-transparent"></div>
+        </div>
+        <div class="text-center relative z-10">
+            <h3 class="text-lg font-semibold text-gray-800 mb-1">Memproses Pesanan</h3>
+            <p class="text-sm text-gray-600">Mohon tunggu sebentar...</p>
+        </div>
+    </div>
+</div>
+
 <script>
 function openShippingModal() {
     document.getElementById('shippingModal').classList.remove('hidden');
@@ -118,4 +144,53 @@ function openShippingModal() {
 function closeShippingModal() {
     document.getElementById('shippingModal').classList.add('hidden');
 }
-</script> 
+
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading overlay
+    const overlay = document.getElementById('loadingOverlay');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    overlay.classList.remove('hidden');
+    submitBtn.disabled = true;
+    
+    // Simulate processing time (2 seconds)
+    setTimeout(() => {
+        this.submit();
+    }, 2000);
+});
+</script>
+
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Add subtle floating animation for plants */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-45deg); }
+    50% { transform: translateY(-5px) rotate(-45deg); }
+}
+
+.fa-leaf {
+    animation: float 3s ease-in-out infinite;
+}
+
+.fa-seedling {
+    animation: float 3s ease-in-out infinite reverse;
+}
+</style> 
