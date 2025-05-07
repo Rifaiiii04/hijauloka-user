@@ -31,13 +31,13 @@
 
     <!-- Modal Kamera - Change background to blur effect -->
     <div id="cameraModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-md text-center relative">
+        <div class="bg-white rounded-lg shadow-lg p-4 w-full text-center relative">
             <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
             <h3 class="text-lg font-semibold mb-2" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
             
             <!-- Camera view (will be hidden for file upload) -->
             <div id="cameraView">
-                <video id="video" width="320" height="240" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
+                <video id="video" width="1050" height="540" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
                 <div class="mt-3 flex justify-center space-x-3">
                     <button id="captureBtn" class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Ambil Foto Manual</button>
                     <button id="autoDetectBtn" class="px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm">Mulai Deteksi Otomatis</button>
@@ -304,6 +304,12 @@
     // Update verifyPaymentImage to handle both camera and file uploads
     async function verifyPaymentImage(manualVerify = false) {
         verifyResult.textContent = 'Memverifikasi...';
+        verifyResult.classList.add('animate-pulse'); // Add pulsing animation
+        
+        // Disable the button during verification
+        uploadBtn.disabled = true;
+        uploadBtn.classList.add('opacity-70');
+        
         try {
             // Kirim ke backend Python
             const res = await fetch('http://localhost:5000/verify-payment', {
@@ -317,6 +323,12 @@
             });
             
             const data = await res.json();
+            
+            // Remove animation and re-enable button
+            verifyResult.classList.remove('animate-pulse');
+            uploadBtn.disabled = false;
+            uploadBtn.classList.remove('opacity-70');
+            
             if (data.success) {
                 let successMessage = 'Pembayaran terverifikasi!';
                 if (data.saved_as_training) {
@@ -338,6 +350,11 @@
                 }
             }
         } catch (error) {
+            // Remove animation and re-enable button
+            verifyResult.classList.remove('animate-pulse');
+            uploadBtn.disabled = false;
+            uploadBtn.classList.remove('opacity-70');
+            
             verifyResult.textContent = 'Error: ' + error.message;
         }
     }

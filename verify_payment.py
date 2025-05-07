@@ -48,94 +48,75 @@ def save_to_dataset(img, is_verified=False):
     return filename
 
 def is_payment_proof(upload_img):
-    # Improved matching with multiple techniques for better detection
+    # Simplified matching with focus on speed
     best_score = 0
-    best_path = None
     
-    # Apply some preprocessing to improve matching
-    # Convert to grayscale for more robust comparison
+    # Resize image to smaller dimensions for faster processing
+    max_dimension = 480  # Even smaller for faster processing
+    h, w = upload_img.shape[:2]
+    if max(h, w) > max_dimension:
+        scale = max_dimension / max(h, w)
+        upload_img = cv2.resize(upload_img, (int(w * scale), int(h * scale)))
+    
+    # Quick check for DANA/QRIS app indicators - blue color detection
+    try:
+        # Check for blue color (DANA app color)
+        hsv = cv2.cvtColor(upload_img, cv2.COLOR_BGR2HSV)
+        # Blue color range in HSV
+        lower_blue = np.array([100, 50, 50])
+        upper_blue = np.array([130, 255, 255])
+        blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        
+        # If significant blue is found (DANA app color), increase confidence
+        blue_ratio = np.sum(blue_mask) / (upload_img.shape[0] * upload_img.shape[1] * 255)
+        if blue_ratio > 0.05:  # If more than 5% of the image is DANA blue
+            print(f"DANA blue color detected: {blue_ratio:.2f} ratio")
+            best_score += 0.3  # Boost the score more
+            
+            # If strong blue signal, return early
+            if blue_ratio > 0.1:
+                print(f"Strong DANA blue signal detected: {blue_ratio:.2f}")
+                return True
+    except Exception as e:
+        print(f"Error in color detection: {str(e)}")
+    
+    # Apply preprocessing to improve matching
     upload_img_gray = cv2.cvtColor(upload_img, cv2.COLOR_BGR2GRAY)
     
-    # Apply slight Gaussian blur to reduce noise
-    upload_img_gray = cv2.GaussianBlur(upload_img_gray, (5, 5), 0)
-    
-    # Check for text indicators of payment success
-    # This can help identify payment proofs even with limited dataset
-    try:
-        # Look for common text in payment receipts
-        payment_keywords = ['berhasil', 'sukses', 'pembayaran', 'payment', 'dana', 'ovo', 'gopay']
-        has_payment_keyword = False
-        
-        # We could use OCR here, but for simplicity we'll rely on other methods
-        # and just note this as a potential enhancement
-    except:
-        pass
-    
-    for path in DATASET_PATHS:
+    # Only process the first dataset image for speed
+    if len(DATASET_PATHS) > 0:
+        path = DATASET_PATHS[0]
         if not os.path.exists(path):
             print(f"Warning: Dataset file not found: {path}")
-            continue
+            return best_score > 0.3  # Return based on color detection only
+            
         dataset_img = cv2.imread(path)
         if dataset_img is None:
             print(f"Warning: Could not read image: {path}")
-            continue
+            return best_score > 0.3  # Return based on color detection only
             
         # Resize for comparison
         dataset_img = cv2.resize(dataset_img, (upload_img.shape[1], upload_img.shape[0]))
         dataset_img_gray = cv2.cvtColor(dataset_img, cv2.COLOR_BGR2GRAY)
-        dataset_img_gray = cv2.GaussianBlur(dataset_img_gray, (5, 5), 0)
         
-        # 1. Multi-channel histogram comparison
-        color_score = 0
-        for i in range(3):  # RGB channels
-            hist1 = cv2.calcHist([upload_img], [i], None, [256], [0,256])
-            hist2 = cv2.calcHist([dataset_img], [i], None, [256], [0,256])
-            color_score += cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
-        color_score = color_score / 3
+        # 1. Fast histogram comparison (grayscale only)
+        hist1 = cv2.calcHist([upload_img_gray], [0], None, [32], [0,256])  # Even fewer bins
+        hist2 = cv2.calcHist([dataset_img_gray], [0], None, [32], [0,256])
+        hist_score = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
         
-        # 2. Template matching on grayscale
-        # This helps detect structural similarities
+        # 2. Fast template matching
         result = cv2.matchTemplate(upload_img_gray, dataset_img_gray, cv2.TM_CCOEFF_NORMED)
         template_score = np.max(result)
         
-        # 3. Feature matching using ORB
-        # This detects specific features that might be common in payment screenshots
-        try:
-            orb = cv2.ORB_create()
-            kp1, des1 = orb.detectAndCompute(upload_img_gray, None)
-            kp2, des2 = orb.detectAndCompute(dataset_img_gray, None)
-            
-            # If features were found in both images
-            if des1 is not None and des2 is not None and len(des1) > 0 and len(des2) > 0:
-                # Create BFMatcher object
-                bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-                # Match descriptors
-                matches = bf.match(des1, des2)
-                
-                # Calculate feature matching score based on number of good matches
-                feature_score = len(matches) / max(len(kp1), len(kp2)) if max(len(kp1), len(kp2)) > 0 else 0
-            else:
-                feature_score = 0
-        except:
-            feature_score = 0
+        # Combine scores
+        combined_score = (hist_score * 0.3) + (template_score * 0.3) + best_score
         
-        # Combine scores with different weights
-        combined_score = (color_score * 0.3) + (template_score * 0.4) + (feature_score * 0.3)
+        print(f"Path: {path}, Hist: {hist_score:.2f}, Template: {template_score:.2f}, Combined: {combined_score:.2f}")
         
-        if combined_score > best_score:
-            best_score = combined_score
-            best_path = path
-        
-        # Print scores for debugging
-        print(f"Path: {path}, Color: {color_score:.2f}, Template: {template_score:.2f}, Feature: {feature_score:.2f}, Combined: {combined_score:.2f}")
-        
-        # Lower threshold for detection with limited dataset
-        if combined_score > 0.6:
-            print(f"Match found with {path}, score: {combined_score:.2f}")
-            return True
+        return combined_score > 0.4
     
-    print(f"Best score: {best_score:.2f} with {best_path}")
-    return False
+    # If no dataset images processed, return based on color detection
+    return best_score > 0.3
 
 @app.route('/verify-payment', methods=['POST'])
 def verify_payment():
