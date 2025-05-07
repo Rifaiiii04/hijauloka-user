@@ -23,59 +23,60 @@
             <span class="text-gray-600 mx-2">atau</span>
         </div>
         
-        <button id="fileUpload" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold cursor-pointer w-64 text-center">
+        <button id="fileUpload" class="px-6 py-3 text-white rounded-lg font-semibold cursor-pointer w-64 text-center" style="background-color: green;">
             Upload Bukti Pembayaran
         </button>
         <!-- Remove the hidden input as we'll use the one in the modal -->
     </div>
 
-    <!-- Modal Kamera -->
-    <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl text-center relative">
+    <!-- Modal Kamera - Change background to blur effect -->
+    <div id="cameraModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-md text-center relative">
             <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-            <h3 class="text-lg font-semibold mb-4" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
+            <h3 class="text-lg font-semibold mb-2" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
             
             <!-- Camera view (will be hidden for file upload) -->
             <div id="cameraView">
-                <video id="video" width="480" height="360" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
-                <div class="mt-4 flex justify-center space-x-3">
-                    <button id="captureBtn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Ambil Foto Manual</button>
-                    <button id="autoDetectBtn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Mulai Deteksi Otomatis</button>
+                <video id="video" width="320" height="240" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
+                <div class="mt-3 flex justify-center space-x-3">
+                    <button id="captureBtn" class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Ambil Foto Manual</button>
+                    <button id="autoDetectBtn" class="px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm">Mulai Deteksi Otomatis</button>
                 </div>
-                <div id="autoDetectStatus" class="mt-2 text-sm text-gray-600 hidden">
+                <div id="autoDetectStatus" class="mt-1 text-xs text-gray-600 hidden">
                     Mendeteksi bukti pembayaran secara otomatis... <span class="inline-block animate-pulse">⚡</span>
                 </div>
             </div>
             
-            <!-- File preview (for uploaded files) -->
+            <!-- File preview (for uploaded files) - Adjust image size -->
             <div id="filePreview" class="hidden">
-                <div class="mb-4">
-                    <label for="modalFileUpload" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold cursor-pointer inline-block">
+                <div class="mb-3">
+                    <label for="modalFileUpload" class="px-4 py-2  text-white rounded-lg  font-semibold cursor-pointer inline-block text-sm" style="background-color:green;">
                         Pilih File Bukti Pembayaran
                     </label>
                     <input type="file" id="modalFileUpload" accept="image/*" class="hidden">
                 </div>
                 <div id="previewContainer" class="hidden">
-                    <img id="previewImage" class="mx-auto rounded border-2 border-gray-300 max-w-full max-h-[360px] object-contain" />
-                    <p class="mt-2 text-sm text-gray-600">File yang dipilih: <span id="fileName">-</span></p>
+                    <!-- Limit image height to be more compact -->
+                    <img id="previewImage" class="mx-auto rounded border-2 border-gray-300 max-w-52 max-h-[180px] object-contain h-52" />
+                    <p class="mt-1 text-xs text-gray-600">File: <span id="fileName">-</span></p>
                 </div>
             </div>
             
-            <!-- Shared elements -->
-            <canvas id="canvas" width="480" height="360" class="hidden"></canvas>
-            <div class="mt-4">
-                <button id="uploadBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold hidden">
+            <!-- Shared elements - Move button closer to image -->
+            <canvas id="canvas" width="320" height="240" class="hidden"></canvas>
+            <div class="mt-2">
+                <button id="uploadBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold hidden text-sm">
                     Verifikasi Pembayaran
                 </button>
             </div>
             
-            <div id="verifyResult" class="mt-4 text-lg font-semibold"></div>
+            <div id="verifyResult" class="mt-2 text-base font-semibold"></div>
             
             <!-- Manual verification option (for admin or when auto-detection fails) -->
-            <div id="manualVerifyOption" class="mt-4 hidden">
-                <p class="text-sm text-gray-600 mb-2">Jika bukti pembayaran valid tapi tidak terdeteksi:</p>
-                <button id="manualVerifyBtn" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                    Verifikasi Manual & Simpan sebagai Training
+            <div id="manualVerifyOption" class="mt-2 hidden">
+                <p class="text-xs text-gray-600 mb-1">Jika bukti pembayaran valid tapi tidak terdeteksi:</p>
+                <button id="manualVerifyBtn" class="px-3 py-1.5 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm">
+                    Verifikasi Manual
                 </button>
             </div>
         </div>
@@ -351,23 +352,15 @@
         await verifyPaymentImage(true);
     });
     
+    // Update processSuccessfulPayment to redirect to sukses.php
     async function processSuccessfulPayment() {
-        verifyResult.textContent = 'Pembayaran terverifikasi!';
+        verifyResult.textContent = 'Pembayaran berhasil! Mengalihkan...';
         verifyResult.classList.add('text-green-600');
         
-        // Update status pembayaran di backend PHP
-        try {
-            await fetch('<?= base_url('orders/mark_paid') ?>', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `order_id=<?= $order['id_order'] ?>`
-            });
-            
-            // Automatic navigation to success page
-            setTimeout(() => window.location.href = '<?= base_url('checkout/suksesqris') ?>', 1500);
-        } catch (error) {
-            console.error('Error updating payment status:', error);
-        }
+        // Redirect to success page after a short delay
+        setTimeout(() => {
+            window.location.href = '<?= base_url('checkout/sukses') ?>';
+        }, 1500);
     }
     </script>
     
