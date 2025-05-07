@@ -56,4 +56,11 @@ class Orders extends CI_Controller {
         $result = $this->order_model->cancel_order($order_id, $user_id);
         echo json_encode($result);
     }
+
+    public function mark_paid() {
+        $order_id = $this->input->post('order_id');
+        $this->db->where('id_order', $order_id);
+        $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
+        echo json_encode(['success' => true]);
+    }
 } 
