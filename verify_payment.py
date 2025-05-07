@@ -47,9 +47,13 @@ def save_to_dataset(img, is_verified=False):
     
     return filename
 
-def is_payment_proof(upload_img):
+def is_payment_proof(upload_img, manual_verify=False):
     # Simplified matching with focus on speed
     best_score = 0
+    
+    # If manual verification, return true immediately
+    if manual_verify:
+        return True
     
     # Resize image to smaller dimensions for faster processing
     max_dimension = 480  # Even smaller for faster processing
@@ -60,22 +64,32 @@ def is_payment_proof(upload_img):
     
     # Quick check for DANA/QRIS app indicators - blue color detection
     try:
-        # Check for blue color (DANA app color)
+        # Check for blue color (DANA app color) - expanded range for better detection
         hsv = cv2.cvtColor(upload_img, cv2.COLOR_BGR2HSV)
-        # Blue color range in HSV
-        lower_blue = np.array([100, 50, 50])
-        upper_blue = np.array([130, 255, 255])
-        blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
         
-        # If significant blue is found (DANA app color), increase confidence
-        blue_ratio = np.sum(blue_mask) / (upload_img.shape[0] * upload_img.shape[1] * 255)
-        if blue_ratio > 0.05:  # If more than 5% of the image is DANA blue
-            print(f"DANA blue color detected: {blue_ratio:.2f} ratio")
+        # Multiple blue ranges to catch different shades of DANA blue
+        blue_ranges = [
+            # DANA primary blue
+            (np.array([100, 50, 50]), np.array([130, 255, 255])),
+            # Lighter blue
+            (np.array([90, 40, 40]), np.array([110, 255, 255])),
+            # Darker blue
+            (np.array([110, 50, 50]), np.array([140, 255, 255]))
+        ]
+        
+        blue_ratio_total = 0
+        for lower_blue, upper_blue in blue_ranges:
+            blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
+            blue_ratio = np.sum(blue_mask) / (upload_img.shape[0] * upload_img.shape[1] * 255)
+            blue_ratio_total += blue_ratio
+            
+        if blue_ratio_total > 0.05:  # If more than 5% of the image has DANA blue colors
+            print(f"DANA blue color detected: {blue_ratio_total:.2f} ratio")
             best_score += 0.3  # Boost the score more
             
             # If strong blue signal, return early
-            if blue_ratio > 0.1:
-                print(f"Strong DANA blue signal detected: {blue_ratio:.2f}")
+            if blue_ratio_total > 0.1:
+                print(f"Strong DANA blue signal detected: {blue_ratio_total:.2f}")
                 return True
     except Exception as e:
         print(f"Error in color detection: {str(e)}")
@@ -113,10 +127,11 @@ def is_payment_proof(upload_img):
         
         print(f"Path: {path}, Hist: {hist_score:.2f}, Template: {template_score:.2f}, Combined: {combined_score:.2f}")
         
-        return combined_score > 0.4
+        # Lower threshold for easier detection
+        return combined_score > 0.35
     
     # If no dataset images processed, return based on color detection
-    return best_score > 0.3
+    return best_score > 0.25  # Lower threshold for easier detection
 
 @app.route('/verify-payment', methods=['POST'])
 def verify_payment():
@@ -130,7 +145,8 @@ def verify_payment():
         if img is None:
             return jsonify({'success': False, 'error': 'Invalid image data'})
             
-        result = is_payment_proof(img) or manual_verify
+        # Pass manual_verify to is_payment_proof
+        result = is_payment_proof(img, manual_verify=manual_verify)
         
         # Save the image to dataset
         if result:
@@ -146,7 +162,7 @@ def verify_payment():
         if result:
             return jsonify({
                 'success': True,
-                'redirect_url': '/checkout/suksesqris.php',  # URL to redirect to
+                'redirect_url': '/checkout/sukses',  # URL to redirect to
                 'saved_as_training': True
             })
         else:

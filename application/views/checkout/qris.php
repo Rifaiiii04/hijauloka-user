@@ -12,7 +12,7 @@
         </span>
     </div>
     <p class="text-gray-600 mb-6">Setelah pembayaran, pesanan Anda akan diproses secara otomatis.</p>
-    <a href="<?= base_url('orders') ?>" class="inline-block mt-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold">Cek Status Pesanan</a>
+   
 
     <div class="mt-8 flex flex-col items-center space-y-3">
         <button id="verifyBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold w-64">
@@ -37,7 +37,20 @@
             
             <!-- Camera view (will be hidden for file upload) -->
             <div id="cameraView">
-                <video id="video" width="1050" height="540" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
+                <div class="relative mx-auto">
+                    <video id="video" width="1050" height="540" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
+                    
+                    <!-- Positioning guide overlay -->
+                    <div id="positioningGuide" class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                        <div class="border-4 border-dashed border-blue-500 rounded-lg w-3/5 h-4/5 flex flex-col items-center justify-center">
+                            <div class="bg-blue-500 bg-opacity-20 rounded-lg p-3 text-center">
+                                <p class="text-blue-800 font-bold text-sm">Posisikan bukti pembayaran di dalam kotak</p>
+                                <p class="text-blue-700 text-xs">Deteksi otomatis akan berjalan saat terlihat jelas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="mt-3 flex justify-center space-x-3">
                     <button id="captureBtn" class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Ambil Foto Manual</button>
                     <button id="autoDetectBtn" class="px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm">Mulai Deteksi Otomatis</button>
@@ -184,6 +197,11 @@
         document.getElementById('manualVerifyOption').classList.add('hidden');
         autoDetectStatus.classList.add('hidden');
         
+        // Reset positioning guide
+        const guide = document.getElementById('positioningGuide');
+        guide.classList.remove('hidden');
+        guide.classList.remove('animate-pulse');
+        
         if (!isFileUpload) {
             // Only start camera if not file upload
             startCamera();
@@ -252,18 +270,26 @@
         autoDetectBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
         autoDetectBtn.classList.add('bg-red-600', 'hover:bg-red-700');
         
-        // Start auto detection interval
+        // Show positioning guide with animation
+        const guide = document.getElementById('positioningGuide');
+        guide.classList.add('animate-pulse');
+        
+        // Show status message
+        verifyResult.textContent = 'Arahkan kamera ke bukti pembayaran DANA/QRIS';
+        verifyResult.classList.add('text-blue-600');
+        
+        // Start auto detection interval - check more frequently
         autoDetectInterval = setInterval(() => {
             // Capture current frame
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = video.videoWidth;
             tempCanvas.height = video.videoHeight;
             tempCanvas.getContext('2d').drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-            const frameData = tempCanvas.toDataURL('image/jpeg');
+            const frameData = tempCanvas.toDataURL('image/jpeg', 0.7); // Lower quality for faster upload
             
             // Send for verification
             verifyFrame(frameData);
-        }, 2000); // Check every 2 seconds
+        }, 1500); // Check every 1.5 seconds for faster response
     }
     
     function stopAutoDetection() {
@@ -275,10 +301,22 @@
         autoDetectBtn.textContent = 'Mulai Deteksi Otomatis';
         autoDetectBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
         autoDetectBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        
+        // Remove guide animation
+        const guide = document.getElementById('positioningGuide');
+        guide.classList.remove('animate-pulse');
+        
+        // Clear status message
+        verifyResult.textContent = '';
+        verifyResult.classList.remove('text-blue-600');
     }
     
     async function verifyFrame(frameData) {
         try {
+            // Show subtle indicator that verification is happening
+            autoDetectStatus.textContent = 'Memindai bukti pembayaran... ⚡';
+            autoDetectStatus.classList.add('text-blue-600');
+            
             const res = await fetch('http://localhost:5000/verify-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -293,11 +331,28 @@
                 // Payment detected! Stop auto detection and process
                 stopAutoDetection();
                 imageData = frameData;
-                captureImage(); // Save the successful frame
+                
+                // Show the captured frame
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.classList.remove('hidden');
+                video.classList.add('hidden');
+                
+                // Hide positioning guide
+                document.getElementById('positioningGuide').classList.add('hidden');
+                
+                // Process the successful payment
                 await processSuccessfulPayment();
+            } else {
+                // Reset indicator color and text
+                autoDetectStatus.textContent = 'Mendeteksi bukti pembayaran secara otomatis... ⚡';
+                autoDetectStatus.classList.remove('text-blue-600');
             }
         } catch (error) {
             console.error('Auto detection error:', error);
+            // Reset indicator color
+            autoDetectStatus.classList.remove('text-blue-600');
         }
     }
     
