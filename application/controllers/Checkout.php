@@ -16,22 +16,41 @@ class Checkout extends CI_Controller {
             $total += $item['harga'] * $item['jumlah'];
         }
 
-        // Ambil metode pembayaran dari POST
-        $metode = $this->input->post('metode_pembayaran') ?? 'dummy';
+        // Ambil metode pembayaran dan kurir dari POST
+        $metode = $this->input->post('metode_pembayaran') ?? 'dana';
+        $kurir = $this->input->post('kurir') ?? 'hijauloka';
+        
+        // Hitung ongkir berdasarkan jarak
+        $ongkir = 0;
+        if ($kurir === 'hijauloka') {
+            // Ambil alamat utama user
+            $primary_address = $this->db->get_where('shipping_addresses', [
+                'user_id' => $id_user,
+                'is_primary' => 1
+            ])->row_array();
 
-        // 2. Insert ke orders
+            if ($primary_address) {
+                $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
+            } else {
+                $ongkir = 5000; // Default ongkir jika tidak ada alamat
+            }
+        }
+
+        // Insert ke orders
         $order_data = [
             'id_user' => $id_user,
             'tgl_pemesanan' => date('Y-m-d H:i:s'),
             'stts_pemesanan' => 'pending',
-            'total_harga' => $total,
-            'stts_pembayaran' => $metode == 'cod' ? 'belum_dibayar' : 'lunas',
+            'total_harga' => $total + $ongkir,
+            'stts_pembayaran' => $metode == 'cod' ? 'belum_dibayar' : 'pending',
+            'kurir' => $kurir,
+            'ongkir' => $ongkir,
             'id_admin' => 1
         ];
         $this->db->insert('orders', $order_data);
         $id_order = $this->db->insert_id();
 
-        // 3. Insert ke order_items
+        // Insert ke order_items
         foreach ($cart_items as $item) {
             $this->db->insert('order_items', [
                 'id_order' => $id_order,
@@ -41,25 +60,29 @@ class Checkout extends CI_Controller {
             ]);
         }
 
-        // 4. Insert ke transaksi (dummy)
+        // Insert ke transaksi (dummy)
         $transaksi_data = [
             'order_id' => $id_order,
             'user_id' => $id_user,
             'total_bayar' => $total,
             'metode_pembayaran' => $metode,
-            'status_pembayaran' => $metode == 'cod' ? 'pending' : 'lunas',
+            'status_pembayaran' => $metode == 'cod' ? 'pending' : 'pending',
             'tanggal_transaksi' => date('Y-m-d H:i:s'),
             'payment_token' => 'DUMMY-' . uniqid(),
             'payment_response' => json_encode(['dummy' => true]),
-            'expired_at' => null
+            'expired_at' => $metode == 'dana' ? date('Y-m-d H:i:s', strtotime('+10 minutes')) : null
         ];
         $this->db->insert('transaksi', $transaksi_data);
 
         // Hapus cart user
         $this->db->delete('cart', ['id_user' => $id_user]);
 
-        // Redirect ke halaman sukses
-        redirect('checkout/sukses');
+        // Redirect ke halaman QRIS jika DANA/QRIS, jika tidak ke sukses
+        if ($metode == 'dana') {
+            redirect('checkout/qris/' . $id_order);
+        } else {
+            redirect('checkout/sukses');
+        }
     }
 
     public function sukses() {
@@ -115,5 +138,16 @@ class Checkout extends CI_Controller {
             $this->db->update('shipping_addresses', ['is_primary' => 1]);
         }
         redirect('checkout/metode');
+    }
+
+    public function qris($id_order) {
+        $order = $this->db->get_where('orders', ['id_order' => $id_order])->row_array();
+        if (!$order) show_404();
+        $expired_at = $this->db->get_where('transaksi', ['order_id' => $id_order])->row('expired_at');
+        $data = [
+            'order' => $order,
+            'expired_at' => $expired_at
+        ];
+        $this->load->view('checkout/qris', $data);
     }
 }

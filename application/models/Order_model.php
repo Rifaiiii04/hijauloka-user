@@ -8,8 +8,29 @@ class Order_model extends CI_Model {
     }
 
     public function create_order($data) {
+        // Set default courier if not specified
+        if (!isset($data['kurir'])) {
+            $data['kurir'] = 'hijauloka';
+        }
+        
+        // Set shipping cost based on courier
+        if (!isset($data['ongkir'])) {
+            $data['ongkir'] = $this->get_shipping_cost($data['kurir']);
+        }
+        
         $this->db->insert('orders', $data);
         return $this->db->insert_id();
+    }
+    
+    private function get_shipping_cost($courier) {
+        // Default shipping costs
+        $shipping_costs = [
+            'hijauloka' => 15000, // Rp 15.000
+            'jne' => 0, // Coming soon
+            'jnt' => 0  // Coming soon
+        ];
+        
+        return $shipping_costs[$courier] ?? 15000; // Default to HijauLoka courier cost
     }
     
     public function create_order_item($data) {
@@ -61,7 +82,7 @@ class Order_model extends CI_Model {
     public function get_order_detail($order_id) {
         $this->db->select('o.*, u.nama as nama_user, u.email as email_user');
         $this->db->from('orders o');
-        $this->db->join('users u', 'u.id_user = o.id_user');
+        $this->db->join('user u', 'u.id_user = o.id_user');
         $this->db->where('o.id_order', $order_id);
         return $this->db->get()->row_array();
     }
