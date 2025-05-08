@@ -82,15 +82,12 @@ class Checkout extends CI_Controller {
         ];
         $this->db->insert('transaksi', $transaksi_data);
 
-        // Hapus cart user di database - Ensure this is working
+        // Hapus cart user di database - Penting untuk semua metode pembayaran
         $this->db->where('id_user', $id_user);
         $this->db->delete('cart');
         
-        // Log the cart deletion for debugging
-        error_log("Deleted cart items for user ID: $id_user");
-        
-        // Hapus cart di session (jika ada)
-        $this->session->unset_userdata('cart');
+        // Log untuk debugging
+        error_log("Cart cleared for user ID: $id_user after checkout with method: $metode");
 
         // Redirect ke halaman QRIS jika DANA/QRIS, jika tidak ke sukses
         if ($metode == 'dana') {
@@ -101,7 +98,17 @@ class Checkout extends CI_Controller {
     }
 
     public function sukses() {
-        $this->load->view('checkout/sukses');
+        $id_user = $this->session->userdata('id_user');
+        
+        // Double-check to ensure cart is cleared for all payment methods
+        $this->db->where('id_user', $id_user);
+        $this->db->delete('cart');
+        
+        // Clear cart in session if exists
+        $this->session->unset_userdata('cart');
+        
+        $data['title'] = 'Checkout Berhasil';
+        $this->load->view('checkout/sukses', $data);
     }
 
     public function metode() {
