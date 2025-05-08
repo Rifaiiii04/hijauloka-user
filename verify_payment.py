@@ -134,6 +134,10 @@ def verify_payment():
         image_data = data['image']
         order_id = data.get('order_id', '')
         manual_verify = data.get('manual_verify', False)
+        
+        # Log the order ID for debugging
+        logging.info(f"Processing payment verification for order ID: {order_id}")
+        
         img = read_image_from_base64(image_data)
         if img is None:
             return jsonify({'success': False, 'error': 'Invalid image data'})
@@ -141,6 +145,54 @@ def verify_payment():
         if result:
             filename = save_to_dataset(img, is_verified=True)
             logging.info(f"Payment verified and saved: {filename}")
+            
+            # If we have an order ID, update the order status in the database
+            if order_id:
+                try:
+                    # Connect to MySQL database
+                    import mysql.connector
+                    db = mysql.connector.connect(
+                        host="localhost",
+                        user="root",
+                        password="",
+                        database="hijauloka"
+                    )
+                    cursor = db.cursor()
+                    
+                    # Update order status
+                    cursor.execute(
+                        "UPDATE orders SET stts_pembayaran = 'lunas' WHERE id_order = %s",
+                        (order_id,)
+                    )
+                    
+                    # Update transaction status
+                    cursor.execute(
+                        "UPDATE transaksi SET status_pembayaran = 'success' WHERE order_id = %s",
+                        (order_id,)
+                    )
+                    
+                    # Get user ID from order
+                    cursor.execute(
+                        "SELECT id_user FROM orders WHERE id_order = %s",
+                        (order_id,)
+                    )
+                    result = cursor.fetchone()
+                    
+                    if result:
+                        user_id = result[0]
+                        # Clear user's cart
+                        cursor.execute(
+                            "DELETE FROM cart WHERE id_user = %s",
+                            (user_id,)
+                        )
+                        logging.info(f"Cleared cart for user ID: {user_id}")
+                    
+                    db.commit()
+                    cursor.close()
+                    db.close()
+                    logging.info(f"Updated order status for order ID: {order_id}")
+                except Exception as e:
+                    logging.error(f"Database error: {str(e)}")
         else:
             filename = save_to_dataset(img, is_verified=False)
             logging.info(f"Payment not verified, saved for review: {filename}")

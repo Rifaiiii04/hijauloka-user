@@ -197,4 +197,25 @@ class Cart extends CI_Controller {
             echo json_encode(['success' => true, 'message' => 'Pesanan berhasil dibatalkan']);
         }
     }
+
+    public function clear() {
+        if (!$this->session->userdata('logged_in')) {
+            echo json_encode(['success' => false, 'message' => 'Silakan login terlebih dahulu']);
+            return;
+        }
+    
+        $user_id = $this->session->userdata('id_user');
+        
+        // Clear cart in database
+        $this->db->where('id_user', $user_id);
+        $this->db->delete('cart');
+        
+        // Clear cart in session
+        $this->session->unset_userdata('cart');
+        
+        // Log for debugging
+        error_log("Cart cleared for user ID: $user_id");
+        
+        echo json_encode(['success' => true, 'message' => 'Keranjang berhasil dikosongkan']);
+    }
 }

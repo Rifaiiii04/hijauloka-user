@@ -323,5 +323,34 @@
             confirmButtonText: 'OK'
         });
     }
+    async function processSuccessfulPayment() {
+        try {
+            verifyResult.textContent = 'Pembayaran berhasil diverifikasi!';
+            verifyResult.classList.add('text-green-600');
+            
+            // Show success message
+            document.getElementById('successMessage').classList.remove('hidden');
+            
+            // Clear cart in session
+            try {
+                await fetch('<?= base_url('cart/clear') ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+            } catch (err) {
+                console.error('Error clearing cart:', err);
+            }
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = '<?= base_url('checkout/sukses') ?>';
+            }, 2000);
+        } catch (error) {
+            console.error('Error processing payment:', error);
+        }
+    }
     </script>
 </div>

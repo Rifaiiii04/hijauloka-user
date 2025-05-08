@@ -50,7 +50,7 @@ class Checkout extends CI_Controller {
         $this->db->insert('orders', $order_data);
         $id_order = $this->db->insert_id();
 
-        // Insert ke order_items
+        // Insert ke order_items dan update stok produk
         foreach ($cart_items as $item) {
             $this->db->insert('order_items', [
                 'id_order' => $id_order,
@@ -58,6 +58,14 @@ class Checkout extends CI_Controller {
                 'quantity' => $item['jumlah'],
                 'subtotal' => $item['harga'] * $item['jumlah']
             ]);
+            
+            // Update stok produk
+            $product = $this->db->get_where('product', ['id_product' => $item['id_product']])->row_array();
+            if ($product) {
+                $new_stock = $product['stok'] - $item['jumlah'];
+                $this->db->where('id_product', $item['id_product']);
+                $this->db->update('product', ['stok' => $new_stock]);
+            }
         }
 
         // Insert ke transaksi (dummy)
@@ -74,8 +82,15 @@ class Checkout extends CI_Controller {
         ];
         $this->db->insert('transaksi', $transaksi_data);
 
-        // Hapus cart user
-        $this->db->delete('cart', ['id_user' => $id_user]);
+        // Hapus cart user di database - Ensure this is working
+        $this->db->where('id_user', $id_user);
+        $this->db->delete('cart');
+        
+        // Log the cart deletion for debugging
+        error_log("Deleted cart items for user ID: $id_user");
+        
+        // Hapus cart di session (jika ada)
+        $this->session->unset_userdata('cart');
 
         // Redirect ke halaman QRIS jika DANA/QRIS, jika tidak ke sukses
         if ($metode == 'dana') {
