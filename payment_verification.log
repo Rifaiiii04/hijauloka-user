@@ -648,3 +648,182 @@ meng soot batre ae ve ana bea sos eee
 2025-05-08 19:56:32,406 - INFO - blue_ratio: 0.142, has_dana_or_bisnis: False, valid: False
 2025-05-08 19:56:32,410 - INFO - Payment not verified, saved for review: unverified_payment_1746708992.jpg
 2025-05-08 19:56:32,412 - INFO - 127.0.0.1 - - [08/May/2025 19:56:32] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:57:01,120 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 19:57:01,239 - INFO -  * Restarting with stat
+2025-05-08 19:57:01,969 - WARNING -  * Debugger is active!
+2025-05-08 19:57:01,972 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 19:57:19,671 - INFO - 127.0.0.1 - - [08/May/2025 19:57:19] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:57:20,743 - INFO - OCR Text: oe i na aa : i oes
+pre curls come fe out ses
+eg ru sn gy
+
+2025-05-08 19:57:20,743 - INFO - blue_ratio: 0.176, has_dana_or_bisnis: False, valid: False
+2025-05-08 19:57:20,747 - INFO - Payment not verified, saved for review: unverified_payment_1746709040.jpg
+2025-05-08 19:57:20,748 - INFO - 127.0.0.1 - - [08/May/2025 19:57:20] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:57:32,505 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 19:57:32,587 - INFO -  * Restarting with stat
+2025-05-08 19:57:33,122 - WARNING -  * Debugger is active!
+2025-05-08 19:57:33,125 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 19:57:47,781 - INFO - 127.0.0.1 - - [08/May/2025 19:57:47] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:57:48,973 - INFO - OCR Text: nan keren hn
+pe aro banas sa nak
+mee iy be fe wrwmug c2 monkonton ff hs ge oe aon
+seta na na one 8 ets aa
+pn bea ny al . al te ange ats na
+
+2025-05-08 19:57:48,973 - INFO - blue_ratio: 0.138, has_dana_or_bisnis: False, valid: False
+2025-05-08 19:57:48,978 - INFO - Payment not verified, saved for review: unverified_payment_1746709068.jpg
+2025-05-08 19:57:48,979 - INFO - 127.0.0.1 - - [08/May/2025 19:57:48] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:57:59,294 - INFO - 127.0.0.1 - - [08/May/2025 19:57:59] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 19:58:00,278 - INFO - OCR Text: pe pan) ee
+acres ae an qpana: pee aa
+
+2025-05-08 19:58:00,278 - INFO - blue_ratio: 0.121, has_dana_or_bisnis: False, valid: False
+2025-05-08 19:58:00,282 - INFO - Payment not verified, saved for review: unverified_payment_1746709080.jpg
+2025-05-08 19:58:00,284 - INFO - 127.0.0.1 - - [08/May/2025 19:58:00] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:01:45,605 - INFO - 127.0.0.1 - - [08/May/2025 20:01:45] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:01:47,066 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:01:47,066 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:01:47,071 - INFO - Saved verified payment proof: verified_payment_1746709307.jpg
+2025-05-08 20:01:47,071 - INFO - Payment verified and saved: verified_payment_1746709307.jpg
+2025-05-08 20:01:47,072 - INFO - 127.0.0.1 - - [08/May/2025 20:01:47] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:02:09,954 - INFO - 127.0.0.1 - - [08/May/2025 20:02:09] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:02:11,401 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:02:11,401 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:02:11,405 - INFO - Saved verified payment proof: verified_payment_1746709331.jpg
+2025-05-08 20:02:11,406 - INFO - Payment verified and saved: verified_payment_1746709331.jpg
+2025-05-08 20:02:11,406 - INFO - 127.0.0.1 - - [08/May/2025 20:02:11] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:04:17,395 - INFO - 127.0.0.1 - - [08/May/2025 20:04:17] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:04:18,894 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:04:18,894 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:04:18,898 - INFO - Saved verified payment proof: verified_payment_1746709458.jpg
+2025-05-08 20:04:18,899 - INFO - Payment verified and saved: verified_payment_1746709458.jpg
+2025-05-08 20:04:18,899 - INFO - 127.0.0.1 - - [08/May/2025 20:04:18] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:07:00,804 - INFO - 127.0.0.1 - - [08/May/2025 20:07:00] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:07:02,382 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:07:02,383 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:07:02,387 - INFO - Saved verified payment proof: verified_payment_1746709622.jpg
+2025-05-08 20:07:02,388 - INFO - Payment verified and saved: verified_payment_1746709622.jpg
+2025-05-08 20:07:02,388 - INFO - 127.0.0.1 - - [08/May/2025 20:07:02] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:08:06,250 - INFO - 127.0.0.1 - - [08/May/2025 20:08:06] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:08:07,686 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:08:07,686 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:08:07,690 - INFO - Saved verified payment proof: verified_payment_1746709687.jpg
+2025-05-08 20:08:07,690 - INFO - Payment verified and saved: verified_payment_1746709687.jpg
+2025-05-08 20:08:07,691 - INFO - 127.0.0.1 - - [08/May/2025 20:08:07] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:08:36,816 - INFO - 127.0.0.1 - - [08/May/2025 20:08:36] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:08:38,441 - INFO - OCR Text: gr 2oo do le all bd
+ee
+or a ao
+ceo bisnis
+= =
+sp he edi
+ta sone tees ged ie cane cane sane
+ee ancanagarnca
+peribgynren en hanana oe _
+ese teaver 5 era
+motode pombayatan saras ana
+abang
+te
+dani tamat pc ages
+= ps as
+—e tts
+ma na ate aa = ij
+lor ooo soe ov
+(csd sereneanreans
+———— esre_eastt
+
+2025-05-08 20:08:38,441 - INFO - blue_ratio: 0.260, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:08:38,445 - INFO - Saved verified payment proof: verified_payment_1746709718.jpg
+2025-05-08 20:08:38,445 - INFO - Payment verified and saved: verified_payment_1746709718.jpg
+2025-05-08 20:08:38,446 - INFO - 127.0.0.1 - - [08/May/2025 20:08:38] "POST /verify-payment HTTP/1.1" 200 -

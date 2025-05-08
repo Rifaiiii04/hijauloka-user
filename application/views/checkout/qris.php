@@ -1,5 +1,16 @@
 <?php $this->load->view('templates/header2'); ?>
 
+<style>
+@keyframes plant-bounce {
+  0%, 100% { transform: translateY(0);}
+  50% { transform: translateY(-10px);}
+}
+#successModal svg {
+  animation: plant-bounce 1.2s infinite;
+}
+</style>
+
+
 <div class="container mx-auto max-w-lg py-12 text-center">
     <h2 class="text-2xl font-bold text-green-800 mb-4">Pembayaran DANA/QRIS</h2>
     <p class="mb-4 text-gray-700">Silakan scan QRIS di bawah ini menggunakan aplikasi DANA, OVO, GoPay, atau aplikasi pembayaran lain yang mendukung QRIS.</p>
@@ -95,8 +106,8 @@
             </div>
             <!-- Photo Preview -->
             <div id="photoPreview" class="hidden space-y-4">
-                <div class="relative">
-                    <img id="previewImageManual" class="w-52 h-52 rounded-lg border-2 border-gray-300" />
+                <div class="relative flex justify-center">
+                    <img id="previewImageManual" class="rounded-lg border-2 border-gray-300 mx-auto my-4 w-64 h-auto object-contain" />
                     <div class="absolute inset-0 border-2 border-dashed border-green-400 rounded-lg pointer-events-none"></div>
                 </div>
                 <div class="flex justify-center space-x-4">
@@ -132,12 +143,30 @@
         </div>
     </div>
 
-    <div class="mt-6">
-        <div class="text-sm text-gray-700 mb-2 font-semibold">Contoh Bukti Pembayaran yang Valid:</div>
-        <div class="flex flex-wrap justify-center gap-4">
-            <img src="<?= base_url('assets/img/contoh1.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 1">
-            <img src="<?= base_url('assets/img/contoh2.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 2">
-            <img src="<?= base_url('assets/img/contoh3.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 3">
+    <!-- Loader Animasi Teman Tanaman -->
+    <div id="successLoader" class="hidden flex flex-col items-center justify-center py-8">
+        <img src="<?= base_url('assets/img/plant_loader.gif') ?>" alt="Loading..." class="w-32 h-32 mb-4">
+        <div class="text-green-700 font-bold text-lg">Pembayaran Berhasil! Pesanan Anda sedang diproses...</div>
+    </div>
+
+    <!-- Modal Loader Verifikasi Berhasil -->
+    <div id="successModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl px-8 py-10 flex flex-col items-center relative animate__animated animate__fadeInDown">
+            <!-- SVG Animasi Tanaman Hias -->
+            <div class="mb-4">
+                <!-- Contoh SVG tanaman, bisa diganti dengan SVG lain atau GIF -->
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+                    <ellipse cx="50" cy="90" rx="30" ry="8" fill="#A3D9A5"/>
+                    <rect x="40" y="60" width="20" height="30" rx="8" fill="#7BC47F"/>
+                    <path d="M50 60 Q45 40 30 50" stroke="#4F8A4B" stroke-width="4" fill="none"/>
+                    <path d="M50 60 Q55 35 70 55" stroke="#4F8A4B" stroke-width="4" fill="none"/>
+                    <circle cx="30" cy="50" r="6" fill="#A3D9A5"/>
+                    <circle cx="70" cy="55" r="7" fill="#A3D9A5"/>
+                </svg>
+            </div>
+            <div class="text-green-700 font-bold text-xl mb-2">Pembayaran Berhasil!</div>
+            <div class="text-gray-600 mb-4">Pesanan Anda sedang diproses oleh sistem.</div>
+            <div class="loader-plant mb-2"></div>
         </div>
     </div>
 
@@ -286,18 +315,14 @@
             retakeBtn.disabled = false;
             
             if (data.success) {
-                verifyResult.textContent = 'Pembayaran terverifikasi!';
-                verifyResult.classList.add('text-green-600');
-                
-                // Show success animation
-                Swal.fire({
-                    title: 'Pembayaran Berhasil!',
-                    text: 'Pembayaran Anda telah terverifikasi.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
+                // Sembunyikan preview, tampilkan modal loader tanaman
+                photoPreview.classList.add('hidden');
+                document.getElementById('successLoader').classList.add('hidden');
+                document.getElementById('successModal').classList.remove('hidden');
+                // Redirect otomatis setelah 2.5 detik
+                setTimeout(() => {
                     window.location.href = '<?= base_url('checkout/sukses') ?>';
-                });
+                }, 2500);
             } else {
                 verifyResult.textContent = 'Bukti pembayaran tidak valid. Silakan ulangi foto.';
                 verifyResult.classList.add('text-red-600');
@@ -320,5 +345,4 @@
         });
     }
     </script>
-    
-    <?php $this->load->view('templates/footer'); ?>
+</div>
