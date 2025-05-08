@@ -3,436 +3,321 @@
 <div class="container mx-auto max-w-lg py-12 text-center">
     <h2 class="text-2xl font-bold text-green-800 mb-4">Pembayaran DANA/QRIS</h2>
     <p class="mb-4 text-gray-700">Silakan scan QRIS di bawah ini menggunakan aplikasi DANA, OVO, GoPay, atau aplikasi pembayaran lain yang mendukung QRIS.</p>
+    
+    <!-- QRIS Display -->
     <div class="flex justify-center mb-6">
         <img src="<?= base_url('assets/img/dana.jpg') ?>" alt="QRIS DANA" class="rounded-lg shadow-lg w-72 h-72 object-contain border-4 border-blue-200">
     </div>
-    <div class="mb-4">
-        <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded text-lg font-semibold">
-            Selesaikan pembayaran dalam <span id="timer">10:00</span>
-        </span>
-    </div>
-    <p class="text-gray-600 mb-6">Setelah pembayaran, pesanan Anda akan diproses secara otomatis.</p>
-   
 
-    <div class="mt-8 flex flex-col items-center space-y-3">
-        <button id="verifyBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold w-64">
-            Verifikasi dengan Kamera
+    <!-- Timer -->
+    <div class="mb-6">
+        <div class="inline-flex items-center space-x-2 bg-yellow-100 px-4 py-2 rounded-full">
+            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-yellow-800 font-semibold">Selesaikan dalam <span id="timer" class="text-red-600">10:00</span></span>
+        </div>
+    </div>
+
+    <p class="text-gray-600 mb-6">Setelah pembayaran, pesanan Anda akan diproses secara otomatis.</p>
+
+    <!-- Payment Verification Buttons -->
+    <div class="mt-8 flex flex-col items-center space-y-4">
+        <button id="verifyBtn" class="group relative px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold w-64 transition-all duration-300 transform hover:scale-105">
+            <span class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Verifikasi dengan Kamera
+            </span>
         </button>
-        
         <div class="flex items-center">
             <span class="text-gray-600 mx-2">atau</span>
         </div>
-        
-        <button id="fileUpload" class="px-6 py-3 text-white rounded-lg font-semibold cursor-pointer w-64 text-center" style="background-color: green;">
-            Upload Bukti Pembayaran
+        <button id="fileUpload" class="group relative px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold w-64 transition-all duration-300 transform hover:scale-105">
+            <span class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                Upload Bukti Pembayaran
+            </span>
         </button>
-        <!-- Remove the hidden input as we'll use the one in the modal -->
     </div>
 
-    <!-- Modal Kamera - Change background to blur effect -->
+    <!-- Enhanced Camera Modal -->
     <div id="cameraModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-4 w-full text-center relative">
-            <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-            <h3 class="text-lg font-semibold mb-2" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
-            
-            <!-- Camera view (will be hidden for file upload) -->
-            <div id="cameraView">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 relative">
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <h3 class="text-xl font-semibold mb-4 text-center" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
+            <!-- Camera View -->
+            <div id="cameraView" class="space-y-4">
                 <div class="relative mx-auto">
-                    <video id="video" width="1050" height="540" autoplay class="mx-auto rounded border-2 border-gray-300"></video>
-                    
-                    <!-- Positioning guide overlay -->
-                    <div id="positioningGuide" class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                        <div class="border-4 border-dashed border-blue-500 rounded-lg w-3/5 h-4/5 flex flex-col items-center justify-center">
-                            <div class="bg-blue-500 bg-opacity-20 rounded-lg p-3 text-center">
-                                <p class="text-blue-800 font-bold text-sm">Posisikan bukti pembayaran di dalam kotak</p>
-                                <p class="text-blue-700 text-xs">Deteksi otomatis akan berjalan saat terlihat jelas</p>
-                            </div>
-                        </div>
+                    <video id="video" class="w-full h-auto rounded-lg border-2 border-gray-300" autoplay playsinline></video>
+                    <!-- Overlay garis kotak dan titik-titik -->
+                    <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                        <svg width="100%" height="100%" viewBox="0 0 400 300" style="position:absolute;top:0;left:0;">
+                            <!-- Kotak guideline -->
+                            <rect x="60" y="40" width="280" height="220" rx="16" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="10,10"/>
+                            <!-- Titik-titik di sudut -->
+                            <circle cx="60" cy="40" r="5" fill="#2563eb"/>
+                            <circle cx="340" cy="40" r="5" fill="#2563eb"/>
+                            <circle cx="60" cy="260" r="5" fill="#2563eb"/>
+                            <circle cx="340" cy="260" r="5" fill="#2563eb"/>
+                        </svg>
                     </div>
                 </div>
-                
-                <div class="mt-3 flex justify-center space-x-3">
-                    <button id="captureBtn" class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Ambil Foto Manual</button>
-                    <button id="autoDetectBtn" class="px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm">Mulai Deteksi Otomatis</button>
+                <div class="text-xs text-blue-700 mt-2">Pastikan bukti pembayaran berada di dalam kotak biru</div>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-2">Instruksi Pengambilan Foto:</h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li>• Pastikan layar HP dalam posisi tegak</li>
+                        <li>• Pastikan tulisan dan nominal terlihat jelas</li>
+                        <li>• Hindari pantulan cahaya pada layar</li>
+                        <li>• Jaga jarak kamera agar tidak terlalu dekat/terlalu jauh</li>
+                    </ul>
                 </div>
-                <div id="autoDetectStatus" class="mt-1 text-xs text-gray-600 hidden">
-                    Mendeteksi bukti pembayaran secara otomatis... <span class="inline-block animate-pulse">⚡</span>
-                </div>
-            </div>
-            
-            <!-- File preview (for uploaded files) - Adjust image size -->
-            <div id="filePreview" class="hidden">
-                <div class="mb-3">
-                    <label for="modalFileUpload" class="px-4 py-2  text-white rounded-lg  font-semibold cursor-pointer inline-block text-sm" style="background-color:green;">
-                        Pilih File Bukti Pembayaran
-                    </label>
-                    <input type="file" id="modalFileUpload" accept="image/*" class="hidden">
-                </div>
-                <div id="previewContainer" class="hidden">
-                    <!-- Limit image height to be more compact -->
-                    <img id="previewImage" class="mx-auto rounded border-2 border-gray-300 max-w-52 max-h-[180px] object-contain h-52" />
-                    <p class="mt-1 text-xs text-gray-600">File: <span id="fileName">-</span></p>
+                <div class="flex justify-center space-x-4">
+                    <button id="captureBtn" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-all duration-300 transform hover:scale-105">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Ambil Foto
+                        </span>
+                    </button>
                 </div>
             </div>
-            
-            <!-- Shared elements - Move button closer to image -->
-            <canvas id="canvas" width="320" height="240" class="hidden"></canvas>
-            <div class="mt-2">
-                <button id="uploadBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold hidden text-sm">
-                    Verifikasi Pembayaran
-                </button>
+            <!-- Photo Preview -->
+            <div id="photoPreview" class="hidden space-y-4">
+                <div class="relative">
+                    <img id="previewImageManual" class="w-full h-auto rounded-lg border-2 border-gray-300" />
+                    <div class="absolute inset-0 border-2 border-dashed border-green-400 rounded-lg pointer-events-none"></div>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button id="retakeBtn" class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-semibold transition-all duration-300 transform hover:scale-105">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Ambil Ulang
+                        </span>
+                    </button>
+                    <button id="verifyBtnManual" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-all duration-300 transform hover:scale-105">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Verifikasi
+                        </span>
+                    </button>
+                </div>
             </div>
-            
-            <div id="verifyResult" class="mt-2 text-base font-semibold"></div>
-            
-            <!-- Manual verification option (for admin or when auto-detection fails) -->
-            <div id="manualVerifyOption" class="mt-2 hidden">
-                <p class="text-xs text-gray-600 mb-1">Jika bukti pembayaran valid tapi tidak terdeteksi:</p>
-                <button id="manualVerifyBtn" class="px-3 py-1.5 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm">
-                    Verifikasi Manual
-                </button>
+            <!-- Verification Result -->
+            <div id="verifyResult" class="mt-4 text-center font-semibold"></div>
+            <!-- Manual Verification Option -->
+            <div id="manualVerifyOption" class="mt-4 hidden">
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <p class="text-sm text-yellow-800 mb-2">Jika bukti pembayaran valid tapi tidak terdeteksi:</p>
+                    <button id="manualVerifyBtn" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-semibold transition-all duration-300 transform hover:scale-105">
+                        Verifikasi Manual
+                    </button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="mt-6">
+        <div class="text-sm text-gray-700 mb-2 font-semibold">Contoh Bukti Pembayaran yang Valid:</div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <img src="<?= base_url('assets/img/contoh1.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 1">
+            <img src="<?= base_url('assets/img/contoh2.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 2">
+            <img src="<?= base_url('assets/img/contoh3.jpg') ?>" class="w-48 rounded shadow border border-blue-300" alt="Contoh 3">
         </div>
     </div>
 
     <script>
-    // Countdown timer 10 menit
-    let timeLeft = 600; // 10 menit dalam detik
+    // Countdown timer with better formatting
+    let timeLeft = 600;
     const timerEl = document.getElementById('timer');
     const interval = setInterval(() => {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
         timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 60) { // Last minute warning
+            timerEl.classList.add('animate-pulse');
+        }
+        
         if (timeLeft <= 0) {
             clearInterval(interval);
             timerEl.textContent = '00:00';
-            alert('Waktu pembayaran telah habis. Silakan lakukan pemesanan ulang.');
-            window.location.href = '<?= base_url('orders') ?>';
+            Swal.fire({
+                title: 'Waktu Habis!',
+                text: 'Waktu pembayaran telah habis. Silakan lakukan pemesanan ulang.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = '<?= base_url('orders') ?>';
+            });
         }
         timeLeft--;
     }, 1000);
     
-    // Kamera & Verifikasi
+    // Enhanced camera handling
     const verifyBtn = document.getElementById('verifyBtn');
     const fileUpload = document.getElementById('fileUpload');
-    const modalFileUpload = document.getElementById('modalFileUpload');
     const cameraModal = document.getElementById('cameraModal');
     const closeModal = document.getElementById('closeModal');
     const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
+    const canvas = document.createElement('canvas');
     const captureBtn = document.getElementById('captureBtn');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const autoDetectBtn = document.getElementById('autoDetectBtn');
-    const autoDetectStatus = document.getElementById('autoDetectStatus');
     const verifyResult = document.getElementById('verifyResult');
     const cameraView = document.getElementById('cameraView');
-    const filePreview = document.getElementById('filePreview');
-    const previewImage = document.getElementById('previewImage');
-    const previewContainer = document.getElementById('previewContainer');
-    const fileName = document.getElementById('fileName');
-    const modalTitle = document.getElementById('modalTitle');
+    const photoPreview = document.getElementById('photoPreview');
+    const previewImageManual = document.getElementById('previewImageManual');
+    const retakeBtn = document.getElementById('retakeBtn');
+    const verifyBtnManual = document.getElementById('verifyBtnManual');
+    const manualVerifyOption = document.getElementById('manualVerifyOption');
+    
     let stream;
     let imageData;
-    let autoDetectInterval;
-    let isAutoDetecting = false;
-    let isFileUpload = false;
     
     // Camera button click
     verifyBtn.onclick = async () => {
-        isFileUpload = false;
-        modalTitle.textContent = 'Ambil Foto Bukti Pembayaran';
-        cameraView.classList.remove('hidden');
-        filePreview.classList.add('hidden');
-        previewContainer.classList.add('hidden');
-        
         openCameraModal();
+        await startCamera();
     };
     
-    // File upload button click - just open modal
-    fileUpload.onclick = (e) => {
-        e.preventDefault(); // Prevent default behavior
-        isFileUpload = true;
-        modalTitle.textContent = 'Upload Bukti Pembayaran';
-        cameraView.classList.add('hidden');
-        filePreview.classList.remove('hidden');
-        previewContainer.classList.add('hidden');
-        uploadBtn.classList.add('hidden');
-        
-        openCameraModal();
-    };
-    
-    // Modal file upload handling
-    modalFileUpload.onchange = (e) => {
-        if (e.target.files && e.target.files[0]) {
+    // File upload button click
+    fileUpload.onclick = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
             const file = e.target.files[0];
-            fileName.textContent = file.name;
-            
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                previewImage.src = event.target.result;
-                imageData = event.target.result;
-                
-                // Show the preview and verify button
-                previewContainer.classList.remove('hidden');
-                uploadBtn.classList.remove('hidden');
-                uploadBtn.textContent = 'Verifikasi Pembayaran';
-            };
-            reader.readAsDataURL(file);
-        }
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imageData = event.target.result;
+                    openCameraModal();
+                    showPreview(imageData);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
     };
     
     function openCameraModal() {
         cameraModal.classList.remove('hidden');
         verifyResult.textContent = '';
-        verifyResult.classList.remove('text-green-600');
-        
-        // Show or hide upload button based on context
-        if (isFileUpload) {
-            uploadBtn.classList.remove('hidden');
-        } else {
-            uploadBtn.classList.add('hidden');
-        }
-        
-        canvas.classList.add('hidden');
-        document.getElementById('manualVerifyOption').classList.add('hidden');
-        autoDetectStatus.classList.add('hidden');
-        
-        // Reset positioning guide
-        const guide = document.getElementById('positioningGuide');
-        guide.classList.remove('hidden');
-        guide.classList.remove('animate-pulse');
-        
-        if (!isFileUpload) {
-            // Only start camera if not file upload
-            startCamera();
-        }
+        verifyResult.classList.remove('text-green-600', 'text-red-600');
+        cameraView.classList.remove('hidden');
+        photoPreview.classList.add('hidden');
+        manualVerifyOption.classList.add('hidden');
     }
     
     async function startCamera() {
         try {
-            // Request camera with higher resolution
             stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { 
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
-                    facingMode: 'environment' // Prefer back camera on mobile
+                    facingMode: 'environment'
                 } 
             });
             video.srcObject = stream;
-            video.classList.remove('hidden');
         } catch (err) {
-            verifyResult.textContent = 'Error accessing camera: ' + err.message;
+            showError('Error mengakses kamera: ' + err.message);
         }
+    }
+    
+    function showPreview(data) {
+        previewImageManual.src = data;
+        cameraView.classList.add('hidden');
+        photoPreview.classList.remove('hidden');
     }
     
     closeModal.onclick = () => {
         cameraModal.classList.add('hidden');
-        stopAutoDetection();
-        if (stream) stream.getTracks().forEach(track => track.stop());
-        // Reset file input
-        fileUpload.value = '';
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
     };
     
     captureBtn.onclick = () => {
-        stopAutoDetection();
-        captureImage();
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        imageData = canvas.toDataURL('image/jpeg', 0.8);
+        showPreview(imageData);
     };
     
-    function captureImage() {
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        imageData = canvas.toDataURL('image/jpeg');
-        canvas.classList.remove('hidden');
-        video.classList.add('hidden');
-        uploadBtn.textContent = 'Verifikasi Pembayaran';
-        uploadBtn.classList.remove('hidden');
-        autoDetectBtn.classList.add('hidden');
-    }
-    
-    uploadBtn.onclick = async () => {
-        // Reset manual verify option
-        document.getElementById('manualVerifyOption').classList.add('hidden');
-        await verifyPaymentImage(false);
+    retakeBtn.onclick = () => {
+        cameraView.classList.remove('hidden');
+        photoPreview.classList.add('hidden');
     };
     
-    // Auto detection functionality
-    autoDetectBtn.onclick = () => {
-        if (isAutoDetecting) {
-            stopAutoDetection();
-        } else {
-            startAutoDetection();
-        }
-    };
-    
-    function startAutoDetection() {
-        isAutoDetecting = true;
-        autoDetectStatus.classList.remove('hidden');
-        autoDetectBtn.textContent = 'Hentikan Deteksi Otomatis';
-        autoDetectBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
-        autoDetectBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-        
-        // Show positioning guide with animation
-        const guide = document.getElementById('positioningGuide');
-        guide.classList.add('animate-pulse');
-        
-        // Show status message
-        verifyResult.textContent = 'Arahkan kamera ke bukti pembayaran DANA/QRIS';
-        verifyResult.classList.add('text-blue-600');
-        
-        // Start auto detection interval - check more frequently
-        autoDetectInterval = setInterval(() => {
-            // Capture current frame
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = video.videoWidth;
-            tempCanvas.height = video.videoHeight;
-            tempCanvas.getContext('2d').drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-            const frameData = tempCanvas.toDataURL('image/jpeg', 0.7); // Lower quality for faster upload
-            
-            // Send for verification
-            verifyFrame(frameData);
-        }, 1500); // Check every 1.5 seconds for faster response
-    }
-    
-    function stopAutoDetection() {
-        if (autoDetectInterval) {
-            clearInterval(autoDetectInterval);
-        }
-        isAutoDetecting = false;
-        autoDetectStatus.classList.add('hidden');
-        autoDetectBtn.textContent = 'Mulai Deteksi Otomatis';
-        autoDetectBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
-        autoDetectBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
-        
-        // Remove guide animation
-        const guide = document.getElementById('positioningGuide');
-        guide.classList.remove('animate-pulse');
-        
-        // Clear status message
-        verifyResult.textContent = '';
-        verifyResult.classList.remove('text-blue-600');
-    }
-    
-    async function verifyFrame(frameData) {
-        try {
-            // Show subtle indicator that verification is happening
-            autoDetectStatus.textContent = 'Memindai bukti pembayaran... ⚡';
-            autoDetectStatus.classList.add('text-blue-600');
-            
-            const res = await fetch('http://localhost:5000/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    image: frameData,
-                    order_id: "<?= $order['id_order'] ?>"
-                })
-            });
-            
-            const data = await res.json();
-            if (data.success) {
-                // Payment detected! Stop auto detection and process
-                stopAutoDetection();
-                imageData = frameData;
-                
-                // Show the captured frame
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.classList.remove('hidden');
-                video.classList.add('hidden');
-                
-                // Hide positioning guide
-                document.getElementById('positioningGuide').classList.add('hidden');
-                
-                // Process the successful payment
-                await processSuccessfulPayment();
-            } else {
-                // Reset indicator color and text
-                autoDetectStatus.textContent = 'Mendeteksi bukti pembayaran secara otomatis... ⚡';
-                autoDetectStatus.classList.remove('text-blue-600');
-            }
-        } catch (error) {
-            console.error('Auto detection error:', error);
-            // Reset indicator color
-            autoDetectStatus.classList.remove('text-blue-600');
-        }
-    }
-    
-    // Update verifyPaymentImage to handle both camera and file uploads
-    async function verifyPaymentImage(manualVerify = false) {
+    verifyBtnManual.onclick = async () => {
         verifyResult.textContent = 'Memverifikasi...';
-        verifyResult.classList.add('animate-pulse'); // Add pulsing animation
-        
-        // Disable the button during verification
-        uploadBtn.disabled = true;
-        uploadBtn.classList.add('opacity-70');
+        verifyResult.classList.add('animate-pulse');
+        verifyBtnManual.disabled = true;
+        retakeBtn.disabled = true;
         
         try {
-            // Kirim ke backend Python
             const res = await fetch('http://localhost:5000/verify-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     image: imageData,
-                    order_id: "<?= $order['id_order'] ?>",
-                    manual_verify: manualVerify
+                    order_id: "<?= $order['id_order'] ?>"
                 })
             });
             
             const data = await res.json();
-            
-            // Remove animation and re-enable button
             verifyResult.classList.remove('animate-pulse');
-            uploadBtn.disabled = false;
-            uploadBtn.classList.remove('opacity-70');
+            verifyBtnManual.disabled = false;
+            retakeBtn.disabled = false;
             
             if (data.success) {
-                let successMessage = 'Pembayaran terverifikasi!';
-                if (data.saved_as_training) {
-                    successMessage += ' Bukti pembayaran disimpan untuk training.';
-                }
-                verifyResult.textContent = successMessage;
-                await processSuccessfulPayment();
-            } else {
-                verifyResult.textContent = 'Bukti pembayaran tidak valid. Coba lagi.';
-                // Show manual verification option
-                document.getElementById('manualVerifyOption').classList.remove('hidden');
+                verifyResult.textContent = 'Pembayaran terverifikasi!';
+                verifyResult.classList.add('text-green-600');
                 
-                if (!isFileUpload) {
-                    // Only reset to camera view if not file upload
-                    canvas.classList.add('hidden');
-                    video.classList.remove('hidden');
-                    uploadBtn.classList.add('hidden');
-                    autoDetectBtn.classList.remove('hidden');
-                }
+                // Show success animation
+                Swal.fire({
+                    title: 'Pembayaran Berhasil!',
+                    text: 'Pembayaran Anda telah terverifikasi.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = '<?= base_url('checkout/sukses') ?>';
+                });
+            } else {
+                verifyResult.textContent = 'Bukti pembayaran tidak valid. Silakan ulangi foto.';
+                verifyResult.classList.add('text-red-600');
+                manualVerifyOption.classList.remove('hidden');
             }
         } catch (error) {
-            // Remove animation and re-enable button
             verifyResult.classList.remove('animate-pulse');
-            uploadBtn.disabled = false;
-            uploadBtn.classList.remove('opacity-70');
-            
-            verifyResult.textContent = 'Error: ' + error.message;
+            verifyBtnManual.disabled = false;
+            retakeBtn.disabled = false;
+            showError('Error: ' + error.message);
         }
-    }
+    };
     
-    // Add event listener for manual verification button
-    document.getElementById('manualVerifyBtn').addEventListener('click', async () => {
-        // Capture current frame if not already captured
-        if (!imageData) {
-            captureImage();
-        }
-        // Process with manual verification flag
-        await verifyPaymentImage(true);
-    });
-    
-    // Update processSuccessfulPayment to redirect to sukses.php
-    async function processSuccessfulPayment() {
-        verifyResult.textContent = 'Pembayaran berhasil! Mengalihkan...';
-        verifyResult.classList.add('text-green-600');
-        
-        // Redirect to success page after a short delay
-        setTimeout(() => {
-            window.location.href = '<?= base_url('checkout/sukses') ?>';
-        }, 1500);
+    function showError(message) {
+        Swal.fire({
+            title: 'Error!',
+            text: message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
     </script>
     
