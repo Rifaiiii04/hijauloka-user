@@ -1,5 +1,5 @@
 <?php $this->load->view('templates/header') ?>
-<div class="container mx-auto max-w-6xl py-12">
+<div class="container mx-auto max-w-6xl py-12 mt-22">
     <h2 class="text-2xl font-bold text-green-800 mb-6">Keranjang Belanja</h2>
     
     <?php if (empty($cart_items)): ?>

@@ -1,5 +1,15 @@
 <?php $this->load->view('templates/header2') ?>
 
+<style>
+@keyframes plant-bounce {
+  0%, 100% { transform: translateY(0);}
+  50% { transform: translateY(-10px);}
+}
+#successModalCOD svg {
+  animation: plant-bounce 1.2s infinite;
+}
+</style>
+
 <div class="container mx-auto max-w-4xl py-8">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-green-800">Checkout</h1>
@@ -116,7 +126,7 @@
                     <?php foreach ($cart_items as $item): ?>
                         <div class="flex gap-4">
                             <div class="w-20 h-20 flex-shrink-0">
-                                <img src="<?= base_url('uploads/' . $item['gambar']) ?>" 
+                                <img src="http://localhost/hijauloka/uploads/<?= $item['gambar'] ?>" 
                                      alt="<?= $item['nama_product'] ?>" 
                                      class="w-full h-full object-cover rounded-lg">
                             </div>
@@ -168,7 +178,6 @@
                                         <span class="font-medium text-gray-900">DANA/QRIS</span>
                                         <p class="text-sm text-gray-500">Bayar dengan DANA atau QRIS</p>
                                     </div>
-                                    <img src="<?= base_url('assets/images/dana-qris.png') ?>" alt="DANA/QRIS" class="h-8">
                                 </div>
                             </label>
                         </div>
@@ -209,6 +218,24 @@
     </div>
 </div>
 
+<!-- Modal Loader Verifikasi Berhasil untuk COD -->
+<div id="successModalCOD" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl px-8 py-10 flex flex-col items-center relative animate__animated animate__fadeInDown">
+        <div class="mb-4">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="50" cy="90" rx="30" ry="8" fill="#A3D9A5"/>
+                <rect x="40" y="60" width="20" height="30" rx="8" fill="#7BC47F"/>
+                <path d="M50 60 Q45 40 30 50" stroke="#4F8A4B" stroke-width="4" fill="none"/>
+                <path d="M50 60 Q55 35 70 55" stroke="#4F8A4B" stroke-width="4" fill="none"/>
+                <circle cx="30" cy="50" r="6" fill="#A3D9A5"/>
+                <circle cx="70" cy="55" r="7" fill="#A3D9A5"/>
+            </svg>
+        </div>
+        <div class="text-green-700 font-bold text-xl mb-2">Pesanan Berhasil!</div>
+        <div class="text-gray-600 mb-4">Pesanan COD Anda sedang diproses oleh sistem.</div>
+    </div>
+</div>
+
 <script>
 document.querySelectorAll('input[name="kurir"]').forEach(radio => {
     radio.addEventListener('change', function() {
@@ -218,6 +245,19 @@ document.querySelectorAll('input[name="kurir"]').forEach(radio => {
         document.getElementById('total-amount').textContent = `Rp ${(<?= $total ?> + shippingCost).toLocaleString('id-ID')}`;
         document.getElementById('selected-kurir').value = this.value;
     });
+});
+
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    // Cek jika metode pembayaran adalah COD
+    const codRadio = document.getElementById('cod');
+    if (codRadio && codRadio.checked) {
+        e.preventDefault();
+        document.getElementById('successModalCOD').classList.remove('hidden');
+        setTimeout(() => {
+            window.location.href = "<?= base_url('checkout/sukses') ?>";
+        }, 2500);
+    }
+    // Jika bukan COD, biarkan submit normal (misal QRIS)
 });
 </script>
 

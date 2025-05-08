@@ -15,12 +15,10 @@
     <h2 class="text-2xl font-bold text-green-800 mb-4">Pembayaran DANA/QRIS</h2>
     <p class="mb-4 text-gray-700">Silakan scan QRIS di bawah ini menggunakan aplikasi DANA, OVO, GoPay, atau aplikasi pembayaran lain yang mendukung QRIS.</p>
     
-    <!-- QRIS Display -->
     <div class="flex justify-center mb-6">
         <img src="<?= base_url('assets/img/dana.jpg') ?>" alt="QRIS DANA" class="rounded-lg shadow-lg w-72 h-72 object-contain border-4 border-blue-200">
     </div>
 
-    <!-- Timer -->
     <div class="mb-6">
         <div class="inline-flex items-center space-x-2 bg-yellow-100 px-4 py-2 rounded-full">
             <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +30,6 @@
 
     <p class="text-gray-600 mb-6">Setelah pembayaran, pesanan Anda akan diproses secara otomatis.</p>
 
-    <!-- Payment Verification Buttons -->
     <div class="mt-8 flex flex-col items-center space-y-4">
         <button id="verifyBtn" class="group relative px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold w-64 transition-all duration-300 transform hover:scale-105">
             <span class="flex items-center justify-center">
@@ -56,7 +53,6 @@
         </button>
     </div>
 
-    <!-- Enhanced Camera Modal -->
     <div id="cameraModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 relative">
             <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200">
@@ -65,16 +61,12 @@
                 </svg>
             </button>
             <h3 class="text-xl font-semibold mb-4 text-center" id="modalTitle">Ambil Foto Bukti Pembayaran</h3>
-            <!-- Camera View -->
             <div id="cameraView" class="space-y-4">
                 <div class="relative mx-auto">
                     <video id="video" class="w-full h-auto rounded-lg border-2 border-gray-300" autoplay playsinline></video>
-                    <!-- Overlay garis kotak dan titik-titik -->
                     <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
                         <svg width="100%" height="100%" viewBox="0 0 400 300" style="position:absolute;top:0;left:0;">
-                            <!-- Kotak guideline -->
                             <rect x="60" y="40" width="280" height="220" rx="16" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="10,10"/>
-                            <!-- Titik-titik di sudut -->
                             <circle cx="60" cy="40" r="5" fill="#2563eb"/>
                             <circle cx="340" cy="40" r="5" fill="#2563eb"/>
                             <circle cx="60" cy="260" r="5" fill="#2563eb"/>
@@ -104,7 +96,6 @@
                     </button>
                 </div>
             </div>
-            <!-- Photo Preview -->
             <div id="photoPreview" class="hidden space-y-4">
                 <div class="relative flex justify-center">
                     <img id="previewImageManual" class="rounded-lg border-2 border-gray-300 mx-auto my-4 w-64 h-auto object-contain" />
@@ -129,9 +120,7 @@
                     </button>
                 </div>
             </div>
-            <!-- Verification Result -->
             <div id="verifyResult" class="mt-4 text-center font-semibold"></div>
-            <!-- Manual Verification Option -->
             <div id="manualVerifyOption" class="mt-4 hidden">
                 <div class="bg-yellow-50 p-4 rounded-lg">
                     <p class="text-sm text-yellow-800 mb-2">Jika bukti pembayaran valid tapi tidak terdeteksi:</p>
@@ -143,18 +132,14 @@
         </div>
     </div>
 
-    <!-- Loader Animasi Teman Tanaman -->
     <div id="successLoader" class="hidden flex flex-col items-center justify-center py-8">
         <img src="<?= base_url('assets/img/plant_loader.gif') ?>" alt="Loading..." class="w-32 h-32 mb-4">
         <div class="text-green-700 font-bold text-lg">Pembayaran Berhasil! Pesanan Anda sedang diproses...</div>
     </div>
 
-    <!-- Modal Loader Verifikasi Berhasil -->
     <div id="successModal" class="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-2xl shadow-2xl px-8 py-10 flex flex-col items-center relative animate__animated animate__fadeInDown">
-            <!-- SVG Animasi Tanaman Hias -->
             <div class="mb-4">
-                <!-- Contoh SVG tanaman, bisa diganti dengan SVG lain atau GIF -->
                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
                     <ellipse cx="50" cy="90" rx="30" ry="8" fill="#A3D9A5"/>
                     <rect x="40" y="60" width="20" height="30" rx="8" fill="#7BC47F"/>
@@ -171,7 +156,6 @@
     </div>
 
     <script>
-    // Countdown timer with better formatting
     let timeLeft = 600;
     const timerEl = document.getElementById('timer');
     const interval = setInterval(() => {
@@ -179,7 +163,7 @@
         const seconds = timeLeft % 60;
         timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         
-        if (timeLeft <= 60) { // Last minute warning
+        if (timeLeft <= 60) {
             timerEl.classList.add('animate-pulse');
         }
         
@@ -198,7 +182,6 @@
         timeLeft--;
     }, 1000);
     
-    // Enhanced camera handling
     const verifyBtn = document.getElementById('verifyBtn');
     const fileUpload = document.getElementById('fileUpload');
     const cameraModal = document.getElementById('cameraModal');
@@ -217,13 +200,11 @@
     let stream;
     let imageData;
     
-    // Camera button click
     verifyBtn.onclick = async () => {
         openCameraModal();
         await startCamera();
     };
     
-    // File upload button click
     fileUpload.onclick = () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -315,11 +296,9 @@
             retakeBtn.disabled = false;
             
             if (data.success) {
-                // Sembunyikan preview, tampilkan modal loader tanaman
                 photoPreview.classList.add('hidden');
                 document.getElementById('successLoader').classList.add('hidden');
                 document.getElementById('successModal').classList.remove('hidden');
-                // Redirect otomatis setelah 2.5 detik
                 setTimeout(() => {
                     window.location.href = '<?= base_url('checkout/sukses') ?>';
                 }, 2500);
