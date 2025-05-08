@@ -96,7 +96,7 @@
             <!-- Photo Preview -->
             <div id="photoPreview" class="hidden space-y-4">
                 <div class="relative">
-                    <img id="previewImageManual" class="w-full h-auto rounded-lg border-2 border-gray-300" />
+                    <img id="previewImageManual" class="w-52 h-52 rounded-lg border-2 border-gray-300" />
                     <div class="absolute inset-0 border-2 border-dashed border-green-400 rounded-lg pointer-events-none"></div>
                 </div>
                 <div class="flex justify-center space-x-4">

@@ -141,62 +141,29 @@ def is_payment_proof(upload_img, manual_verify=False):
         return True
 
     try:
-        logging.info("Starting payment proof verification")
+        # 1. Deteksi area biru dominan (warna biru DANA)
+        hsv = cv2.cvtColor(upload_img, cv2.COLOR_BGR2HSV)
+        lower_blue = np.array([90, 50, 50])
+        upper_blue = np.array([130, 255, 255])
+        blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        blue_ratio = np.sum(blue_mask) / (upload_img.shape[0] * upload_img.shape[1] * 255)
+
+        # 2. OCR untuk deteksi kata "DANA" atau "BISNIS"
         processed_img = preprocess_image(upload_img)
-        features = extract_features(upload_img)
-        ocr_text = pytesseract.image_to_string(processed_img, config='--psm 6')
-        ocr_text = ocr_text.lower()
+        ocr_text = pytesseract.image_to_string(
+            processed_img, 
+            config='--psm 6 -l ind+eng --oem 3'
+        ).lower()
 
-        # --- PATOKAN DARI CONTOH GAMBAR ---
-        # 1. Ada kata 'dana' (logo/header)
-        # 2. Ada 'transaksi berhasil' atau 'pembayaran berhasil'
-        # 3. Ada 'total bayar' dan nominal (rp...)
-        # 4. Ada tanggal (regex: dd mmm yyyy)
-        # 5. Ada id dana (regex: id dana|dana id)
-        # 6. Ada nama penerima/akun dana
-        # 7. Ada kata 'saldo dana' atau 'smartpay'
-        # 8. Ada kata 'detail transaksi' atau 'detail penerima'
+        has_dana_or_bisnis = ("dana" in ocr_text) or ("bisnis" in ocr_text)
+        is_valid = (blue_ratio >= 0.01) and has_dana_or_bisnis
 
-        # --- Keyword checks ---
-        must_keywords = [
-            'dana',
-            'berhasil',
-            'total bayar',
-            'rp',
-            'detail transaksi',
-        ]
-        keyword_count = sum(1 for k in must_keywords if k in ocr_text)
-        has_dana = 'dana' in ocr_text
-        has_berhasil = 'berhasil' in ocr_text
-        has_total = 'total bayar' in ocr_text
-        has_rp = 'rp' in ocr_text
-        has_detail = 'detail transaksi' in ocr_text or 'detail penerima' in ocr_text
-        has_saldo = 'saldo dana' in ocr_text or 'smartpay' in ocr_text
-        has_id = 'id dana' in ocr_text or 'dana id' in ocr_text
-        # Tanggal (format: dd mmm yyyy)
-        has_date = bool(re.search(r'\d{2} [a-z]+ \d{4}', ocr_text))
-        # Nominal (format: rp[spasi]angka)
-        has_nominal = bool(re.search(r'rp\s?\d+[.,]?\d*', ocr_text))
-
-        # --- Layout checks (sederhana) ---
-        # Cek apakah 'dana' dan 'total bayar' muncul di baris berbeda
-        dana_idx = ocr_text.find('dana')
-        total_idx = ocr_text.find('total bayar')
-        layout_ok = dana_idx != -1 and total_idx != -1 and abs(dana_idx - total_idx) > 10
-
-        # --- Final validation ---
-        is_valid = (
-            keyword_count >= 4 and
-            has_dana and has_berhasil and has_total and has_rp and has_detail and has_nominal and layout_ok
-        )
-
-        # Log hasil deteksi
-        logging.info(f"OCR: {ocr_text}")
-        logging.info(f"Keywords found: {keyword_count}/5")
-        logging.info(f"has_dana: {has_dana}, has_berhasil: {has_berhasil}, has_total: {has_total}, has_rp: {has_rp}, has_detail: {has_detail}, has_nominal: {has_nominal}, layout_ok: {layout_ok}")
-        logging.info(f"Final valid: {is_valid}")
+        # Logging
+        logging.info(f"OCR Text: {ocr_text}")
+        logging.info(f"blue_ratio: {blue_ratio:.3f}, has_dana_or_bisnis: {has_dana_or_bisnis}, valid: {is_valid}")
 
         return is_valid
+
     except Exception as e:
         logging.error(f"Error in payment proof detection: {str(e)}")
         return False
