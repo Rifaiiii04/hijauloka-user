@@ -54,3 +54,8 @@
 2025-05-08 18:36:27,078 - INFO -  * Restarting with stat
 2025-05-08 18:36:27,718 - WARNING -  * Debugger is active!
 2025-05-08 18:36:27,723 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 18:38:38,037 - INFO - 127.0.0.1 - - [08/May/2025 18:38:38] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 18:38:38,300 - INFO - Starting payment proof verification
+2025-05-08 18:38:38,759 - ERROR - Error in payment proof detection: C:\Program Files\Tesseract-OCR\tesseract.exe is not installed or it's not in your PATH. See README file for more information.
+2025-05-08 18:38:38,767 - INFO - Payment not verified, saved for review: unverified_payment_1746704318.jpg
+2025-05-08 18:38:38,769 - INFO - 127.0.0.1 - - [08/May/2025 18:38:38] "POST /verify-payment HTTP/1.1" 200 -
