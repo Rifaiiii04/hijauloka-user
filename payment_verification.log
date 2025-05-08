@@ -839,3 +839,35 @@ lor ooo soe ov
 2025-05-08 20:14:30,856 - INFO -  * Restarting with stat
 2025-05-08 20:14:31,418 - WARNING -  * Debugger is active!
 2025-05-08 20:14:31,420 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 20:45:24,034 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-08 20:45:24,039 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 20:45:24,043 - INFO -  * Restarting with stat
+2025-05-08 20:45:24,639 - WARNING -  * Debugger is active!
+2025-05-08 20:45:24,648 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 20:45:52,032 - INFO - 127.0.0.1 - - [08/May/2025 20:45:52] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 20:45:52,281 - INFO - Processing payment verification for order ID: 105
+2025-05-08 20:45:53,767 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 20:45:53,767 - INFO - blue_ratio: 0.163, has_dana_or_bisnis: True, valid: True
+2025-05-08 20:45:53,775 - INFO - Saved verified payment proof: verified_payment_1746711953.jpg
+2025-05-08 20:45:53,775 - INFO - Payment verified and saved: verified_payment_1746711953.jpg
+2025-05-08 20:45:53,776 - ERROR - Database error: No module named 'mysql'
+2025-05-08 20:45:53,777 - INFO - 127.0.0.1 - - [08/May/2025 20:45:53] "POST /verify-payment HTTP/1.1" 200 -
