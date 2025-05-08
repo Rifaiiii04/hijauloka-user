@@ -871,3 +871,190 @@ aa - k2 kaden
 2025-05-08 20:45:53,775 - INFO - Payment verified and saved: verified_payment_1746711953.jpg
 2025-05-08 20:45:53,776 - ERROR - Database error: No module named 'mysql'
 2025-05-08 20:45:53,777 - INFO - 127.0.0.1 - - [08/May/2025 20:45:53] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:32:08,476 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:32:08,885 - INFO -  * Restarting with stat
+2025-05-08 21:32:09,796 - WARNING -  * Debugger is active!
+2025-05-08 21:32:09,800 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:33:36,284 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:33:36,517 - INFO -  * Restarting with stat
+2025-05-08 21:33:38,175 - WARNING -  * Debugger is active!
+2025-05-08 21:33:38,180 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:35:59,960 - INFO - 127.0.0.1 - - [08/May/2025 21:35:59] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:36:00,115 - INFO - Processing payment verification for order ID: 106
+2025-05-08 21:36:02,241 - INFO - Blue ratio detected: 0.165
+2025-05-08 21:36:02,242 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 21:36:02,242 - INFO - Confidence score: 0.30
+2025-05-08 21:36:02,242 - INFO - Not a valid payment proof
+2025-05-08 21:36:02,259 - INFO - Payment not verified, saved for review: assets/img/dataset/20250508\unverified\unverified_order_106_payment_1746714962.jpg
+2025-05-08 21:36:02,261 - INFO - 127.0.0.1 - - [08/May/2025 21:36:02] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:38:19,685 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:38:20,020 - INFO -  * Restarting with stat
+2025-05-08 21:38:21,136 - WARNING -  * Debugger is active!
+2025-05-08 21:38:21,142 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:39:40,470 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:39:40,653 - INFO -  * Restarting with stat
+2025-05-08 21:39:41,636 - WARNING -  * Debugger is active!
+2025-05-08 21:39:41,641 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:39:51,848 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:39:51,936 - INFO -  * Restarting with stat
+2025-05-08 21:39:52,578 - WARNING -  * Debugger is active!
+2025-05-08 21:39:52,581 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:40:00,708 - INFO - 127.0.0.1 - - [08/May/2025 21:40:00] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:40:00,952 - INFO - Processing payment verification for order ID: 106
+2025-05-08 21:40:02,745 - INFO - Blue ratio detected: 0.165
+2025-05-08 21:40:02,745 - INFO - Found 1 payment keywords
+2025-05-08 21:40:02,745 - INFO - DANA keyword explicitly found
+2025-05-08 21:40:02,746 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 21:40:02,746 - INFO - Confidence score: 0.70
+2025-05-08 21:40:02,746 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-08 21:40:02,746 - INFO - Payment proof detected successfully
+2025-05-08 21:40:02,747 - ERROR - Database error: No module named 'mysql'
+2025-05-08 21:40:02,759 - INFO - Saved verified payment proof: assets/img/dataset/20250508\verified\verified_order_106_payment_1746715202.jpg
+2025-05-08 21:40:02,782 - INFO - Payment verified and saved: assets/img/dataset/20250508\verified\verified_order_106_payment_1746715202.jpg
+2025-05-08 21:40:02,783 - INFO - 127.0.0.1 - - [08/May/2025 21:40:02] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:44:49,639 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:44:50,045 - INFO -  * Restarting with stat
+2025-05-08 21:44:51,267 - WARNING -  * Debugger is active!
+2025-05-08 21:44:51,276 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:46:07,415 - INFO - 127.0.0.1 - - [08/May/2025 21:46:07] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:46:07,654 - INFO - Processing payment verification for order ID: 107
+2025-05-08 21:46:09,361 - INFO - Blue ratio detected: 0.165
+2025-05-08 21:46:09,362 - INFO - Found 1 payment keywords
+2025-05-08 21:46:09,362 - INFO - DANA keyword explicitly found
+2025-05-08 21:46:09,362 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 21:46:09,362 - INFO - Confidence score: 0.70
+2025-05-08 21:46:09,362 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-08 21:46:09,362 - INFO - Payment proof detected successfully
+2025-05-08 21:46:09,372 - INFO - Saved verified payment proof: assets/img/dataset/20250508\verified\verified_order_107_payment_1746715569.jpg
+2025-05-08 21:46:09,394 - INFO - Payment verified and saved: assets/img/dataset/20250508\verified\verified_order_107_payment_1746715569.jpg
+2025-05-08 21:46:09,395 - ERROR - Database error: No module named 'mysql'
+2025-05-08 21:46:09,396 - INFO - 127.0.0.1 - - [08/May/2025 21:46:09] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:47:34,160 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 21:47:34,499 - INFO -  * Restarting with stat
+2025-05-08 21:47:35,814 - WARNING -  * Debugger is active!
+2025-05-08 21:47:35,824 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 21:51:09,841 - INFO - 127.0.0.1 - - [08/May/2025 21:51:09] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 21:51:10,049 - INFO - Processing payment verification for order ID: 108
+2025-05-08 21:51:11,799 - INFO - Blue ratio detected: 0.165
+2025-05-08 21:51:11,799 - INFO - Found 1 payment keywords
+2025-05-08 21:51:11,799 - INFO - DANA keyword explicitly found
+2025-05-08 21:51:11,799 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-08 21:51:11,799 - INFO - Confidence score: 0.70
+2025-05-08 21:51:11,799 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-08 21:51:11,799 - INFO - Payment proof detected successfully
+2025-05-08 21:51:11,817 - INFO - Saved verified payment proof: uploads/bukti\verified_order_108_payment_1746715871.jpg
+2025-05-08 21:51:11,817 - INFO - Payment verified and saved: uploads/bukti\verified_order_108_payment_1746715871.jpg
+2025-05-08 21:51:11,818 - ERROR - Database error: No module named 'mysql'
+2025-05-08 21:51:11,819 - INFO - 127.0.0.1 - - [08/May/2025 21:51:11] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 22:03:22,839 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 22:03:23,128 - INFO -  * Restarting with stat
+2025-05-08 22:03:24,194 - WARNING -  * Debugger is active!
+2025-05-08 22:03:24,199 - INFO -  * Debugger PIN: 669-873-542
+2025-05-08 22:04:26,595 - INFO - 127.0.0.1 - - [08/May/2025 22:04:26] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-08 22:04:26,827 - INFO - Processing payment verification for order ID: 109
+2025-05-08 22:04:28,790 - INFO - Blue ratio detected: 0.263
+2025-05-08 22:04:28,790 - INFO - Found 1 payment keywords
+2025-05-08 22:04:28,790 - INFO - OCR Text: gr 2oo do le all bd
+ee
+or a ao
+ceo bisnis
+= =
+sp he edi
+ta sone tees ged ie cane cane sane
+ee ancanagarnca
+peribgynren en hanana oe _
+ese teaver 5 era
+motode pombayatan saras ana
+abang
+te
+dani tamat pc ages
+= ps as
+—e tts
+ma na ate aa = ij
+lor ooo soe ov
+(csd sereneanreans
+———— esre_eastt
+
+2025-05-08 22:04:28,790 - INFO - Confidence score: 0.40
+2025-05-08 22:04:28,791 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-08 22:04:28,791 - INFO - Payment proof detected successfully
+2025-05-08 22:04:28,805 - INFO - Saved verified payment proof: uploads/bukti\verified_order_109_payment_1746716668.jpg
+2025-05-08 22:04:28,805 - INFO - Payment verified and saved: uploads/bukti\verified_order_109_payment_1746716668.jpg
+2025-05-08 22:04:28,806 - ERROR - Database error: No module named 'mysql'
+2025-05-08 22:04:28,807 - INFO - 127.0.0.1 - - [08/May/2025 22:04:28] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-08 22:07:21,241 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\hijaulokauser\\verify_payment.py', reloading
+2025-05-08 22:07:21,843 - INFO -  * Restarting with stat
+2025-05-08 22:07:23,510 - WARNING -  * Debugger is active!
+2025-05-08 22:07:23,517 - INFO -  * Debugger PIN: 669-873-542

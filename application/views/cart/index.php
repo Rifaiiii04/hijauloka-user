@@ -1,7 +1,6 @@
 <?php $this->load->view('templates/header') ?>
-<div class="mt-64">.</div>
-<div class="mt-64">.</div>
-<div class="container mx-auto max-w-6xl py-8 px-4 md:px-0 mt-52">
+
+<div class="container mx-auto max-w-6xl py-8 px-4 md:px-0 mt-22">
     <h2 class="text-2xl font-bold text-green-800 mb-6">Keranjang Belanja</h2>
     
     <?php if (empty($cart_items)): ?>
