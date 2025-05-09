@@ -23,46 +23,50 @@ class Category extends CI_Controller {
     }
     
     public function plants() {
-        // Config for pagination
-        $config['base_url'] = base_url('category/plants');
-        $config['total_rows'] = $this->product_model->count_all_products();
-        $config['per_page'] = 12;
-        $config['uri_segment'] = 3;
-        
-        // Styling pagination
-        $config['full_tag_open'] = '<div class="flex justify-center mt-8"><ul class="flex space-x-2">';
-        $config['full_tag_close'] = '</ul></div>';
-        $config['first_link'] = 'First';
-        $config['last_link'] = 'Last';
-        $config['first_tag_open'] = '<li class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-green-500 hover:text-white">';
-        $config['first_tag_close'] = '</li>';
-        $config['last_tag_open'] = '<li class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-green-500 hover:text-white">';
-        $config['last_tag_close'] = '</li>';
-        $config['next_link'] = '&raquo;';
-        $config['next_tag_open'] = '<li class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-green-500 hover:text-white">';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&laquo;';
-        $config['prev_tag_open'] = '<li class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-green-500 hover:text-white">';
-        $config['prev_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="px-3 py-2 bg-green-500 text-white rounded-md">';
-        $config['cur_tag_close'] = '</li>';
-        $config['num_tag_open'] = '<li class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-green-500 hover:text-white">';
-        $config['num_tag_close'] = '</li>';
-        
-        $this->pagination->initialize($config);
-        
-        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-        
-        // Get products with pagination
-        $data['products'] = $this->product_model->get_products_with_pagination($config['per_page'], $page);
-        $data['pagination'] = $this->pagination->create_links();
-        $data['title'] = 'All Plants';
-        
-        // Get all categories for filter
+        // Get all categories for display
         $data['categories'] = $this->category_model->get_all_categories();
+        $data['title'] = 'Kategori Tanaman';
         
-        // Initialize wishlist status for all products
-        $data['is_wishlisted'] = false;
+        // Define collection categories for the view with descriptions
+        $data['collection_categories'] = [
+            [
+                'name' => 'Tanaman Indoor',
+                'route' => 'collection/indoor',
+                'image' => 'indoor.jpg',
+                'description' => 'Tanaman yang cocok untuk di dalam ruangan'
+            ],
+            [
+                'name' => 'Tanaman Outdoor',
+                'route' => 'collection/outdoor',
+                'image' => 'outdoor.jpg',
+                'description' => 'Tanaman yang cocok untuk di luar ruangan'
+            ],
+            [
+                'name' => 'Florikultura',
+                'route' => 'collection/florikultura',
+                'image' => 'florikultura.jpg',
+                'description' => 'Tanaman hias dan bunga'
+            ],
+            [
+                'name' => 'Mudah Dirawat',
+                'route' => 'collection/mudah_dirawat',
+                'image' => 'mudah_dirawat.jpg',
+                'description' => 'Tanaman yang tidak memerlukan perawatan khusus'
+            ]
+        ];
+        
+        // Create an array of category names to exclude from database query
+        $exclude_names = [];
+        foreach ($data['collection_categories'] as $cat) {
+            $exclude_names[] = $cat['name'];
+            // Also add variations without "Tanaman " prefix
+            if (strpos($cat['name'], 'Tanaman ') === 0) {
+                $exclude_names[] = substr($cat['name'], 8); // "Tanaman " is 8 characters
+            }
+        }
+        
+        // Pass the exclude names to the view
+        $data['exclude_names'] = $exclude_names;
         
         $this->load->view('templates/header', $data);
         $this->load->view('category/plants', $data);

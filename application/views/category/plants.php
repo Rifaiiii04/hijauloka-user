@@ -3,118 +3,112 @@
 <div class="container mx-auto px-4 py-8 mt-22">
     <!-- Category Header -->
     <div class="mb-8 text-center">
-        <h1 class="text-3xl font-bold text-green-800 mb-2">Tanaman</h1>
+        <h1 class="text-3xl font-bold text-green-800 mb-2">Kategori Tanaman</h1>
         <p class="text-gray-600">
-            Temukan berbagai jenis tanaman berkualitas untuk koleksi Anda
+            Temukan berbagai jenis kategori tanaman untuk kebutuhan Anda
         </p>
     </div>
 
-    <!-- Filter Section -->
-    <div class="mb-8 bg-white p-4 rounded-lg shadow-sm">
-        <div class="flex flex-wrap items-center gap-4">
-            <div class="flex items-center flex-grow">
-                <span class="text-gray-700 font-medium mr-3">Cari:</span>
-                <input type="text" id="quickSearch" placeholder="Cari tanaman..." class="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
-            </div>
-          
-            <div class="flex items-center">
-                <span class="text-gray-700 font-medium mr-3">Urutkan:</span>
-                <select id="sortOrder" class="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="newest">Terbaru</option>
-                    <option value="price_low">Harga Terendah</option>
-                    <option value="price_high">Harga Tertinggi</option>
-                    <option value="rating">Rating Tertinggi</option>
-                </select>
-            </div>
-            <button id="applyFilter" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
-                Terapkan Filter
-            </button>
-        </div>
-    </div>
-
-    <!-- Products Grid -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- Categories Grid -->
+    <div id="categoriesGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <?php
-        // Use the products data passed from the controller
-        if (!empty($products)) {
-            foreach ($products as $product) :
-                // Get image
-                if (!empty($product['gambar'])) {
-                    $gambarArr = explode(',', $product['gambar']);
-                    $gambar = trim($gambarArr[0]);
-                } else {
-                    $gambar = 'default.jpg';
-                }
-                
-                // Get category name from the product data
-                $kategori = isset($product['nama_kategori']) ? $product['nama_kategori'] : 'Tanaman';
+        // Display collection categories
+        foreach ($collection_categories as $category) {
+            // Generate a consistent color based on category name
+            $colorHash = substr(md5($category['name']), 0, 6);
         ?>
-        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 product-card" data-name="<?= strtolower($product['nama_product']) ?>" data-category="<?= strtolower($kategori) ?>">
-            <a href="<?= base_url('product/detail/' . $product['id_product']) ?>" class="block">
-                <div class="relative h-48">
-                    <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
-                         alt="<?= $product['nama_product'] ?>" 
-                         class="w-full h-full object-cover">
+        <a href="<?= base_url($category['route']) ?>" class="category-card group">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 text-center h-full border border-gray-100">
+                <div class="relative h-48 overflow-hidden bg-gradient-to-br from-green-500 to-green-700" style="background-color: #<?= $colorHash ?>;">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-leaf text-white text-4xl opacity-50"></i>
+                    </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2"><?= $product['nama_product'] ?></h3>
-                    
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-1 mb-2">
-                        <span class="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full"><?= $kategori ?></span>
-                    </div>
-                    
-                    <!-- Rating -->
-                    <div class="flex items-center mb-3">
-                        <?php 
-                        $rating = isset($product['rating']) ? floatval($product['rating']) : 0;
-                        for ($i = 1; $i <= 5; $i++): 
-                        ?>
-                            <?php if ($i <= $rating): ?>
-                                <i class="fas fa-star text-yellow-400"></i>
-                            <?php elseif ($i - 0.5 <= $rating): ?>
-                                <i class="fas fa-star-half-alt text-yellow-400"></i>
-                            <?php else: ?>
-                                <i class="far fa-star text-yellow-400"></i>
-                            <?php endif; ?>
-                        <?php endfor; ?>
-                        <span class="text-xs text-gray-500 ml-1">(<?= number_format($rating, 1) ?>)</span>
-                    </div>
-                    
-                    <!-- Price and Actions -->
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold">Rp<?= number_format($product['harga'], 0, ',', '.') ?></span>
-                        <div class="flex gap-2">
-                            <button onclick="event.preventDefault(); toggleWishlist(this, <?= $product['id_product'] ?>)" 
-                                    class="bg-gray-100 text-gray-600 p-2 rounded-md hover:bg-gray-200 transition-colors">
-                                <i class="<?= $is_wishlisted ? 'fas text-red-500' : 'far' ?> fa-heart"></i>
-                            </button>
-                            <button onclick="event.preventDefault(); addToCart(<?= $product['id_product'] ?>)" 
-                                    class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors">
-                                <i class="fas fa-shopping-cart"></i>
-                            </button>
-                        </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-green-600 transition-colors duration-300"><?= htmlspecialchars($category['name']) ?></h3>
+                    <?php if(isset($category['description'])): ?>
+                    <p class="text-sm text-gray-500"><?= htmlspecialchars($category['description']) ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </a>
+        <?php } ?>
+        
+        <?php
+        // Get additional categories from database
+        $this->db->select('id_kategori, nama_kategori');
+        $this->db->from('category');
+        // Exclude categories that we've already hardcoded
+        if (!empty($exclude_names)) {
+            $this->db->where_not_in('nama_kategori', $exclude_names);
+        }
+        $this->db->order_by('nama_kategori', 'ASC');
+        $query = $this->db->get();
+        $categories = $query->result();
+        
+        // Display each additional category from database
+        foreach ($categories as $category) {
+            // Create URL-friendly slug from category name
+            $slug = url_title($category->nama_kategori, 'dash', TRUE);
+            
+            // Generate a consistent color based on category name
+            $colorHash = substr(md5($category->nama_kategori), 0, 6);
+        ?>
+        <a href="<?= base_url('category/view/' . $category->id_kategori) ?>" class="category-card group">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 text-center h-full border border-gray-100">
+                <div class="relative h-48 overflow-hidden bg-gradient-to-br from-green-500 to-green-700" style="background-color: #<?= $colorHash ?>;">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-leaf text-white text-4xl opacity-50"></i>
                     </div>
                 </div>
-            </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800 group-hover:text-green-600 transition-colors duration-300"><?= htmlspecialchars($category->nama_kategori) ?></h3>
+                </div>
+            </div>
+        </a>
+        <?php } ?>
+        
+        <?php if (empty($categories) && empty($collection_categories)): ?>
+        <div class="col-span-full text-center py-12">
+            <div class="bg-gray-50 rounded-lg p-8 inline-block">
+                <i class="fas fa-leaf text-gray-300 text-5xl mb-4"></i>
+                <p class="text-gray-500 text-lg">Tidak ada kategori yang tersedia saat ini.</p>
+            </div>
         </div>
-        <?php 
-            endforeach;
-        } else {
-            echo '<div class="col-span-full text-center py-8">
-                    <p class="text-gray-500 text-lg">Tidak ada produk yang tersedia saat ini.</p>
-                  </div>';
-        }
-        ?>
+        <?php endif; ?>
     </div>
-
-    <!-- Pagination -->
-    <?php if(isset($pagination) && !empty($pagination)): ?>
-    <div class="mt-8">
-        <?= $pagination ?>
-    </div>
-    <?php endif; ?>
 </div>
+
+<style>
+.category-card:hover h3 {
+    color: #16a34a; /* green-600 */
+    transition: color 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.category-card {
+    animation: fadeIn 0.5s ease forwards;
+    animation-delay: calc(var(--animation-order) * 0.1s);
+    opacity: 0;
+}
+
+#categoriesGrid {
+    counter-reset: card-counter;
+}
+
+.category-card {
+    counter-increment: card-counter;
+    --animation-order: counter(card-counter);
+}
+
+.no-results-message {
+    animation: fadeIn 0.3s ease forwards;
+}
+</style>
 
 <!-- Login Prompt Modal -->
 <div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -143,251 +137,60 @@
     </div>
 </div>
 
-<!-- Cart Notification -->
-<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
-        <div class="text-center mb-4">
-            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
-            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
-            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
-        </div>
-        <button onclick="closeCartNotification()" 
-                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
-            Lanjut Belanja
-        </button>
-    </div>
-</div>
-
 <script>
-function toggleWishlist(button, productId) {
-    <?php if (!$this->session->userdata('logged_in')): ?>
-        document.getElementById('loginPrompt').classList.remove('hidden');
-        return;
-    <?php endif; ?>
+// Prevent multiple event listeners by removing any existing ones
+const quickSearchInput = document.getElementById('quickSearch');
+const oldQuickSearch = quickSearchInput.cloneNode(true);
+quickSearchInput.parentNode.replaceChild(oldQuickSearch, quickSearchInput);
 
-    const icon = button.querySelector('i');
-    
-    // Toggle heart icon
-    if (icon.classList.contains('far')) {
-        icon.classList.remove('far');
-        icon.classList.add('fas', 'text-red-500');
-    } else {
-        icon.classList.remove('fas', 'text-red-500');
-        icon.classList.add('far');
-    }
-    
-    // Send AJAX request to server
-    fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Wishlist updated:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-function addToCart(productId) {
-    <?php if (!$this->session->userdata('logged_in')): ?>
-        document.getElementById('loginPrompt').classList.remove('hidden');
-        return;
-    <?php endif; ?>
-    
-    // Send AJAX request to server
-    fetch('<?= base_url('cart/add') ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: 'id_product=' + productId + '&jumlah=1'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('cartNotification').classList.remove('hidden');
-            setTimeout(() => {
-                closeCartNotification();
-            }, 2000);
-        } else {
-            alert(data.message || 'Gagal menambahkan produk ke keranjang');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat menambahkan produk ke keranjang');
-    });
-}
-
-// Filter functionality
-document.getElementById('applyFilter').addEventListener('click', function() {
-    const sortBy = document.getElementById('sortOrder').value;
-    
-    // Send AJAX request to filter products
-    fetch('<?= base_url('category/filter') ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: 'sort_by=' + sortBy
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Update products grid with filtered results
-        updateProductsGrid(data.products);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
-
-// Quick search functionality
+// Add the event listener once
 document.getElementById('quickSearch').addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase().trim();
-    const productCards = document.querySelectorAll('.product-card');
+    const categoryCards = document.querySelectorAll('.category-card');
+    let visibleCount = 0;
     
-    productCards.forEach(card => {
-        const productName = card.getAttribute('data-name');
-        const productCategory = card.getAttribute('data-category');
+    categoryCards.forEach((card, index) => {
+        const categoryName = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
         
-        if (productName.includes(searchTerm) || productCategory.includes(searchTerm)) {
+        if (categoryName.includes(searchTerm) || description.includes(searchTerm)) {
             card.style.display = '';
+            card.style.setProperty('--animation-order', visibleCount);
+            visibleCount++;
         } else {
             card.style.display = 'none';
         }
     });
     
-    // Show message if no products match
-    const visibleProducts = document.querySelectorAll('.product-card[style=""]').length;
+    // Show message if no categories match
     const noResultsMessage = document.querySelector('.no-results-message');
     
-    if (visibleProducts === 0 && searchTerm !== '') {
+    if (visibleCount === 0 && searchTerm !== '') {
         if (!noResultsMessage) {
             const message = document.createElement('div');
             message.className = 'col-span-full text-center py-8 no-results-message';
-            message.innerHTML = '<p class="text-gray-500 text-lg">Tidak ada produk yang sesuai dengan pencarian Anda.</p>';
-            document.getElementById('productsGrid').appendChild(message);
+            message.innerHTML = '<div class="bg-gray-50 rounded-lg p-8 inline-block"><i class="fas fa-search text-gray-300 text-4xl mb-4"></i><p class="text-gray-500 text-lg">Tidak ada kategori yang sesuai dengan pencarian Anda.</p></div>';
+            document.getElementById('categoriesGrid').appendChild(message);
         }
     } else if (noResultsMessage) {
         noResultsMessage.remove();
     }
 });
 
-function updateProductsGrid(products) {
-    const grid = document.getElementById('productsGrid');
-    grid.innerHTML = '';
-    
-    if (products.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center py-8"><p class="text-gray-500 text-lg">Tidak ada produk yang tersedia saat ini.</p></div>';
-        return;
-    }
-    
-    products.forEach(product => {
-        // Get image
-        let gambar = 'default.jpg';
-        if (product.gambar) {
-            const gambarArr = product.gambar.split(',');
-            gambar = gambarArr[0].trim();
-        }
-        
-        // Get category
-        const kategori = product.nama_kategori || 'Tanaman';
-        
-        // Create product card
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 product-card';
-        card.setAttribute('data-name', product.nama_product.toLowerCase());
-        card.setAttribute('data-category', kategori.toLowerCase());
-        
-        card.innerHTML = `
-            <a href="<?= base_url('product/detail/') ?>${product.id_product}" class="block">
-                <div class="relative h-48">
-                    <img src="http://localhost/hijauloka/uploads/${gambar}" 
-                         alt="${product.nama_product}" 
-                         class="w-full h-full object-cover">
-                </div>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">${product.nama_product}</h3>
-                    
-                    <!-- Rating -->
-                    <div class="flex items-center mb-3">
-                        ${getRatingStars(product.rating || 0)}
-                        <span class="text-xs text-gray-500 ml-1">(${parseFloat(product.rating || 0).toFixed(1)})</span>
-                    </div>
-                    
-                    <!-- Price and Actions -->
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold">Rp${numberFormat(product.harga)}</span>
-                        <div class="flex gap-2">
-                            <button onclick="event.preventDefault(); toggleWishlist(this, ${product.id_product})" 
-                                    class="bg-gray-100 text-gray-600 p-2 rounded-md hover:bg-gray-200 transition-colors">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <button onclick="event.preventDefault(); addToCart(${product.id_product})" 
-                                    class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors">
-                                <i class="fas fa-shopping-cart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `;
-        
-        grid.appendChild(card);
-    });
-}
-
-function getRatingStars(rating) {
-    let stars = '';
-    for (let i = 1; i <= 5; i++) {
-        if (i <= rating) {
-            stars += '<i class="fas fa-star text-yellow-400"></i>';
-        } else if (i - 0.5 <= rating) {
-            stars += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
-        } else {
-            stars += '<i class="far fa-star text-yellow-400"></i>';
-        }
-    }
-    return stars;
-}
-
-function numberFormat(number) {
-    return new Intl.NumberFormat('id-ID').format(number);
-}
-
 function closeLoginPrompt() {
-    document.getElementById('loginPrompt').classList.add('hidden');
+    const modal = document.getElementById('loginPrompt');
+    modal.classList.add('hidden');
 }
 
-function closeCartNotification() {
-    document.getElementById('cartNotification').classList.add('hidden');
-}
-
-document.getElementById('loginPrompt').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeLoginPrompt();
-    }
-});
-
-document.getElementById('cartNotification').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeCartNotification();
+// Use event delegation to avoid multiple event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const loginPrompt = document.getElementById('loginPrompt');
+    if (loginPrompt) {
+        loginPrompt.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginPrompt();
+            }
+        });
     }
 });
 </script>
-
-<style>
-@keyframes bounce-once {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-.animate-bounce-once {
-    animation: bounce-once 0.5s ease-in-out;
-}
-</style>
