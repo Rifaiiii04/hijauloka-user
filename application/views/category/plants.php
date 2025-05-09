@@ -1,8 +1,8 @@
 <?php $this->load->view('templates/header'); ?>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8 mt-22">
     <!-- Category Header -->
-    <div class="mb-8">
+    <div class="mb-8 text-center">
         <h1 class="text-3xl font-bold text-green-800 mb-2">Tanaman</h1>
         <p class="text-gray-600">
             Temukan berbagai jenis tanaman berkualitas untuk koleksi Anda
@@ -16,15 +16,7 @@
                 <span class="text-gray-700 font-medium mr-3">Cari:</span>
                 <input type="text" id="quickSearch" placeholder="Cari tanaman..." class="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
             </div>
-            <div class="flex items-center">
-                <span class="text-gray-700 font-medium mr-3">Filter:</span>
-                <select id="categoryFilter" class="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Semua Kategori</option>
-                    <?php foreach($categories as $category): ?>
-                    <option value="<?= $category['id_kategori'] ?>"><?= $category['nama_kategori'] ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+          
             <div class="flex items-center">
                 <span class="text-gray-700 font-medium mr-3">Urutkan:</span>
                 <select id="sortOrder" class="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
