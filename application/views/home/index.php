@@ -354,7 +354,7 @@ function showNotification(type, title, message) {
                     <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                         <h3 class="text-xl font-bold text-white mb-1">Seeds</h3>
-                        <a href="<?= base_url('category/seeds') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
+                        <a href="<?= base_url('category/coming_soon') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
                             <i class="fas fa-seedling mr-1"></i> 
                             <span>Lihat Koleksi</span>
                             <i class="fas fa-chevron-right ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
@@ -368,7 +368,7 @@ function showNotification(type, title, message) {
                     <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                         <h3 class="text-xl font-bold text-white mb-1">Pots</h3>
-                        <a href="<?= base_url('category/pots') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
+                        <a href="<?= base_url('category/coming_soon') ?>" class="inline-flex items-center text-green-100 hover:text-white transition-colors">
                             <i class="fas fa-box mr-1"></i> 
                             <span>Lihat Koleksi</span>
                             <i class="fas fa-chevron-right ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all"></i>
@@ -402,7 +402,7 @@ function showNotification(type, title, message) {
             <div class="grid grid-cols-2 gap-4">
                 <!-- Seeds Category -->
                 <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-                    <a href="<?= base_url('category/seeds') ?>" class="block">
+                    <a href="<?= base_url('category/coming_soon') ?>" class="block">
                         <div class="relative h-[120px]">
                             <img src="<?= base_url('assets/img/seedscategory.png') ?>" alt="Seeds" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -420,7 +420,7 @@ function showNotification(type, title, message) {
 
                 <!-- Pots Category -->
                 <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-                    <a href="<?= base_url('category/pots') ?>" class="block">
+                    <a href="<?= base_url('category/coming_soon') ?>" class="block">
                         <div class="relative h-[120px]">
                             <img src="<?= base_url('assets/img/category-pots.png') ?>" alt="Pots" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

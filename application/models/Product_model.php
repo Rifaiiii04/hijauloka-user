@@ -216,4 +216,83 @@ class Product_model extends CI_Model {
         
         return $result;
     }
+
+    public function get_products_by_category_id($category_id)
+    {
+        $this->db->where('id_kategori', $category_id);
+        $this->db->where('stok >', 0); // Only show products in stock
+        $query = $this->db->get('product');
+        
+        return $query->result_array();
+    }
+    
+    // Method to count all products
+    public function count_all_products() {
+        return $this->db->count_all('product');
+    }
+    
+    // Method for pagination
+    public function get_products_with_pagination($limit, $start) {
+        $this->db->select('p.*, c.nama_kategori');
+        $this->db->from('product p');
+        $this->db->join('category c', 'p.id_kategori = c.id_kategori', 'left');
+        $this->db->order_by('p.id_product', 'DESC');
+        $this->db->limit($limit, $start);
+        return $this->db->get()->result_array();
+    }
+    
+    public function filter_products($category_id = null, $sort_by = null, $price_min = null, $price_max = null) {
+        $this->db->select('p.*, c.nama_kategori');
+        $this->db->from('product p');
+        $this->db->join('category c', 'p.id_kategori = c.id_kategori', 'left');
+        
+        // Apply category filter
+        if (!empty($category_id)) {
+            $this->db->where('p.id_kategori', $category_id);
+        }
+        
+        // Apply price range filter
+        if (!empty($price_min)) {
+            $this->db->where('p.harga >=', $price_min);
+        }
+        
+        if (!empty($price_max)) {
+            $this->db->where('p.harga <=', $price_max);
+        }
+        
+        // Apply sorting
+        if (!empty($sort_by)) {
+            switch ($sort_by) {
+                case 'price_low':
+                    $this->db->order_by('p.harga', 'ASC');
+                    break;
+                case 'price_high':
+                    $this->db->order_by('p.harga', 'DESC');
+                    break;
+                case 'rating':
+                    $this->db->order_by('p.rating', 'DESC');
+                    break;
+                case 'newest':
+                default:
+                    $this->db->order_by('p.id_product', 'DESC');
+                    break;
+            }
+        } else {
+            $this->db->order_by('p.id_product', 'DESC');
+        }
+        
+        return $this->db->get()->result_array();
+    }
+    
+    // Method for searching products
+    public function search_products($keyword) {
+        $this->db->select('p.*, c.nama_kategori');
+        $this->db->from('product p');
+        $this->db->join('category c', 'p.id_kategori = c.id_kategori', 'left');
+        $this->db->like('p.nama_product', $keyword);
+        $this->db->or_like('p.desk_product', $keyword);
+        $this->db->or_like('c.nama_kategori', $keyword);
+        $this->db->order_by('p.id_product', 'DESC');
+        return $this->db->get()->result_array();
+    }
 }

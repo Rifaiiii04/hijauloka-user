@@ -40,7 +40,14 @@
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <a href="<?= base_url('product/detail/' . $product['id_product']) ?>" class="block">
                     <div class="relative pb-[100%]">
-                        <img src="<?= base_url('assets/img/products/' . $product['gambar']) ?>" 
+                        <?php 
+                        $gambar = !empty($product['gambar']) ? 
+                            (strpos($product['gambar'], ',') !== false ? 
+                                explode(',', $product['gambar'])[0] : 
+                                $product['gambar']) : 
+                            'default.jpg';
+                        ?>
+                        <img src="<?= base_url('uploads/' . $gambar) ?>" 
                              alt="<?= $product['nama_product'] ?>" 
                              class="absolute inset-0 w-full h-full object-cover">
                     </div>
@@ -66,6 +73,7 @@
             <i class="fas fa-leaf text-6xl text-gray-300 mb-4"></i>
             <h3 class="text-xl font-semibold text-gray-600 mb-2">Belum ada produk</h3>
             <p class="text-gray-500">Produk akan segera hadir</p>
+            <p class="text-gray-500 mt-2">Category: <?= $category ?></p>
         </div>
     <?php endif; ?>
 </div>
@@ -138,4 +146,4 @@ function addToCart(productId) {
         alert('Terjadi kesalahan saat menambahkan produk ke keranjang');
     });
 }
-</script> 
+</script>

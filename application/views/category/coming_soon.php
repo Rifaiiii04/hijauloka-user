@@ -4,7 +4,7 @@
             <i class="fas fa-seedling text-8xl text-green-500 mb-6 animate-bounce"></i>
             <h1 class="text-4xl font-bold text-green-800 mb-4">Coming Soon!</h1>
             <p class="text-xl text-gray-600 mb-8">
-                <?php if ($category === 'seeds'): ?>
+                <?php if (isset($category) && $category === 'seeds'): ?>
                     Kategori benih tanaman akan segera hadir. Kami sedang menyiapkan koleksi benih berkualitas untuk Anda.
                 <?php else: ?>
                     Kategori pot tanaman akan segera hadir. Kami sedang menyiapkan koleksi pot cantik untuk tanaman Anda.
@@ -35,7 +35,6 @@
         </div>
     </div>
 </div>
-
 <style>
 @keyframes bounce {
     0%, 100% {
@@ -49,4 +48,4 @@
 .animate-bounce {
     animation: bounce 2s infinite;
 }
-</style> 
+</style>
