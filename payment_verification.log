@@ -1640,3 +1640,9 @@ aa - k2 kaden
 2025-05-09 15:24:09,106 - INFO - Payment verified and saved: uploads/bukti\verified_order_114_payment_1746779049.jpg
 2025-05-09 15:24:09,108 - ERROR - Database error: No module named 'mysql'
 2025-05-09 15:24:09,109 - INFO - 127.0.0.1 - - [09/May/2025 15:24:09] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 10:34:48,184 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-10 10:34:48,189 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-10 10:34:48,192 - INFO -  * Restarting with stat
+2025-05-10 10:34:49,242 - WARNING -  * Debugger is active!
+2025-05-10 10:34:49,259 - INFO -  * Debugger PIN: 150-050-058

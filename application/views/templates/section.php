@@ -24,13 +24,12 @@
 			</div>
 			<div class="w-1/2  hidden md:flex">
 				<model-viewer
-					alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
-					src="<?= site_url('assets/models/plant2.glb')?> " 
+					alt="HijauLoka Car Delivery"
+					src="<?= site_url('assets/models/HijauLoka.glb')?> " 
 					ar
-					shadow-intensity="1"
+					shadow-intensity="2"
 					camera-controls
 					auto-rotate
-					touch-action="pan-y"
 					class="w-full h-[500px] items-center justify-center"
 				></model-viewer>
 			</div>

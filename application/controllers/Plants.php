@@ -93,4 +93,11 @@ class Plants extends CI_Controller {
         $this->load->view('plants/detail', $data);
         // $this->load->view('templates/footer');
     }
+
+    // public function back(){
+    //     $this->load->view('templates/header');
+    //     $this->load->view('category/plan');
+    //     $this->load->view('templates/footer');
+    // }
+
 }

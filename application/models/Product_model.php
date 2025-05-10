@@ -295,4 +295,74 @@ class Product_model extends CI_Model {
         $this->db->order_by('p.id_product', 'DESC');
         return $this->db->get()->result_array();
     }
+    
+    // Add these methods to your existing Product_model.php file
+    
+    public function count_products_by_tag($tag) {
+        $this->db->select('COUNT(DISTINCT p.id_product) as total');
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+        $this->db->join('category c', 'pc.id_kategori = c.id_kategori');
+        
+        // Check for tag in product name or category name
+        $this->db->group_start();
+        $this->db->like('p.nama_product', $tag);
+        $this->db->or_like('p.desk_product', $tag);
+        $this->db->or_like('c.nama_kategori', $tag);
+        $this->db->group_end();
+        
+        $query = $this->db->get();
+        return $query->row()->total;
+    }
+    
+    public function get_products_by_tag_with_pagination($tag, $limit, $start) {
+        $this->db->select('p.*, c.nama_kategori, 0 as diskon'); // Add default diskon value
+        $this->db->from('product p');
+        $this->db->join('product_category pc', 'p.id_product = pc.id_product');
+        $this->db->join('category c', 'pc.id_kategori = c.id_kategori');
+        
+        // Check for tag in product name or category name
+        $this->db->group_start();
+        $this->db->like('p.nama_product', $tag);
+        $this->db->or_like('p.desk_product', $tag);
+        $this->db->or_like('c.nama_kategori', $tag);
+        $this->db->group_end();
+        
+        $this->db->group_by('p.id_product');
+        
+        // Sort products
+        $sort = $this->input->get('sort');
+        if ($sort) {
+            switch ($sort) {
+                case 'price_low':
+                    $this->db->order_by('p.harga', 'ASC');
+                    break;
+                case 'price_high':
+                    $this->db->order_by('p.harga', 'DESC');
+                    break;
+                case 'name_asc':
+                    $this->db->order_by('p.nama_product', 'ASC');
+                    break;
+                case 'name_desc':
+                    $this->db->order_by('p.nama_product', 'DESC');
+                    break;
+                default:
+                    $this->db->order_by('p.id_product', 'DESC');
+                    break;
+            }
+        } else {
+            $this->db->order_by('p.id_product', 'DESC');
+        }
+        
+        // Check for limit parameter from URL
+        $url_limit = $this->input->get('limit');
+        if ($url_limit && is_numeric($url_limit)) {
+            $limit = $url_limit;
+        }
+        
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        
+        return $query->result();
+    }
 }
