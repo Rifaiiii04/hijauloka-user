@@ -169,27 +169,27 @@
                     <input type="hidden" name="kurir" id="selected-kurir" value="hijauloka">
                     
                     <div class="space-y-4">
-                        <!-- DANA/QRIS -->
-                        <div class="flex items-center p-4 border rounded-lg hover:border-green-500 cursor-pointer">
-                            <input type="radio" name="metode_pembayaran" value="dana" id="dana" class="w-4 h-4 text-green-600" checked>
-                            <label for="dana" class="ml-3 flex-grow">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <span class="font-medium text-gray-900">DANA/QRIS</span>
-                                        <p class="text-sm text-gray-500">Bayar dengan DANA atau QRIS</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-
                         <!-- COD -->
                         <div class="flex items-center p-4 border rounded-lg hover:border-green-500 cursor-pointer">
-                            <input type="radio" name="metode_pembayaran" value="cod" id="cod" class="w-4 h-4 text-green-600">
+                            <input type="radio" name="metode_pembayaran" value="cod" id="cod" class="w-4 h-4 text-green-600" checked>
                             <label for="cod" class="ml-3 flex-grow">
                                 <div class="flex justify-between items-center">
                                     <div>
                                         <span class="font-medium text-gray-900">Cash on Delivery (COD)</span>
                                         <p class="text-sm text-gray-500">Bayar di tempat saat barang diterima</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Midtrans Payment Gateway -->
+                        <div class="flex items-center p-4 border rounded-lg hover:border-green-500 cursor-pointer">
+                            <input type="radio" name="metode_pembayaran" value="midtrans" id="midtrans" class="w-4 h-4 text-green-600">
+                            <label for="midtrans" class="ml-3 flex-grow">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="font-medium text-gray-900">Pembayaran Online</span>
+                                        <p class="text-sm text-gray-500">QRIS, Transfer Bank, E-Wallet, Kartu Kredit</p>
                                     </div>
                                 </div>
                             </label>
@@ -201,7 +201,7 @@
                             <label for="transfer" class="ml-3 flex-grow">
                                 <div class="flex justify-between items-center">
                                     <div>
-                                        <span class="font-medium text-gray-900">Transfer Bank</span>
+                                        <span class="font-medium text-gray-900">Transfer Bank Manual</span>
                                         <p class="text-sm text-gray-500">Coming Soon</p>
                                     </div>
                                 </div>
@@ -248,16 +248,97 @@ document.querySelectorAll('input[name="kurir"]').forEach(radio => {
 });
 
 document.getElementById('checkout-form').addEventListener('submit', function(e) {
-    // Cek jika metode pembayaran adalah COD
+    e.preventDefault();
+    
+    // Ambil metode pembayaran yang dipilih
     const codRadio = document.getElementById('cod');
+    const midtransRadio = document.getElementById('midtrans');
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+    
+    // Buat form data
+    const formData = new FormData(this);
+    
     if (codRadio && codRadio.checked) {
-        e.preventDefault();
-        document.getElementById('successModalCOD').classList.remove('hidden');
-        setTimeout(() => {
-            window.location.href = "<?= base_url('checkout/sukses') ?>";
-        }, 2500);
+        // Proses COD
+        fetch('<?= base_url('checkout/proses_checkout') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            try {
+                const jsonData = JSON.parse(data);
+                if (jsonData.success) {
+                    // Show success modal
+                    document.getElementById('successModalCOD').classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('checkout/sukses') ?>";
+                    }, 2500);
+                } else {
+                    // Show error message
+                    alert(jsonData.message || 'Terjadi kesalahan saat memproses pesanan');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            } catch (e) {
+                // If response is not JSON, assume it's a redirect or success
+                document.getElementById('successModalCOD').classList.remove('hidden');
+                setTimeout(() => {
+                    window.location.href = "<?= base_url('checkout/sukses') ?>";
+                }, 2500);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    } else if (midtransRadio && midtransRadio.checked) {
+        // Perbaikan untuk Midtrans: Gunakan form baru dan submit langsung
+        const midtransForm = document.createElement('form');
+        midtransForm.method = 'POST';
+        midtransForm.action = '<?= base_url('midtrans/process_payment') ?>';
+        
+        // Salin semua field dari form asli
+        for (const pair of formData.entries()) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = pair[0];
+            input.value = pair[1];
+            midtransForm.appendChild(input);
+        }
+        
+        // Tambahkan field tambahan untuk Midtrans
+        const amountInput = document.createElement('input');
+        amountInput.type = 'hidden';
+        amountInput.name = 'amount';
+        amountInput.value = <?= $total + (!empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000) ?>;
+        midtransForm.appendChild(amountInput);
+        
+        const shippingInput = document.createElement('input');
+        shippingInput.type = 'hidden';
+        shippingInput.name = 'shipping_cost';
+        shippingInput.value = <?= !empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000 ?>;
+        midtransForm.appendChild(shippingInput);
+        
+        // Tambahkan form ke body dan submit
+        document.body.appendChild(midtransForm);
+        midtransForm.submit();
     }
-    // Jika bukan COD, biarkan submit normal (misal QRIS)
 });
 </script>
 

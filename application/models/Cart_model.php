@@ -50,4 +50,13 @@ class Cart_model extends CI_Model {
         $this->db->where('id_user', $id_user);
         return $this->db->delete('cart');
     }
+    
+    public function get_selected_cart_items($id_user, $cart_ids) {
+        $this->db->select('cart.*, product.nama_product, product.harga, product.gambar, product.stok');
+        $this->db->from('cart');
+        $this->db->join('product', 'cart.id_product = product.id_product');
+        $this->db->where('cart.id_user', $id_user);
+        $this->db->where_in('cart.id_cart', $cart_ids);
+        return $this->db->get()->result_array();
+    }
 }

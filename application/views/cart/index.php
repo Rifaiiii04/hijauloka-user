@@ -113,7 +113,7 @@
                         <span class="text-green-700">Rp<span id="finalTotal">0</span></span>
                     </div>
                     
-                    <form action="<?= base_url('checkout/metode') ?>" method="get" id="checkoutForm">
+                    <form action="<?= base_url('checkout/metode') ?>" method="post" id="checkoutForm">
                         <input type="hidden" name="selected_items" id="selectedItemsInput">
                         <button type="submit" id="checkoutBtn" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-md disabled:opacity-60 disabled:cursor-not-allowed" disabled>
                             <i class="fas fa-credit-card"></i>

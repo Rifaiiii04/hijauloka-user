@@ -2,9 +2,11 @@
 
 <!-- Login Prompt Modal - Place this right after header -->
 <div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class=" rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-fade-in">
         <div class="text-center mb-6">
-            <i class="fas fa-lock text-4xl text-green-600 mb-4"></i>
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-lock text-3xl text-green-600"></i>
+            </div>
             <h3 class="text-2xl font-semibold text-gray-900">Login Required</h3>
             <p class="text-gray-600 mt-2">Please login or create an account to add items to your wishlist</p>
         </div>
@@ -27,8 +29,25 @@
     </div>
 </div>
 
+<!-- Add this animation to your existing style section -->
+<style>
+    @keyframes fade-in {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    
+    .animate-fade-in {
+        animation: fade-in 0.3s ease-out forwards;
+    }
+</style>
+
 <!-- Place this script after the modal but before the content -->
 <script>
+// Add this function if it doesn't exist
+function closeLoginPrompt() {
+    document.getElementById('loginPrompt').classList.add('hidden');
+}
+
 function toggleWishlist(button, productId) {
     <?php if (!$this->session->userdata('logged_in')): ?>
         document.getElementById('loginPrompt').classList.remove('hidden');
@@ -316,10 +335,10 @@ function showNotification(type, title, message) {
                 <h2 class="text-3xl font-bold text-green-800 mb-2">Kategori Tanaman</h2>
                 <p class="text-gray-600">Temukan berbagai jenis tanaman sesuai kebutuhan Anda</p>
             </div>
-            <a href="<?= base_url('category') ?>" class="text-green-700 hover:text-green-900 font-medium flex items-center group transition-all duration-300">
+            <!-- <a href="<?= base_url('category') ?>" class="text-green-700 hover:text-green-900 font-medium flex items-center group transition-all duration-300">
                 <span>Lihat Semua</span>
                 <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-            </a>
+            </a> -->
         </div>
         
         <!-- Mobile Header -->

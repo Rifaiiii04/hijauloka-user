@@ -10,6 +10,62 @@ class Checkout extends CI_Controller {
 
     public function proses_checkout() {
         $id_user = $this->session->userdata('id_user');
+        if (!$id_user) {
+            redirect('auth');
+        }
+        
+        // Get selected cart items from session
+        $selected_cart_ids = $this->session->userdata('selected_cart_items');
+        if (empty($selected_cart_ids)) {
+            $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
+            redirect('cart');
+        }
+        
+        // Get only the selected cart items
+        $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_cart_ids);
+        
+        $metode_pembayaran = $this->input->post('metode_pembayaran');
+        
+        // Jika metode pembayaran adalah Midtrans, redirect ke controller Midtrans
+        if ($metode_pembayaran == 'midtrans') {
+            // Simpan data checkout ke session untuk digunakan oleh controller Midtrans
+            $cart_items = $this->cart_model->get_cart_items($id_user);
+            $total = 0;
+            foreach ($cart_items as $item) {
+                $total += $item['harga'] * $item['jumlah'];
+            }
+            
+            // Ambil kurir dari POST
+            $kurir = $this->input->post('kurir') ?? 'hijauloka';
+            
+            // Hitung ongkir berdasarkan jarak
+            $ongkir = 0;
+            if ($kurir === 'hijauloka') {
+                // Ambil alamat utama user
+                $primary_address = $this->db->get_where('shipping_addresses', [
+                    'user_id' => $id_user,
+                    'is_primary' => 1
+                ])->row_array();
+
+                if ($primary_address) {
+                    $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
+                } else {
+                    $ongkir = 5000; // Default ongkir jika tidak ada alamat
+                }
+            }
+            
+            $this->session->set_userdata('checkout_data', [
+                'cart_items' => $cart_items,
+                'total' => $total,
+                'ongkir' => $ongkir,
+                'kurir' => $kurir,
+                'total_amount' => $total + $ongkir
+            ]);
+            
+            redirect('midtrans/process_payment');
+        }
+        
+        // Proses untuk COD
         $cart_items = $this->cart_model->get_cart_items($id_user);
         $total = 0;
         foreach ($cart_items as $item) {
@@ -89,6 +145,12 @@ class Checkout extends CI_Controller {
         // Log untuk debugging
         error_log("Cart cleared for user ID: $id_user after checkout with method: $metode");
 
+        // Return JSON response untuk AJAX
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(['success' => true]);
+            return;
+        }
+
         // Redirect ke halaman QRIS jika DANA/QRIS, jika tidak ke sukses
         if ($metode == 'dana') {
             redirect('checkout/qris/' . $id_order);
@@ -97,6 +159,7 @@ class Checkout extends CI_Controller {
         }
     }
 
+    // Metode lainnya tetap sama
     public function sukses() {
         $id_user = $this->session->userdata('id_user');
         
@@ -112,38 +175,54 @@ class Checkout extends CI_Controller {
     }
 
     public function metode() {
-        $user_id = $this->session->userdata('id_user');
-        $shipping_addresses = $this->db->get_where('shipping_addresses', [
-            'user_id' => $user_id
-        ])->result_array();
-
-        // Ambil primary address
-        $primary_address = null;
-        foreach ($shipping_addresses as $addr) {
-            if ($addr['is_primary']) {
-                $primary_address = $addr;
-                break;
-            }
+        $id_user = $this->session->userdata('id_user');
+        if (!$id_user) {
+            redirect('auth');
         }
-        if (!$primary_address && !empty($shipping_addresses)) {
-            $primary_address = $shipping_addresses[0];
+        
+        // Get selected items from POST instead of GET
+        $selected_items = $this->input->post('selected_items');
+        if (empty($selected_items)) {
+            $this->session->set_flashdata('error', 'Pilih minimal satu produk untuk checkout');
+            redirect('cart');
         }
-
-        $cart_items = $this->cart_model->get_cart_items($user_id);
+        
+        // Convert comma-separated string to array
+        $selected_item_ids = explode(',', $selected_items);
+        
+        // Get only the selected cart items
+        $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_item_ids);
+        
+        if (empty($cart_items)) {
+            $this->session->set_flashdata('error', 'Produk yang dipilih tidak ditemukan');
+            redirect('cart');
+        }
+        
+        // Calculate total
         $total = 0;
-        $total_items = 0;
         foreach ($cart_items as $item) {
             $total += $item['harga'] * $item['jumlah'];
-            $total_items += $item['jumlah'];
         }
-
+        
+        // Get shipping addresses
+        $shipping_addresses = $this->db->get_where('shipping_addresses', ['user_id' => $id_user])->result_array();
+        
+        // Get primary address
+        $primary_address = $this->db->get_where('shipping_addresses', [
+            'user_id' => $id_user,
+            'is_primary' => 1
+        ])->row_array();
+        
+        // Store selected items in session for later use
+        $this->session->set_userdata('selected_cart_items', $selected_item_ids);
+        
         $data = [
-            'shipping_addresses' => $shipping_addresses,
-            'primary_address' => $primary_address,
             'cart_items' => $cart_items,
             'total' => $total,
-            'total_items' => $total_items
+            'shipping_addresses' => $shipping_addresses,
+            'primary_address' => $primary_address
         ];
+        
         $this->load->view('checkout/metode', $data);
     }
 

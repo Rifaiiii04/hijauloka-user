@@ -1646,3 +1646,214 @@ aa - k2 kaden
 2025-05-10 10:34:48,192 - INFO -  * Restarting with stat
 2025-05-10 10:34:49,242 - WARNING -  * Debugger is active!
 2025-05-10 10:34:49,259 - INFO -  * Debugger PIN: 150-050-058
+2025-05-10 11:19:48,783 - INFO - 127.0.0.1 - - [10/May/2025 11:19:48] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:19:48,921 - INFO - Processing payment verification for order ID: 115
+2025-05-10 11:19:52,235 - INFO - Blue ratio detected: 0.321
+2025-05-10 11:19:52,235 - INFO - OCR Text: cp an hi. pana bag
+“3 is) is vi ass ig h3 popuitimgns ae i. _ i i
+i 9) “1 yq rendu | mah zi pas ah
+sp bale are
+mes) p 2 i ca pees |! 7 oe “ae |
+
+2025-05-10 11:19:52,235 - INFO - Confidence score: 0.30
+2025-05-10 11:19:52,235 - INFO - Not a valid payment proof
+2025-05-10 11:19:52,256 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_115_payment_1746850792.jpg
+2025-05-10 11:19:52,258 - INFO - 127.0.0.1 - - [10/May/2025 11:19:52] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:19:59,565 - INFO - 127.0.0.1 - - [10/May/2025 11:19:59] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:19:59,808 - INFO - Processing payment verification for order ID: 115
+2025-05-10 11:20:01,567 - INFO - Blue ratio detected: 0.165
+2025-05-10 11:20:01,567 - INFO - Found 1 payment keywords
+2025-05-10 11:20:01,567 - INFO - DANA keyword explicitly found
+2025-05-10 11:20:01,567 - INFO - OCR Text: = soleo ss
+<4
+oo oo oa
+tap pp ana
+= =
+see. sn. ae
+mee srancane sarna —
+set erre es wo 008 ma anatrianayan - =
+tea ss np aecaee]
+ea mean dao dana
+ge = werrans
+os a lag
+seb oo per an
+eon dana oatsisaanzse
+sarg ree ee ia buta peri
+aa - k2 kaden
+‘(sto santuane
+= s =
+
+2025-05-10 11:20:01,567 - INFO - Confidence score: 0.70
+2025-05-10 11:20:01,567 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-10 11:20:01,567 - INFO - Payment proof detected successfully
+2025-05-10 11:20:01,578 - INFO - Saved verified payment proof: uploads/bukti\verified_order_115_payment_1746850801.jpg
+2025-05-10 11:20:01,578 - INFO - Payment verified and saved: uploads/bukti\verified_order_115_payment_1746850801.jpg
+2025-05-10 11:20:01,579 - ERROR - Database error: No module named 'mysql'
+2025-05-10 11:20:01,580 - INFO - 127.0.0.1 - - [10/May/2025 11:20:01] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:20:26,179 - INFO - 127.0.0.1 - - [10/May/2025 11:20:26] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:20:26,442 - INFO - Processing payment verification for order ID: 115
+2025-05-10 11:20:27,842 - INFO - Blue ratio detected: 0.406
+2025-05-10 11:20:27,842 - INFO - Found 1 payment keywords
+2025-05-10 11:20:27,842 - INFO - OCR Text: tn bn @pana ii |
+bara ea haid {\ fasantosos-- bal 3 ik
+
+2025-05-10 11:20:27,842 - INFO - Confidence score: 0.40
+2025-05-10 11:20:27,842 - INFO - Payment proof detected successfully
+2025-05-10 11:20:27,862 - INFO - Saved verified payment proof: uploads/bukti\verified_order_115_payment_1746850827.jpg
+2025-05-10 11:20:27,862 - INFO - Payment verified and saved: uploads/bukti\verified_order_115_payment_1746850827.jpg
+2025-05-10 11:20:27,863 - ERROR - Database error: No module named 'mysql'
+2025-05-10 11:20:27,864 - INFO - 127.0.0.1 - - [10/May/2025 11:20:27] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:28:50,823 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-10 11:28:50,826 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-10 11:28:50,828 - INFO -  * Restarting with stat
+2025-05-10 11:28:51,392 - WARNING -  * Debugger is active!
+2025-05-10 11:28:51,397 - INFO -  * Debugger PIN: 150-050-058
+2025-05-10 11:29:04,392 - INFO - 127.0.0.1 - - [10/May/2025 11:29:04] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:29:04,649 - INFO - Processing payment verification for order ID: 116
+2025-05-10 11:29:06,208 - INFO - Blue ratio detected: 0.347
+2025-05-10 11:29:06,208 - INFO - OCR Text: ber ana ga an yl ;
+lo aa 0 ad | :
+aa ba
+mn pena come mere te
+tenes || @pana ol |
+ie f tan jap | pemai reese dar 1
+pp aa er erg ial
+es payee tan mein ninteet ais“) y a wer
+msp ae any © ieitecagice & es view
+ba seva ns : sio sy "la
+sea a3 mena san lisa
+
+2025-05-10 11:29:06,208 - INFO - Confidence score: 0.30
+2025-05-10 11:29:06,208 - INFO - Not a valid payment proof
+2025-05-10 11:29:06,222 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_116_payment_1746851346.jpg
+2025-05-10 11:29:06,224 - INFO - 127.0.0.1 - - [10/May/2025 11:29:06] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:29:17,519 - INFO - 127.0.0.1 - - [10/May/2025 11:29:17] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:29:17,785 - INFO - Processing payment verification for order ID: 116
+2025-05-10 11:29:18,833 - INFO - Blue ratio detected: 0.328
+2025-05-10 11:29:18,834 - INFO - OCR Text: on er \\\ |
+ay of ce am: | a
+sw qoann’ hiv iu
+arenes 2 pains 43 sean lee yes
+"4 pp ly kk ba lear” 2 feta ©: . lau ch eae
+~ 1 fd sila | set er 3 sani | iy ! ni: sh at
+
+2025-05-10 11:29:18,834 - INFO - Confidence score: 0.30
+2025-05-10 11:29:18,834 - INFO - Not a valid payment proof
+2025-05-10 11:29:18,845 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_116_payment_1746851358.jpg
+2025-05-10 11:29:18,846 - INFO - 127.0.0.1 - - [10/May/2025 11:29:18] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:29:58,033 - INFO - 127.0.0.1 - - [10/May/2025 11:29:58] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:29:58,280 - INFO - Processing payment verification for order ID: 116
+2025-05-10 11:29:59,303 - INFO - Blue ratio detected: 0.339
+2025-05-10 11:29:59,303 - INFO - OCR Text: ana ca an 0 am | 1 a 1
+coe on open. ipp?
+pee tan | ane ea kan bn
+ee ne a pel bed
+ed ha 1 3 | tea omar se mp0 ig pi eee
+
+2025-05-10 11:29:59,304 - INFO - Confidence score: 0.30
+2025-05-10 11:29:59,304 - INFO - Not a valid payment proof
+2025-05-10 11:29:59,314 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_116_payment_1746851399.jpg
+2025-05-10 11:29:59,316 - INFO - 127.0.0.1 - - [10/May/2025 11:29:59] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:30:01,269 - INFO - Processing payment verification for order ID: 116
+2025-05-10 11:30:02,433 - INFO - Blue ratio detected: 0.339
+2025-05-10 11:30:02,433 - INFO - OCR Text: ana ca an 0 am | 1 a 1
+coe on open. ipp?
+pee tan | ane ea kan bn
+ee ne a pel bed
+ed ha 1 3 | tea omar se mp0 ig pi eee
+
+2025-05-10 11:30:02,433 - INFO - Confidence score: 0.30
+2025-05-10 11:30:02,433 - INFO - Not a valid payment proof
+2025-05-10 11:30:02,445 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_116_payment_1746851402.jpg
+2025-05-10 11:30:02,446 - INFO - 127.0.0.1 - - [10/May/2025 11:30:02] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:30:14,443 - INFO - 127.0.0.1 - - [10/May/2025 11:30:14] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:30:14,689 - INFO - Processing payment verification for order ID: 116
+2025-05-10 11:30:15,754 - INFO - Blue ratio detected: 0.412
+2025-05-10 11:30:15,754 - INFO - Found 1 payment keywords
+2025-05-10 11:30:15,754 - INFO - DANA keyword explicitly found
+2025-05-10 11:30:15,754 - INFO - OCR Text: so aa ws
+ee pa p1 dana. aaa
+fat 19 sa ima g7 woawonatsone [be 8 hrg
+4 35, 1 ay in mantan 0okedfa samar s1- 4 pit" bi
+wife i uo pe * meters ssi | ae
+
+2025-05-10 11:30:15,754 - INFO - Confidence score: 0.70
+2025-05-10 11:30:15,755 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-10 11:30:15,755 - INFO - Payment proof detected successfully
+2025-05-10 11:30:15,766 - INFO - Saved verified payment proof: uploads/bukti\verified_order_116_payment_1746851415.jpg
+2025-05-10 11:30:15,766 - INFO - Payment verified and saved: uploads/bukti\verified_order_116_payment_1746851415.jpg
+2025-05-10 11:30:15,767 - ERROR - Database error: No module named 'mysql'
+2025-05-10 11:30:15,768 - INFO - 127.0.0.1 - - [10/May/2025 11:30:15] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:34:32,837 - INFO - 127.0.0.1 - - [10/May/2025 11:34:32] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 11:34:33,065 - INFO - Processing payment verification for order ID: 117
+2025-05-10 11:34:34,848 - INFO - Blue ratio detected: 0.263
+2025-05-10 11:34:34,848 - INFO - Found 1 payment keywords
+2025-05-10 11:34:34,848 - INFO - OCR Text: gr 2oo do le all bd
+ee
+or a ao
+ceo bisnis
+= =
+sp he edi
+ta sone tees ged ie cane cane sane
+ee ancanagarnca
+peribgynren en hanana oe _
+ese teaver 5 era
+motode pombayatan saras ana
+abang
+te
+dani tamat pc ages
+= ps as
+—e tts
+ma na ate aa = ij
+lor ooo soe ov
+(csd sereneanreans
+———— esre_eastt
+
+2025-05-10 11:34:34,848 - INFO - Confidence score: 0.40
+2025-05-10 11:34:34,848 - INFO - Using fallback detection method - found DANA/BISNIS with sufficient blue ratio
+2025-05-10 11:34:34,848 - INFO - Payment proof detected successfully
+2025-05-10 11:34:34,857 - INFO - Saved verified payment proof: uploads/bukti\verified_order_117_payment_1746851674.jpg
+2025-05-10 11:34:34,857 - INFO - Payment verified and saved: uploads/bukti\verified_order_117_payment_1746851674.jpg
+2025-05-10 11:34:34,859 - ERROR - Database error: No module named 'mysql'
+2025-05-10 11:34:34,860 - INFO - 127.0.0.1 - - [10/May/2025 11:34:34] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 13:54:29,279 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-10 13:54:29,281 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-10 13:54:29,284 - INFO -  * Restarting with stat
+2025-05-10 13:54:30,001 - WARNING -  * Debugger is active!
+2025-05-10 13:54:30,005 - INFO -  * Debugger PIN: 150-050-058
+2025-05-10 13:54:49,303 - INFO - 127.0.0.1 - - [10/May/2025 13:54:49] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 13:54:49,540 - INFO - Processing payment verification for order ID: 118
+2025-05-10 13:54:52,785 - INFO - Blue ratio detected: 0.343
+2025-05-10 13:54:52,786 - INFO - OCR Text: “pps aw "1 gs 0 ees y oe
+ank deal wansels med
+ies pana “tfl
+aj an ewean ep" mu bone of pn
+1 , 0 resaatema i ik a ta ta
+h 5 atin yang rp15 uke ba sao = 4 | nan |
+oe ie , | dan ps she menu uae
+an na pera sss ppts.o00 6 | bi: si ann
+dis rh eodereniaih | ma ppb! 3 me
+
+2025-05-10 13:54:52,786 - INFO - Confidence score: 0.30
+2025-05-10 13:54:52,786 - INFO - Not a valid payment proof
+2025-05-10 13:54:52,815 - INFO - Payment not verified, saved for review: uploads/bukti\unverified_order_118_payment_1746860092.jpg
+2025-05-10 13:54:52,818 - INFO - 127.0.0.1 - - [10/May/2025 13:54:52] "POST /verify-payment HTTP/1.1" 200 -
+2025-05-10 13:55:11,499 - INFO - 127.0.0.1 - - [10/May/2025 13:55:11] "OPTIONS /verify-payment HTTP/1.1" 200 -
+2025-05-10 13:55:11,746 - INFO - Processing payment verification for order ID: 118
+2025-05-10 13:55:13,032 - INFO - Blue ratio detected: 0.429
+2025-05-10 13:55:13,032 - INFO - Found 1 payment keywords
+2025-05-10 13:55:13,032 - INFO - OCR Text: sae, carn: 9 op pear la -
+pn ass oam aa aan bie
+a ae, sa a 1500 eta anos ia sa a
+ee wea ira peatoaper 3 st ig ko 2 pn
+
+pa petai penerima sea sa we h
+
+2025-05-10 13:55:13,032 - INFO - Confidence score: 0.40
+2025-05-10 13:55:13,032 - INFO - Payment proof detected successfully
+2025-05-10 13:55:13,151 - INFO - Saved verified payment proof: uploads/bukti\verified_order_118_payment_1746860113.jpg
+2025-05-10 13:55:13,152 - INFO - Payment verified and saved: uploads/bukti\verified_order_118_payment_1746860113.jpg
+2025-05-10 13:55:13,152 - ERROR - Database error: No module named 'mysql'
+2025-05-10 13:55:13,154 - INFO - 127.0.0.1 - - [10/May/2025 13:55:13] "POST /verify-payment HTTP/1.1" 200 -
