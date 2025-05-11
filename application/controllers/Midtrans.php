@@ -27,6 +27,13 @@ class Midtrans extends CI_Controller {
         $amount = $this->input->post('amount');
         $shipping_cost = $this->input->post('shipping_cost');
         $kurir = $this->input->post('kurir');
+        $metode_pembayaran = $this->input->post('metode_pembayaran'); // Ambil metode pembayaran
+        
+        // Pastikan metode pembayaran adalah midtrans
+        if ($metode_pembayaran !== 'midtrans') {
+            $this->session->set_flashdata('error', 'Metode pembayaran tidak valid');
+            redirect('checkout/metode');
+        }
         
         // Ambil data cart
         $cart_items = $this->cart_model->get_cart_items($id_user);
@@ -110,13 +117,22 @@ class Midtrans extends CI_Controller {
             // Dapatkan Snap Token
             $snapToken = \Midtrans\Snap::getSnapToken($params);
             
-            // Insert ke orders
+            // Get payment method
+            $metode_pembayaran = $this->input->post('metode_pembayaran');
+            
+            // Make sure it's a valid method
+            if (!in_array($metode_pembayaran, ['cod', 'midtrans', 'transfer'])) {
+                $metode_pembayaran = 'midtrans'; // Default to midtrans if invalid
+            }
+            
+            // Add to order data
             $order_data = [
                 'id_user' => $id_user,
                 'tgl_pemesanan' => date('Y-m-d H:i:s'),
                 'stts_pemesanan' => 'pending',
                 'total_harga' => $amount,
-                'stts_pembayaran' => 'pending',
+                'stts_pembayaran' => 'lunas', // Set to 'lunas' for Midtrans payments
+                'metode_pembayaran' => $metode_pembayaran,
                 'kurir' => $kurir,
                 'ongkir' => $shipping_cost,
                 'id_admin' => 1,
@@ -144,11 +160,12 @@ class Midtrans extends CI_Controller {
             }
             
             // Insert ke transaksi
+            // Update transaksi data to include payment method
             $transaksi_data = [
                 'order_id' => $id_order,
                 'user_id' => $id_user,
                 'total_bayar' => $amount,
-                'metode_pembayaran' => 'midtrans',
+                'metode_pembayaran' => $metode_pembayaran, // Use the payment method from form
                 'status_pembayaran' => 'pending',
                 'tanggal_transaksi' => date('Y-m-d H:i:s'),
                 'payment_token' => $snapToken,
@@ -215,11 +232,11 @@ class Midtrans extends CI_Controller {
                 } else {
                     // Update status order
                     $this->db->where('id_order', $id_order);
-                    $this->db->update('orders', ['stts_pembayaran' => 'dibayar', 'stts_pemesanan' => 'diproses']);
+                    $this->db->update('orders', ['stts_pembayaran' => 'lunas', 'stts_pemesanan' => 'diproses']);
                     
                     // Update status transaksi
                     $this->db->where('order_id', $id_order);
-                    $this->db->update('transaksi', ['status_pembayaran' => 'success']);
+                    $this->db->update('transaksi', ['status_pembayaran' => 'dibayar']);
                 }
             }
         } else if ($transaction == 'settlement') {

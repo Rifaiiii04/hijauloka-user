@@ -251,8 +251,13 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
     e.preventDefault();
     
     // Ambil metode pembayaran yang dipilih
-    const codRadio = document.getElementById('cod');
-    const midtransRadio = document.getElementById('midtrans');
+    const selectedPaymentMethod = document.querySelector('input[name="metode_pembayaran"]:checked').value;
+    
+    // Validasi metode pembayaran
+    if (!['cod', 'midtrans', 'transfer'].includes(selectedPaymentMethod)) {
+        alert('Metode pembayaran tidak valid');
+        return;
+    }
     
     // Show loading state
     const submitBtn = this.querySelector('button[type="submit"]');
@@ -263,7 +268,7 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
     // Buat form data
     const formData = new FormData(this);
     
-    if (codRadio && codRadio.checked) {
+    if (selectedPaymentMethod === 'cod') {
         // Proses COD
         fetch('<?= base_url('checkout/proses_checkout') ?>', {
             method: 'POST',
@@ -307,7 +312,7 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
         });
-    } else if (midtransRadio && midtransRadio.checked) {
+    } else if (selectedPaymentMethod === 'midtrans') {
         // Perbaikan untuk Midtrans: Gunakan form baru dan submit langsung
         const midtransForm = document.createElement('form');
         midtransForm.method = 'POST';
@@ -334,6 +339,13 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
         shippingInput.name = 'shipping_cost';
         shippingInput.value = <?= !empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000 ?>;
         midtransForm.appendChild(shippingInput);
+        
+        // Tambahkan metode pembayaran secara eksplisit
+        const paymentMethodInput = document.createElement('input');
+        paymentMethodInput.type = 'hidden';
+        paymentMethodInput.name = 'metode_pembayaran';
+        paymentMethodInput.value = selectedPaymentMethod; // Use the actual selected value
+        midtransForm.appendChild(paymentMethodInput);
         
         // Tambahkan form ke body dan submit
         document.body.appendChild(midtransForm);

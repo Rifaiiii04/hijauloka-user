@@ -8,6 +8,7 @@ class Checkout extends CI_Controller {
         $this->load->library('session');
     }
 
+    // In your proses_checkout method
     public function proses_checkout() {
         $id_user = $this->session->userdata('id_user');
         if (!$id_user) {
@@ -24,7 +25,27 @@ class Checkout extends CI_Controller {
         // Get only the selected cart items
         $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_cart_ids);
         
+        // Get payment method from form
+        // Get the payment method from POST
         $metode_pembayaran = $this->input->post('metode_pembayaran');
+        
+        // Validate payment method against ENUM values
+        if (!in_array($metode_pembayaran, ['cod', 'midtrans', 'transfer'])) {
+            $metode_pembayaran = 'cod'; // Default to COD if invalid
+        }
+        
+        // Add to order data
+        $order_data = [
+            'id_user' => $id_user,
+            'tgl_pemesanan' => date('Y-m-d H:i:s'),
+            'stts_pemesanan' => 'pending',
+            'total_harga' => $total_amount,
+            'stts_pembayaran' => 'pending',
+            'metode_pembayaran' => $metode_pembayaran, // Save payment method
+            'kurir' => $kurir,
+            'ongkir' => $shipping_cost,
+            'id_admin' => 1
+        ];
         
         // Jika metode pembayaran adalah Midtrans, redirect ke controller Midtrans
         if ($metode_pembayaran == 'midtrans') {
