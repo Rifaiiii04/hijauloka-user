@@ -31,6 +31,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= base_url('blog') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Blog</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= $this->session->userdata('logged_in') ? base_url('wishlist') : '#' ?>"
                        class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
                         <i class="fas fa-heart"></i>

@@ -460,119 +460,83 @@ function showNotification(type, title, message) {
 </section>
 
 <!-- Blog Section - Enhanced UX -->
-<section class="py-16 ">
+<section class="py-16">
     <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
             <div class="max-w-xl">
                 <h2 class="text-3xl font-bold text-green-800 mb-3">Postingan Blog Terbaru</h2>
                 <p class="text-gray-600">Tips perawatan tanaman, inspirasi dekorasi, dan panduan berkebun untuk membantu Anda merawat tanaman dengan baik</p>
             </div>
-            <a href="#" class="mt-4 md:mt-0 px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center group">
+            <a href="<?= base_url('blog') ?>" class="mt-4 md:mt-0 px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center group">
                 <span>Lihat Semua</span>
                 <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
         
-        <!-- Featured Blog Posts -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <!-- Featured Post 1 -->
-            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
-                <img src="<?= base_url('assets/img/news1.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
-                    <div class="flex items-center text-green-100 mb-3">
-                        <span>By Muhamad Rifai</span>
-                        <span class="mx-3">•</span>
-                        <span>20 Mei, 2023</span>
+        <?php if (!empty($featured_blog_posts)): ?>
+            <!-- Featured Blog Posts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <?php foreach ($featured_blog_posts as $post): ?>
+                    <!-- Featured Post -->
+                    <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
+                        <img src="<?= !empty($post['featured_image']) ? base_url('uploads/blog/' . $post['featured_image']) : base_url('assets/img/news1.png') ?>" 
+                             alt="<?= $post['title'] ?>" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
+                            <div class="flex items-center text-green-100 mb-3">
+                                <span>By <?= $post['author_name'] ?? 'Admin' ?></span>
+                                <span class="mx-3">•</span>
+                                <span><?= date('d M, Y', strtotime($post['created_at'])) ?></span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors"><?= $post['title'] ?></h3>
+                            <p class="text-green-100 mb-4 line-clamp-2"><?= $post['excerpt'] ?? substr(strip_tags($post['content']), 0, 150) . '...' ?></p>
+                            <a href="<?= base_url('blog/post/' . $post['slug']) ?>" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
+                                <span>Baca Selengkapnya</span>
+                                <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">Cara Merawat Tanaman Hias Indoor dengan Mudah</h3>
-                    <p class="text-green-100 mb-4 line-clamp-2">Pelajari tips dan trik merawat tanaman hias indoor agar tetap segar dan indah sepanjang tahun.</p>
-                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
-                        <span>Baca Selengkapnya</span>
-                        <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
-                </div>
+                <?php endforeach; ?>
             </div>
             
-            <!-- Featured Post 2 -->
-            <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
-                <img src="<?= base_url('assets/img/news2.png') ?>" alt="Featured blog post" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
-                    <div class="flex items-center text-green-100 mb-3">
-                        <span>By Muhamad Rifai</span>
-                        <span class="mx-3">•</span>
-                        <span>20 Mei, 2023</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors">10 Tanaman yang Cocok untuk Pemula</h3>
-                    <p class="text-green-100 mb-4 line-clamp-2">Baru memulai hobi berkebun? Ini dia 10 tanaman yang mudah dirawat dan cocok untuk pemula.</p>
-                    <a href="#" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
-                        <span>Baca Selengkapnya</span>
-                        <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
+            <!-- Small Blog Posts -->
+            <?php if (!empty($small_blog_posts)): ?>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <?php foreach ($small_blog_posts as $post): ?>
+                        <!-- Small Post -->
+                        <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+                            <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                                <img src="<?= !empty($post['featured_image']) ? base_url('uploads/blog/' . $post['featured_image']) : base_url('assets/img/news1.png') ?>" 
+                                     alt="<?= $post['title'] ?>" 
+                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2"><?= $post['title'] ?></h3>
+                                <p class="text-sm text-gray-500 flex items-center">
+                                    <span>By <?= $post['author_name'] ?? 'Admin' ?></span>
+                                    <span class="mx-2">•</span>
+                                    <span><?= date('d M, Y', strtotime($post['created_at'])) ?></span>
+                                </p>
+                                <a href="<?= base_url('blog/post/' . $post['slug']) ?>" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span>Baca</span>
+                                    <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <!-- No Blog Posts Message -->
+            <div class="bg-gray-50 rounded-xl p-8 text-center">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-newspaper text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Postingan Blog</h3>
+                <p class="text-gray-500 max-w-md mx-auto">Kami sedang menyiapkan konten menarik untuk Anda. Kunjungi kembali halaman ini dalam waktu dekat.</p>
             </div>
-        </div>
-        
-        <!-- Small Blog Posts -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Small Post 1 -->
-            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">Panduan Lengkap Menanam Sayuran di Rumah</h3>
-                    <p class="text-sm text-gray-500 flex items-center">
-                        <span>By Dea Amelia</span>
-                        <span class="mx-2">•</span>
-                        <span>18 April, 2023</span>
-                    </p>
-                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span>Baca</span>
-                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Small Post 2 -->
-            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">5 Tanaman Pembersih Udara untuk Kamar Tidur</h3>
-                    <p class="text-sm text-gray-500 flex items-center">
-                        <span>By Dea Amelia</span>
-                        <span class="mx-2">•</span>
-                        <span>12 April, 2023</span>
-                    </p>
-                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span>Baca</span>
-                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Small Post 3 -->
-            <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-                <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                    <img src="<?= base_url('assets/img/news1.png')?>" alt="Blog thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors line-clamp-2 mb-2">Cara Mengatasi Hama pada Tanaman Hias</h3>
-                    <p class="text-sm text-gray-500 flex items-center">
-                        <span>By Dea Amelia</span>
-                        <span class="mx-2">•</span>
-                        <span>5 April, 2023</span>
-                    </p>
-                    <a href="#" class="text-green-600 text-sm mt-2 inline-flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span>Baca</span>
-                        <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
 </section>
 

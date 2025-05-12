@@ -11,16 +11,17 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $user_id = $this->session->userdata('logged_in') ? $this->session->userdata('id_user') : null;
+        // Load blog model
+        $this->load->model('blog_model');
         
-        $data = [
-            'cart_count' => $user_id ? $this->cart_model->get_cart_count($user_id) : 0,
-            'produk_terbaru' => $this->product_model->get_latest_products(8, $user_id),
-            'featured_products' => $this->product_model->get_featured_products()
-        ];
+        // Get featured products (existing code)
+        $data['featured_products'] = $this->product_model->get_featured_products();
         
-        $this->load->view('templates/header', $data);
+        // Get latest blog posts (3 featured posts and 3 small posts)
+        $data['featured_blog_posts'] = $this->blog_model->get_latest_posts(2, 'published');
+        $data['small_blog_posts'] = $this->blog_model->get_latest_posts(3, 'published', 2); // Skip the first 2
+        
+        // Load view with data
         $this->load->view('home/index', $data);
-        $this->load->view('templates/footer');
     }
 }
