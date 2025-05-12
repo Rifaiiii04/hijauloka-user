@@ -36,7 +36,22 @@ class Midtrans extends CI_Controller {
         }
         
         // Ambil data cart
-        $cart_items = $this->cart_model->get_cart_items($id_user);
+        // Get selected cart items from session
+        $selected_cart_items = $this->session->userdata('selected_cart_items');
+        
+        if (empty($selected_cart_items)) {
+            redirect('cart');
+            return;
+        }
+        
+        // Convert comma-separated string to array if needed
+        if (is_string($selected_cart_items)) {
+            $selected_cart_items = explode(',', $selected_cart_items);
+        }
+        
+        // Get only the selected cart items
+        $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_cart_items);
+        
         $total = 0;
         foreach ($cart_items as $item) {
             $total += $item['harga'] * $item['jumlah'];
@@ -175,7 +190,14 @@ class Midtrans extends CI_Controller {
             $this->db->insert('transaksi', $transaksi_data);
             
             // Hapus cart user di database
+            // CHANGE THIS: Only delete the selected cart items instead of all items
+            if (is_string($selected_cart_items)) {
+                $selected_cart_items = explode(',', $selected_cart_items);
+            }
+            
+            // Delete only selected cart items
             $this->db->where('id_user', $id_user);
+            $this->db->where_in('id_cart', $selected_cart_items);
             $this->db->delete('cart');
             
             // Kirim token ke view dengan opsi untuk menampilkan langsung di halaman

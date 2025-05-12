@@ -27,6 +27,26 @@ class Cart extends CI_Controller {
         $this->load->view('cart/index', $data);
     }
     
+    // Add a new method to handle checkout with selected items
+    public function checkout() {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+        
+        $selected_items = $this->input->post('selected_items');
+        
+        if (empty($selected_items)) {
+            $this->session->set_flashdata('error', 'Pilih minimal satu produk untuk checkout');
+            redirect('cart');
+        }
+        
+        // Store selected items in session for use in checkout process
+        $this->session->set_userdata('selected_cart_items', $selected_items);
+        
+        // Redirect to checkout page
+        redirect('checkout/metode');
+    }
+    
     public function add() {
         if (!$this->session->userdata('logged_in')) {
             echo json_encode(['success' => false, 'message' => 'Anda harus login']);

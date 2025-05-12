@@ -5,10 +5,10 @@ class Checkout extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('cart_model');
+        $this->load->model('user_model'); // Add this line to load the user_model
         $this->load->library('session');
     }
 
-    // In your proses_checkout method
     public function proses_checkout() {
         $id_user = $this->session->userdata('id_user');
         if (!$id_user) {
@@ -26,7 +26,6 @@ class Checkout extends CI_Controller {
         $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_cart_ids);
         
         // Get payment method from form
-        // Get the payment method from POST
         $metode_pembayaran = $this->input->post('metode_pembayaran');
         
         // Validate payment method against ENUM values
@@ -34,23 +33,9 @@ class Checkout extends CI_Controller {
             $metode_pembayaran = 'cod'; // Default to COD if invalid
         }
         
-        // Add to order data
-        $order_data = [
-            'id_user' => $id_user,
-            'tgl_pemesanan' => date('Y-m-d H:i:s'),
-            'stts_pemesanan' => 'pending',
-            'total_harga' => $total_amount,
-            'stts_pembayaran' => 'pending',
-            'metode_pembayaran' => $metode_pembayaran, // Save payment method
-            'kurir' => $kurir,
-            'ongkir' => $shipping_cost,
-            'id_admin' => 1
-        ];
-        
         // Jika metode pembayaran adalah Midtrans, redirect ke controller Midtrans
         if ($metode_pembayaran == 'midtrans') {
             // Simpan data checkout ke session untuk digunakan oleh controller Midtrans
-            $cart_items = $this->cart_model->get_cart_items($id_user);
             $total = 0;
             foreach ($cart_items as $item) {
                 $total += $item['harga'] * $item['jumlah'];
@@ -87,14 +72,12 @@ class Checkout extends CI_Controller {
         }
         
         // Proses untuk COD
-        $cart_items = $this->cart_model->get_cart_items($id_user);
         $total = 0;
         foreach ($cart_items as $item) {
             $total += $item['harga'] * $item['jumlah'];
         }
 
-        // Ambil metode pembayaran dan kurir dari POST
-        $metode = $this->input->post('metode_pembayaran') ?? 'dana';
+        // Ambil kurir dari POST
         $kurir = $this->input->post('kurir') ?? 'hijauloka';
         
         // Hitung ongkir berdasarkan jarak
@@ -119,7 +102,8 @@ class Checkout extends CI_Controller {
             'tgl_pemesanan' => date('Y-m-d H:i:s'),
             'stts_pemesanan' => 'pending',
             'total_harga' => $total + $ongkir,
-            'stts_pembayaran' => $metode == 'cod' ? 'belum_dibayar' : 'pending',
+            'stts_pembayaran' => $metode_pembayaran == 'cod' ? 'belum_dibayar' : 'pending',
+            'metode_pembayaran' => $metode_pembayaran, // Add this line to save payment method
             'kurir' => $kurir,
             'ongkir' => $ongkir,
             'id_admin' => 1
@@ -150,21 +134,28 @@ class Checkout extends CI_Controller {
             'order_id' => $id_order,
             'user_id' => $id_user,
             'total_bayar' => $total,
-            'metode_pembayaran' => $metode,
-            'status_pembayaran' => $metode == 'cod' ? 'pending' : 'pending',
+            'metode_pembayaran' => $metode_pembayaran,
+            'status_pembayaran' => $metode_pembayaran == 'cod' ? 'pending' : 'pending',
             'tanggal_transaksi' => date('Y-m-d H:i:s'),
             'payment_token' => 'DUMMY-' . uniqid(),
             'payment_response' => json_encode(['dummy' => true]),
-            'expired_at' => $metode == 'dana' ? date('Y-m-d H:i:s', strtotime('+10 minutes')) : null
+            'expired_at' => $metode_pembayaran == 'dana' ? date('Y-m-d H:i:s', strtotime('+10 minutes')) : null
         ];
         $this->db->insert('transaksi', $transaksi_data);
 
         // Hapus cart user di database - Penting untuk semua metode pembayaran
+        // CHANGE THIS: Only delete the selected cart items instead of all items
+        if (is_string($selected_cart_ids)) {
+            $selected_cart_ids = explode(',', $selected_cart_ids);
+        }
+        
+        // Delete only selected cart items
         $this->db->where('id_user', $id_user);
+        $this->db->where_in('id_cart', $selected_cart_ids);
         $this->db->delete('cart');
         
-        // Log untuk debugging
-        error_log("Cart cleared for user ID: $id_user after checkout with method: $metode");
+        // Log for debugging
+        error_log("Selected cart items deleted for user ID: $id_user - Items: " . implode(',', $selected_cart_ids));
 
         // Return JSON response untuk AJAX
         if ($this->input->is_ajax_request()) {
@@ -172,21 +163,17 @@ class Checkout extends CI_Controller {
             return;
         }
 
-        // Redirect ke halaman QRIS jika DANA/QRIS, jika tidak ke sukses
-        if ($metode == 'dana') {
-            redirect('checkout/qris/' . $id_order);
-        } else {
-            redirect('checkout/sukses');
-        }
+        // Redirect ke halaman sukses
+        redirect('checkout/sukses');
     }
 
     // Metode lainnya tetap sama
     public function sukses() {
         $id_user = $this->session->userdata('id_user');
         
-        // Double-check to ensure cart is cleared for all payment methods
-        $this->db->where('id_user', $id_user);
-        $this->db->delete('cart');
+        // Remove this line that deletes all cart items
+        // $this->db->where('id_user', $id_user);
+        // $this->db->delete('cart');
         
         // Clear cart in session if exists
         $this->session->unset_userdata('cart');
@@ -196,57 +183,53 @@ class Checkout extends CI_Controller {
     }
 
     public function metode() {
-        $id_user = $this->session->userdata('id_user');
-        if (!$id_user) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('auth');
         }
         
-        // Get selected items from POST instead of GET
-        $selected_items = $this->input->post('selected_items');
-        if (empty($selected_items)) {
+        // Get selected cart items from session
+        $selected_cart_items = $this->session->userdata('selected_cart_items');
+        
+        if (empty($selected_cart_items)) {
             $this->session->set_flashdata('error', 'Pilih minimal satu produk untuk checkout');
             redirect('cart');
         }
         
-        // Convert comma-separated string to array
-        $selected_item_ids = explode(',', $selected_items);
+        // Convert comma-separated string to array if needed
+        if (is_string($selected_cart_items)) {
+            $selected_cart_items = explode(',', $selected_cart_items);
+        }
         
         // Get only the selected cart items
-        $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_item_ids);
+        $data['cart_items'] = $this->cart_model->get_selected_cart_items($this->session->userdata('id_user'), $selected_cart_items);
         
-        if (empty($cart_items)) {
+        if (empty($data['cart_items'])) {
             $this->session->set_flashdata('error', 'Produk yang dipilih tidak ditemukan');
             redirect('cart');
         }
         
-        // Calculate total
+        // Calculate total for selected items only
         $total = 0;
-        foreach ($cart_items as $item) {
+        foreach ($data['cart_items'] as $item) {
             $total += $item['harga'] * $item['jumlah'];
         }
+        $data['total'] = $total;
         
         // Get shipping addresses
-        $shipping_addresses = $this->db->get_where('shipping_addresses', ['user_id' => $id_user])->result_array();
+        $data['shipping_addresses'] = $this->user_model->get_user_addresses($this->session->userdata('id_user'));
+        $data['primary_address'] = $this->user_model->get_primary_address($this->session->userdata('id_user'));
         
-        // Get primary address
-        $primary_address = $this->db->get_where('shipping_addresses', [
-            'user_id' => $id_user,
-            'is_primary' => 1
-        ])->row_array();
-        
-        // Store selected items in session for later use
-        $this->session->set_userdata('selected_cart_items', $selected_item_ids);
-        
-        $data = [
-            'cart_items' => $cart_items,
-            'total' => $total,
-            'shipping_addresses' => $shipping_addresses,
-            'primary_address' => $primary_address
-        ];
-        
+        $data['title'] = 'Checkout';
         $this->load->view('checkout/metode', $data);
     }
 
+    // REMOVE THIS DUPLICATE METHOD
+    // public function proses_checkout() {
+    // First implementation code
+    // ...
+    // }
+
+    // Metode lainnya tetap sama
     public function set_primary_address() {
         $user_id = $this->session->userdata('id_user');
         $primary_id = $this->input->post('primary_id');
