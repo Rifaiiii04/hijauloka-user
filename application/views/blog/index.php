@@ -38,7 +38,7 @@
                 <?php foreach ($posts as $post): ?>
                     <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                         <a href="<?= base_url('blog/post/' . $post['slug']) ?>" class="block relative h-52 overflow-hidden">
-                            <img src="<?= !empty($post['featured_image']) ? base_url('uploads/blog/' . $post['featured_image']) : base_url('assets/img/news1.png') ?>" 
+                            <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
                                  alt="<?= $post['title'] ?>" 
                                  class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                             <!-- Category badge overlay -->
