@@ -10,11 +10,14 @@ class Midtrans extends CI_Controller {
         $this->load->model('cart_model');
         $this->load->library('session');
         
-        // Konfigurasi Midtrans - Updated to use sandbox credentials
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-cHC4Z3JHh_Z8dHnQ8f4kK89x';
-        \Midtrans\Config::$isProduction = false;
-        \Midtrans\Config::$isSanitized = true;
-        \Midtrans\Config::$is3ds = true;
+        // Load Midtrans config
+        $this->load->config('midtrans');
+        
+        // Configure Midtrans with values from config file
+        \Midtrans\Config::$serverKey = $this->config->item('midtrans_server_key');
+        \Midtrans\Config::$isProduction = $this->config->item('midtrans_is_production');
+        \Midtrans\Config::$isSanitized = $this->config->item('midtrans_is_sanitized');
+        \Midtrans\Config::$is3ds = $this->config->item('midtrans_is_3ds');
     }
     
     public function process_payment() {
