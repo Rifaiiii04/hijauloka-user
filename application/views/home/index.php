@@ -699,3 +699,4 @@ function showNotification(type, title, message) {
     }
 </style>
 
+<?php $this->load->view('templates/footer'); ?>
