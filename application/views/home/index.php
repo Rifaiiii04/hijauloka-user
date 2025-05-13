@@ -477,23 +477,26 @@ function showNotification(type, title, message) {
             <!-- Featured Blog Posts -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <?php foreach ($featured_blog_posts as $post): ?>
-                    <!-- Featured Post -->
+                    <!-- Featured Post - Modern Design -->
                     <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
-                        <img src="<?= !empty($post['featured_image']) ? base_url('uploads/blog/' . $post['featured_image']) : base_url('assets/img/news1.png') ?>" 
-                             alt="<?= $post['title'] ?>" 
+                        <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                             alt="<?= $post['title'] ?>"
+                             onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-green-900/50 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
-                            <div class="flex items-center text-green-100 mb-3">
-                                <span>By <?= $post['author_name'] ?? 'Admin' ?></span>
-                                <span class="mx-3">•</span>
-                                <span><?= date('d M, Y', strtotime($post['created_at'])) ?></span>
+                        <!-- Modern glass morphism overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-70"></div>
+                        <!-- Modern content container with glass effect -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 backdrop-blur-md bg-gradient-to-t from-black/100 to-black-10  transform transition-all duration-300 ">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full"><?= $post['author_name'] ?? 'Admin' ?></span>
+                                <span class="text-white/80 text-xs"><?= date('d M, Y', strtotime($post['created_at'])) ?></span>
                             </div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-200 transition-colors"><?= $post['title'] ?></h3>
-                            <p class="text-green-100 mb-4 line-clamp-2"><?= $post['excerpt'] ?? substr(strip_tags($post['content']), 0, 150) . '...' ?></p>
-                            <a href="<?= base_url('blog/post/' . $post['slug']) ?>" class="inline-flex items-center text-white hover:text-green-200 transition-colors group">
+                            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors line-clamp-2"><?= $post['title'] ?></h3>
+                            <!-- Modern excerpt styling -->
+                            <p class="text-white/80 text-sm mb-4 line-clamp-2"><?= $post['excerpt'] ?? substr(strip_tags($post['content']), 0, 120) . '...' ?></p>
+                            <a href="<?= base_url('blog/post/' . $post['slug']) ?>" class="inline-flex items-center bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-full transition-all group">
                                 <span>Baca Selengkapnya</span>
-                                <i class="fas fa-long-arrow-alt-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
                             </a>
                         </div>
                     </div>
@@ -507,8 +510,9 @@ function showNotification(type, title, message) {
                         <!-- Small Post -->
                         <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="<?= !empty($post['featured_image']) ? base_url('uploads/blog/' . $post['featured_image']) : base_url('assets/img/news1.png') ?>" 
-                                     alt="<?= $post['title'] ?>" 
+                                <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                                     alt="<?= $post['title'] ?>"
+                                     onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div>
