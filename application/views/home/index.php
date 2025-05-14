@@ -293,7 +293,13 @@ function showNotification(type, title, message) {
                                         <?php 
                                         $rating = floatval($product['rating'] ?? 0);
                                         for ($i = 1; $i <= 5; $i++): ?>
-                                            <i class="far fa-star"></i>
+                                            <?php if ($i <= $rating): ?>
+                                                <i class="fas fa-star"></i>
+                                            <?php elseif ($i - 0.5 <= $rating): ?>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-star"></i>
+                                            <?php endif; ?>
                                         <?php endfor; ?>
                                     </div>
                                     <span class="text-gray-500 text-sm ml-2">(<?= number_format($rating, 1) ?>)</span>

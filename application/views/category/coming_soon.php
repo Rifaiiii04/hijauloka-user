@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-16">
+<div class="container mx-auto px-4 py-16 mt-12">
     <div class="max-w-2xl mx-auto text-center">
         <div class="mb-8">
             <i class="fas fa-seedling text-8xl text-green-500 mb-6 animate-bounce"></i>
