@@ -131,4 +131,52 @@ class Order_model extends CI_Model {
 
         return ['success' => true, 'message' => 'Pesanan berhasil dibatalkan'];
     }
+
+    public function get_completed_orders_by_user_and_product($id_user, $id_product)
+    {
+        // First, let's check if the user has any completed orders
+        $this->db->select('orders.id_order');
+        $this->db->from('orders');
+        $this->db->where('orders.id_user', $id_user);
+        $this->db->where('orders.stts_pemesanan', 'selesai');
+        $user_completed_orders = $this->db->get()->result_array();
+        
+        log_message('debug', 'User completed orders: ' . json_encode($user_completed_orders));
+        
+        if (empty($user_completed_orders)) {
+            return [];
+        }
+        
+        // Get the order IDs
+        $order_ids = array_column($user_completed_orders, 'id_order');
+        
+        // Now check if any of these orders contain the specific product
+        $this->db->select('order_items.id_order, order_items.id_product, order_items.quantity');
+        $this->db->from('order_items');
+        $this->db->where('order_items.id_product', $id_product);
+        $this->db->where_in('order_items.id_order', $order_ids);
+        $product_orders = $this->db->get()->result_array();
+        
+        log_message('debug', 'Product in completed orders: ' . json_encode($product_orders));
+        
+        if (empty($product_orders)) {
+            return [];
+        }
+        
+        // Finally, get the full order details for orders that contain this product
+        $this->db->select('orders.*');
+        $this->db->from('orders');
+        $this->db->where('orders.id_user', $id_user);
+        $this->db->where('orders.stts_pemesanan', 'selesai');
+        $this->db->where_in('orders.id_order', array_column($product_orders, 'id_order'));
+        $this->db->order_by('orders.tgl_selesai', 'DESC');
+        
+        $query = $this->db->get();
+        $result = $query->result_array();
+        
+        log_message('debug', 'Final order query: ' . $this->db->last_query());
+        log_message('debug', 'Final order result count: ' . count($result));
+        
+        return $result;
+    }
 }

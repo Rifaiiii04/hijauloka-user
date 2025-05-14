@@ -365,4 +365,10 @@ class Product_model extends CI_Model {
         
         return $query->result();
     }
+    
+    public function update_product_rating($id_product, $rating)
+    {
+        $this->db->where('id_product', $id_product);
+        return $this->db->update('product', ['rating' => $rating]);
+    }
 }

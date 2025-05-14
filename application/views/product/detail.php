@@ -23,7 +23,15 @@
                 <div class="relative h-[250px]">
                     <?php 
                     $mainImage = $product['gambar'];
-                    if (strpos($mainImage, ',') !== false) {
+                    $images = [];
+                    
+                    // Check if gambar is already an array
+                    if (is_array($mainImage)) {
+                        $images = $mainImage;
+                        $mainImage = !empty($images) ? $images[0] : '';
+                    } 
+                    // If it's a string, check if it contains multiple images
+                    else if (is_string($mainImage) && strpos($mainImage, ',') !== false) {
                         $images = array_map('trim', explode(',', $mainImage));
                         $mainImage = $images[0];
                     }
@@ -33,7 +41,7 @@
                          class="w-full h-full object-contain rounded-lg">
                 </div>
                 
-                <?php if (isset($images) && count($images) > 1): ?>
+                <?php if (!empty($images) && count($images) > 1): ?>
                 <div class="grid grid-cols-4 gap-0.5 mt-0.5">
                     <?php foreach($images as $image): ?>
                     <div class="relative h-14 left-1.5 gap-5">
@@ -114,7 +122,7 @@
                         Tambah ke Keranjang
                     </button>
                     <button onclick="buyNow(<?= $product['id_product'] ?>)"
-                            class="flex-1 bg-blue-600 text-white py-1.5 px-3 rounded text-xs hover:bg-blue-700">
+                            class="flex-1 bg-blue-600 text-white py-1.5 px-3 rounded text-xs hover:bg-blue-700 transition-all">
                         <i class="fas fa-bolt text-[10px] mr-1"></i>
                         Beli Sekarang
                     </button>
@@ -127,7 +135,7 @@
         </div>
     </div>
 
-    <!-- Reviews Section (similarly updated) -->
+    <!-- Reviews Section - Updated with actual reviews and review form -->
     <section class="px-2 py-4">
         <h2 class="text-lg font-bold text-gray-900 mb-3">Ulasan Pembeli</h2>
         
@@ -138,13 +146,29 @@
                     <div class="text-4xl font-bold text-gray-900 mb-2"><?= number_format($rating, 1) ?></div>
                     <div class="flex text-yellow-400 justify-center mb-1">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <i class="fas fa-star"></i>
+                            <?php if ($i <= $rating): ?>
+                                <i class="fas fa-star"></i>
+                            <?php elseif ($i - 0.5 <= $rating): ?>
+                                <i class="fas fa-star-half-alt"></i>
+                            <?php else: ?>
+                                <i class="far fa-star"></i>
+                            <?php endif; ?>
                         <?php endfor; ?>
                     </div>
-                    <div class="text-gray-500 text-sm">Dari 0 ulasan</div>
+                    <div class="text-gray-500 text-sm">Dari <?= count($reviews) ?> ulasan</div>
                 </div>
                 <div class="flex-1">
                     <div class="space-y-2">
+                        <?php 
+                        $rating_counts = [0, 0, 0, 0, 0];
+                        foreach ($reviews as $review) {
+                            if ($review['rating'] >= 1 && $review['rating'] <= 5) {
+                                $rating_counts[$review['rating']-1]++;
+                            }
+                        }
+                        $total_reviews = count($reviews);
+                        ?>
+                        
                         <?php for ($i = 5; $i >= 1; $i--): ?>
                         <div class="flex items-center gap-4">
                             <div class="flex text-yellow-400">
@@ -154,10 +178,11 @@
                             </div>
                             <div class="flex-1">
                                 <div class="h-2 bg-gray-200 rounded-full">
-                                    <div class="h-2 bg-yellow-400 rounded-full" style="width: 0%"></div>
+                                    <div class="h-2 bg-yellow-400 rounded-full" 
+                                         style="width: <?= $total_reviews > 0 ? ($rating_counts[$i-1] / $total_reviews * 100) : 0 ?>%"></div>
                                 </div>
                             </div>
-                            <div class="text-gray-500 w-12 text-right">0</div>
+                            <div class="text-gray-500 w-12 text-right"><?= $rating_counts[$i-1] ?></div>
                         </div>
                         <?php endfor; ?>
                     </div>
@@ -165,18 +190,135 @@
             </div>
         </div>
 
+        <!-- Check if user can review this product -->
+        <?php if ($can_review): ?>
+        <div class="bg-white rounded-md shadow p-4 mb-4">
+            <h3 class="text-md font-semibold text-gray-800 mb-3">Berikan Ulasan Anda</h3>
+            <form id="reviewForm" action="<?= base_url('product/submit_review') ?>" method="post">
+                <input type="hidden" name="id_product" value="<?= $product['id_product'] ?>">
+                
+                <!-- Star Rating -->
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                    <div class="flex gap-1">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 focus:outline-none transition-colors" 
+                                data-rating="<?= $i ?>">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <?php endfor; ?>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" value="0">
+                </div>
+                
+                <!-- Review Text -->
+                <div class="mb-3">
+                    <label for="review" class="block text-sm font-medium text-gray-700 mb-1">Ulasan</label>
+                    <textarea id="review" name="ulasan" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              placeholder="Bagikan pengalaman Anda dengan produk ini..."></textarea>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                    Kirim Ulasan
+                </button>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <!-- Comments List -->
         <div class="space-y-4">
-            <div class="bg-white rounded-md shadow p-4 text-center">
-                <div class="text-gray-400 mb-1">
-                    <i class="far fa-comment-dots text-2xl"></i>
+            <?php if (!empty($reviews)): ?>
+                <?php foreach ($reviews as $review): ?>
+                <div class="bg-white rounded-md shadow p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                    <?php if (!empty($review['profile_image'])): ?>
+                                        <img src="<?= base_url('uploads/profile/' . $review['profile_image']) ?>" alt="Profile" class="w-full h-full object-cover">
+                                    <?php else: ?>
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    <?php endif; ?>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800"><?= $review['nama'] ?></h4>
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="fas <?= $i <= $review['rating'] ? 'fa-star' : 'fa-star text-gray-300' ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-500"><?= date('d M Y', strtotime($review['tgl_review'])) ?></span>
+                    </div>
+                    <p class="text-gray-600 text-sm"><?= nl2br(htmlspecialchars($review['ulasan'])) ?></p>
                 </div>
-                <p class="text-sm text-gray-600 font-medium">Belum ada ulasan</p>
-                <p class="text-xs text-gray-500 mt-1">Jadilah yang pertama memberikan ulasan untuk produk ini</p>
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="bg-white rounded-md shadow p-4 text-center">
+                    <div class="text-gray-400 mb-1">
+                        <i class="far fa-comment-dots text-2xl"></i>
+                    </div>
+                    <p class="text-sm text-gray-600 font-medium">Belum ada ulasan</p>
+                    <p class="text-xs text-gray-500 mt-1">Jadilah yang pertama memberikan ulasan untuk produk ini</p>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 </main>
+
+<!-- Add this JavaScript for the rating functionality -->
+<script>
+// Rating functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.rating-star');
+    const ratingInput = document.getElementById('ratingInput');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.getAttribute('data-rating'));
+            ratingInput.value = rating;
+            
+            // Update star colors
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.remove('text-gray-300');
+                    s.classList.add('text-yellow-400');
+                } else {
+                    s.classList.remove('text-yellow-400');
+                    s.classList.add('text-gray-300');
+                }
+            });
+        });
+    });
+    
+    // Form validation
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            const rating = parseInt(ratingInput.value);
+            const review = document.getElementById('review').value.trim();
+            
+            if (rating === 0) {
+                e.preventDefault();
+                showNotification('error', 'Error', 'Silakan berikan rating (1-5 bintang)');
+                return false;
+            }
+            
+            if (review.length < 10) {
+                e.preventDefault();
+                showNotification('error', 'Error', 'Ulasan harus minimal 10 karakter');
+                return false;
+            }
+            
+            return true;
+        });
+    }
+});
+</script>
 
 <!-- Add this after header -->
 <!-- Login Prompt Modal -->
@@ -230,7 +372,7 @@
     }
 </style>
 
-// First, let's add the CSS for our custom notification
+
 </style>
 
 <!-- Add custom notification styles -->
@@ -469,7 +611,7 @@ function buyNow(productId) {
     // Show loading state
     const button = document.querySelector('button[onclick="buyNow(' + productId + ')"]');
     const originalText = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px] mr-1"></i> Processing...';
+    button.innerHTML = '<i class="fas fa-spinner fa-spin text-[10px] mr-1"></i> Memproses...';
     button.disabled = true;
 
     // Create form data
@@ -477,31 +619,29 @@ function buyNow(productId) {
     formData.append('id_product', productId);
     formData.append('quantity', quantity);
 
-    // Add to cart first
-    fetch('<?= base_url('cart/add') ?>', {
+    // Add to cart and proceed to checkout
+    fetch('<?= base_url('cart/add_and_checkout') ?>', {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
-        // Reset button
-        button.innerHTML = originalText;
-        button.disabled = false;
-        
         if (data.success) {
-            // Redirect to checkout
-            window.location.href = '<?= base_url('checkout') ?>';
+            // Redirect to checkout - fixed URL to match your application's route
+            window.location.href = '<?= base_url('checkout/metode') ?>';
         } else {
-            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
+            // Reset button
+            button.innerHTML = originalText;
+            button.disabled = false;
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat memproses pembelian');
         }
     })
     .catch(error => {
+        console.error('Error:', error);
         // Reset button
         button.innerHTML = originalText;
         button.disabled = false;
-        
         showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
-        console.error('Error:', error);
     });
 }
 </script>

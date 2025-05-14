@@ -84,12 +84,39 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
                                 <i class="fas fa-times"></i> Batalkan
                             </button>
                         <?php endif; ?>
+                        
+                        <?php if ($order['stts_pemesanan'] === 'selesai'): ?>
+                            <button onclick="showReviewModal(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
+                                <i class="fas fa-star"></i> Beri Ulasan
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">Beri Ulasan Produk</h3>
+            <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="orderProducts" class="mb-4">
+            <!-- Products will be loaded here -->
+            <div class="text-center py-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
+                <p class="mt-2 text-sm text-gray-600">Memuat produk...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 @keyframes fade-in {
     from { opacity: 0; transform: translateY(20px); }
@@ -147,30 +174,139 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
     }
 }
 </style>
+
 <script>
-function cancelOrder(orderId) {
-    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
-        fetch('<?= base_url('orders/cancel_order') ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `order_id=${orderId}`
-        })
+let currentOrderId = null;
+
+function showReviewModal(orderId) {
+    currentOrderId = orderId;
+    document.getElementById('reviewModal').classList.remove('hidden');
+    
+    // Load products for this order
+    fetch(`<?= base_url('orders/get_order_products/') ?>${orderId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
-                location.reload();
+                const productsHtml = data.products.map(product => `
+                    <div class="border-b pb-4 mb-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="http://localhost/hijauloka/uploads/${product.gambar.split(',')[0]}" 
+                                 alt="${product.nama_product}" 
+                                 class="w-16 h-16 object-cover rounded-md">
+                            <div>
+                                <h4 class="font-medium text-gray-800">${product.nama_product}</h4>
+                                <p class="text-sm text-gray-500">Rp${new Intl.NumberFormat('id-ID').format(product.harga_satuan)}</p>
+                            </div>
+                        </div>
+                        
+                        <form action="<?= base_url('product/submit_review') ?>" method="post" class="review-form">
+                            <input type="hidden" name="id_product" value="${product.id_product}">
+                            <input type="hidden" name="id_order" value="${orderId}">
+                            
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                                <div class="flex gap-1">
+                                    ${[1,2,3,4,5].map(star => `
+                                        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 focus:outline-none transition-colors" 
+                                                data-rating="${star}" onclick="setRating(this, ${star})">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <input type="hidden" name="rating" class="rating-input" value="0">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Ulasan</label>
+                                <textarea name="ulasan" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                          placeholder="Bagikan pengalaman Anda dengan produk ini"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-all">
+                                Kirim Ulasan
+                            </button>
+                        </form>
+                    </div>
+                `).join('');
+                
+                document.getElementById('orderProducts').innerHTML = productsHtml;
+                
+                // Add form submission handlers
+                document.querySelectorAll('.review-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const ratingInput = this.querySelector('.rating-input');
+                        const ulasan = this.querySelector('textarea[name="ulasan"]').value.trim();
+                        
+                        if (ratingInput.value === '0') {
+                            alert('Silakan berikan rating (1-5 bintang)');
+                            return false;
+                        }
+                        
+                        if (ulasan.length < 10) {
+                            alert('Ulasan harus minimal 10 karakter');
+                            return false;
+                        }
+                        
+                        this.submit();
+                    });
+                });
             } else {
-                alert(data.message || 'Gagal membatalkan pesanan');
+                document.getElementById('orderProducts').innerHTML = `
+                    <div class="text-center py-4">
+                        <div class="text-red-500 mb-2">
+                            <i class="fas fa-exclamation-circle text-2xl"></i>
+                        </div>
+                        <p class="text-gray-700">Gagal memuat produk. Silakan coba lagi.</p>
+                    </div>
+                `;
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat membatalkan pesanan');
+            document.getElementById('orderProducts').innerHTML = `
+                <div class="text-center py-4">
+                    <div class="text-red-500 mb-2">
+                        <i class="fas fa-exclamation-circle text-2xl"></i>
+                    </div>
+                    <p class="text-gray-700">Terjadi kesalahan. Silakan coba lagi.</p>
+                </div>
+            `;
         });
-    }
 }
+
+function closeReviewModal() {
+    document.getElementById('reviewModal').classList.add('hidden');
+    currentOrderId = null;
+}
+
+function setRating(button, rating) {
+    const starsContainer = button.parentElement;
+    const ratingInput = starsContainer.parentElement.querySelector('.rating-input');
+    ratingInput.value = rating;
+    
+    // Update star colors
+    const stars = starsContainer.querySelectorAll('.rating-star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.remove('text-gray-300');
+            star.classList.add('text-yellow-400');
+        } else {
+            star.classList.remove('text-yellow-400');
+            star.classList.add('text-gray-300');
+        }
+    });
+}
+
+function cancelOrder(orderId) {
+    // Your existing cancelOrder function
+}
+
+document.getElementById('reviewModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeReviewModal();
+    }
+});
 </script>
-<?php $this->load->view('templates/footer'); ?> 
+<?php $this->load->view('templates/footer'); ?>

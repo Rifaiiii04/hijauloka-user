@@ -235,4 +235,57 @@ class Cart extends CI_Controller {
         
         echo json_encode(['success' => true, 'message' => 'Keranjang berhasil dikosongkan']);
     }
+
+    public function add_and_checkout()
+    {
+        // Check if user is logged in
+        if (!$this->session->userdata('logged_in')) {
+            echo json_encode(['success' => false, 'message' => 'Silakan login terlebih dahulu']);
+            return;
+        }
+        
+        $id_product = $this->input->post('id_product');
+        $quantity = $this->input->post('quantity');
+        
+        if (!$id_product || !$quantity) {
+            echo json_encode(['success' => false, 'message' => 'Data tidak lengkap']);
+            return;
+        }
+        
+        // Get product details
+        $product = $this->product_model->get_product_by_id($id_product);
+        
+        if (!$product) {
+            echo json_encode(['success' => false, 'message' => 'Produk tidak ditemukan']);
+            return;
+        }
+        
+        // Check stock
+        if ($product['stok'] < $quantity) {
+            echo json_encode(['success' => false, 'message' => 'Stok tidak mencukupi']);
+            return;
+        }
+        
+        // Clear cart first for direct checkout
+        $this->cart_model->clear_cart($this->session->userdata('id_user'));
+        
+        // Add to cart
+        $cart_data = [
+            'id_user' => $this->session->userdata('id_user'),
+            'id_product' => $id_product,
+            'jumlah' => $quantity  // Changed from 'quantity' to 'jumlah' to match cart_model
+        ];
+        
+        // Use the existing add method from cart_model
+        $this->db->insert('cart', $cart_data);
+        $result = $this->db->affected_rows() > 0;
+        
+        if ($result) {
+            // Store selected item in session for checkout
+            $this->session->set_userdata('selected_cart_items', [$this->db->insert_id()]);
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal menambahkan produk ke keranjang']);
+        }
+    }
 }

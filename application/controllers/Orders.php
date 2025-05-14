@@ -63,4 +63,35 @@ class Orders extends CI_Controller {
         $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
         echo json_encode(['success' => true]);
     }
-} 
+
+    public function get_order_products($order_id)
+    {
+        // Check if user is logged in
+        if (!$this->session->userdata('logged_in')) {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+        
+        $id_user = $this->session->userdata('id_user');
+        
+        // Check if order belongs to user
+        $order = $this->db->get_where('orders', [
+            'id_order' => $order_id,
+            'id_user' => $id_user
+        ])->row_array();
+        
+        if (!$order) {
+            echo json_encode(['success' => false, 'message' => 'Order not found']);
+            return;
+        }
+        
+        // Get order products
+        $this->db->select('oi.*, p.nama_product, p.gambar, p.desk_product');
+        $this->db->from('order_items oi');
+        $this->db->join('product p', 'p.id_product = oi.id_product');
+        $this->db->where('oi.id_order', $order_id);
+        $products = $this->db->get()->result_array();
+        
+        echo json_encode(['success' => true, 'products' => $products]);
+    }
+}
