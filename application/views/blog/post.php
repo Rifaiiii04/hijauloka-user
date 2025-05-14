@@ -1,4 +1,4 @@
-<div class="bg-gray-50 min-h-screen pt-24 pb-16 mt-32">
+<div class="bg-gray-50 min-h-screen pt-24 pb-16 mt-18">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Breadcrumbs -->

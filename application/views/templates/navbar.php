@@ -161,6 +161,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= base_url('blog') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Blog</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= base_url('profile/index') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
                         <i class="fas fa-user text-lg"></i>
                     </a>

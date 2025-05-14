@@ -1,8 +1,8 @@
-<div class=" min-h-screen pt-24 pb-16">
+<div class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4">
         <!-- Blog Header with improved visual appeal -->
-        <div class="text-center flex flex-col items-center justify-center max-w-3xl mx-auto mb-12 mt-22 p-4">
-            <h1 class="text-4xl font-bold text-green-800 mb-4 relative inline-block">
+        <div class="text-center flex flex-col items-center justify-center max-w-3xl mx-auto  mt-22 p-4">
+            <h1 class="text-4xl font-bold text-green-800 relative inline-block">
                 Blog HijauLoka
             </h1>
             <!-- <p class="text-gray-600  w-96 text-center">Temukan tips perawatan tanaman, inspirasi dekorasi, dan panduan berkebun untuk membantu Anda merawat tanaman dengan baik</p> -->

@@ -1,4 +1,4 @@
-<div class="bg-gray-50 min-h-screen pt-24 pb-16 mt-22">
+<div class="bg-gray-50 min-h-screen pt-24 pb-16 mt-18">
     <div class="container mx-auto px-4">
         <!-- Category Header -->
         <div class="text-center max-w-3xl mx-auto mb-12">
