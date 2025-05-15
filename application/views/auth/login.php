@@ -179,12 +179,12 @@
 </body>
 </html>
 
-<!-- Add this right before the form -->
-<?php if($this->session->flashdata('error')): ?>
+<!-- Remove this duplicate error message -->
+<!-- <?php if($this->session->flashdata('error')): ?>
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
         <?= $this->session->flashdata('error') ?>
     </div>
-<?php endif; ?>
+<?php endif; ?> -->
 
     <!-- Add this script before closing body tag -->
     <script>
