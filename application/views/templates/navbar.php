@@ -112,17 +112,19 @@
     </nav>
     
     <!-- Mobile Navigation Header -->
-    <nav class="md:hidden bg-white w-full flex items-center rounded-b-md justify-between px-4 py-3 fixed z-50">
+    <nav class="md:hidden bg-white w-full flex items-center rounded-b-md justify-between px-4 py-3 fixed top-0 z-50">
         <div class="flex items-center gap-3">
-        <img src="<?= base_url('assets/img/logoicon.png') ?>" alt="" class="w-10 h-10">
+            <img src="<?= base_url('assets/img/logoicon.png') ?>" alt="" class="w-10 h-10">
         </div>
     
         <ul class="flex items-center gap-4">
             <?php if ($this->session->userdata('logged_in')): ?>
                 <li>
-                    <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
+                    <a href="<?= base_url('cart') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
                         <i class="fas fa-shopping-cart text-xl text-green-800"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-5 text-white h-5 flex items-center justify-center rounded-full">0</span>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-5 text-white h-5 flex items-center justify-center rounded-full">
+                            <?= $this->cart_model->get_cart_count($this->session->userdata('id_user')) ?? '0' ?>
+                        </span>
                     </a>
                 </li>
                 <li>
@@ -132,7 +134,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url('wishlist/index') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
+                    <a href="<?= base_url('wishlist') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
                         <i class="fas fa-heart text-xl text-green-800"></i>
                     </a>
                 </li>
@@ -147,9 +149,9 @@
     </nav>
     
     <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 mb-10 left-0 right-0 text-center mx-auto bg-white/40 backdrop-blur-2xl border-2 border-green-800 rounded-full h-14  shadow-lg z-50 w-80">
-        <div class="max-w-md mx-auto">
-            <ul class="grid grid-cols-3 gap-1 p-2 text-center">
+    <nav class="md:hidden fixed bottom-0 mb-4 left-0 right-0 text-center mx-auto bg-white/80 backdrop-blur-2xl border-2 border-green-800 rounded-full h-14 shadow-lg z-50 w-64">
+        <div class="mx-auto">
+            <ul class="grid grid-cols-4 h-full items-center">
                 <li>
                     <a href="<?= base_url('home') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
                         <i class="fas fa-home text-lg"></i>
@@ -161,13 +163,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url('blog') ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Blog</span>
+                    <a href="<?= base_url('blog') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
+                        <i class="fas fa-newspaper text-lg"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url('profile/index') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
+                    <a href="<?= base_url('profile') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
                         <i class="fas fa-user text-lg"></i>
                     </a>
                 </li>

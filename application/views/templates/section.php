@@ -5,7 +5,7 @@
 			src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
 		></script>
 <section
-			class="relative md:top-22 mb-10 top-20 overflow-hidden flex h-[550px] mx-auto w-[1000px]"
+			class="relative md:top-22 mb-10 top-20 overflow-hidden flex h-[550px] mx-auto md:w-[1000px] w-full"
 		>
 			<div class="w-1/2 flex relative left-10 flex-col">
 				<h1 class="md:text-xl text-md text-black/70 ml-1 mt-5">
@@ -23,7 +23,7 @@
 				</a>
 			</div>
 			<div class="w-1/2  hidden md:flex">
-				<model-viewer
+				<!-- <model-viewer
 					alt="HijauLoka Car Delivery"
 					src="<?= site_url('assets/models/HijauLoka.glb')?> " 
 					ar
@@ -31,7 +31,8 @@
 					camera-controls
 					auto-rotate
 					class="w-full h-[500px] items-center justify-center"
-				></model-viewer>
+				></model-viewer> -->
+				<img src="<?= site_url('assets/images/hero.png')?>" class="animate-subtle-zoom animate-fade-in">
 			</div>
 		</section>
 

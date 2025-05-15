@@ -2,7 +2,7 @@
 <div class="min-h-screen flex items-center">
     <div class="container mx-auto px-4 py-16">
         <!-- Compact Profile Header -->
-        <div class="max-w-2xl mx-auto mt-16 mb-3">
+        <div class="max-w-2xl mx-auto md:mt-16 mt-5 mb-3">
             <div class="bg-white rounded-lg shadow">
                 <div class="p-4 flex items-center gap-4">
                     <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center shadow">
@@ -124,38 +124,45 @@
             </div>
 
             <!-- Riwayat Pesanan -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">Riwayat Pesanan</h2>
-                <?php if (!empty($orders)): ?>
-                    <div class="space-y-3">
-                        <?php foreach ($orders as $order): ?>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                            <div class="text-sm">
-                                <div class="font-medium text-gray-800">#<?= $order['order_id'] ?></div>
-                                <div class="text-gray-600"><?= $order['date'] ?></div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="text-right text-sm">
-                                    <div class="font-medium text-gray-800">Rp <?= number_format($order['total'], 0, ',', '.') ?></div>
-                                    <div class="text-green-600"><?= $order['status'] ?></div>
-                                </div>
-                                <a href="<?= base_url('orders/detail/' . $order['order_id']) ?>" 
-                                   class="px-3 py-1.5 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
-                                    <i class="fas fa-eye mr-1"></i>Detail
-                                </a>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="text-center py-4 text-sm text-gray-500">
-                        <i class="fas fa-shopping-bag text-gray-300 text-2xl mb-2"></i>
-                        <p>Belum ada pesanan</p>
-                    </div>
+            <!--<div class="bg-white rounded-lg shadow p-4">-->
+            <!--    <h2 class="text-lg font-semibold text-gray-800 mb-3">Riwayat Pesanan</h2>-->
+            <!--    <?php if (!empty($orders)): ?>-->
+            <!--        <div class="space-y-3">-->
+            <!--            <?php foreach ($orders as $order): ?>-->
+            <!--            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">-->
+            <!--                <div class="text-sm">-->
+            <!--                    <div class="font-medium text-gray-800">#<?= $order['order_id'] ?></div>-->
+            <!--                    <div class="text-gray-600"><?= $order['date'] ?></div>-->
+            <!--                </div>-->
+            <!--                <div class="flex items-center gap-3">-->
+            <!--                    <div class="text-right text-sm">-->
+            <!--                        <div class="font-medium text-gray-800">Rp <?= number_format($order['total'], 0, ',', '.') ?></div>-->
+            <!--                        <div class="text-green-600"><?= $order['status'] ?></div>-->
+            <!--                    </div>-->
+            <!--                    <a href="<?= base_url('orders/detail/' . $order['order_id']) ?>" -->
+            <!--                       class="px-3 py-1.5 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">-->
+            <!--                        <i class="fas fa-eye mr-1"></i>Detail-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <?php endforeach; ?>-->
+            <!--        </div>-->
+            <!--    <?php else: ?>-->
+                    <!--<div class="text-center py-4 text-sm text-gray-500">-->
+                    <!--    <i class="fas fa-shopping-bag text-gray-300 text-2xl mb-2"></i>-->
+                    <!--    <p>Belum ada pesanan</p>-->
+                    <!--</div>-->
                 <?php endif; ?>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Logout Button for Mobile Only -->
+<div class="fixed bottom-20 right-4 md:hidden z-40">
+    <button onclick="handleLogout(event)" class="bg-red-500 hover:bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300">
+        <i class="fas fa-sign-out-alt text-xl"></i>
+    </button>
 </div>
 
 <!-- Modal Edit Profil -->
@@ -386,4 +393,11 @@ document.addEventListener('DOMContentLoaded', function() {
         editButton.onclick = openEditModal;
     }
 });
+
+function handleLogout(event) {
+    event.preventDefault();
+    if (confirm('Apakah Anda yakin ingin keluar?')) {
+        window.location.href = '<?= base_url('auth/logout') ?>';
+    }
+}
 </script>
