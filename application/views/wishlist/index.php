@@ -1,7 +1,7 @@
 <div class="container mx-auto px-4 py-20">
     <div class="text-center relative mb-12">
-        <h1 class="text-4xl font-bold text-green-800 mt-10 mb-6">My Wishlist</h1>
-        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+        <h1 class="text-4xl font-bold text-green-800 mt-10 mb-6">Favorit</h1>
+       
     </div>
     
     <?php if (empty($wishlist)): ?>
@@ -64,14 +64,11 @@
                         <div class="flex justify-between items-center">
                             <span class="text-sm sm:text-lg font-bold">Rp<?= number_format($item['harga'], 0, ',', '.'); ?></span>
                             <div class="flex gap-2">
-                                <button onclick="removeFromWishlist(<?= $item['id_product'] ?>, this)" 
+                                <button onclick="removeFromWishlist(<?= $item['id_product'] ?>, this)"
                                         class="bg-red-100 text-red-600 p-2 sm:p-2.5 rounded-md hover:bg-red-200 transition-colors">
                                     <i class="fas fa-heart"></i>
                                 </button>
-                                <button onclick="handleCartClick(event, <?= $item['id_product'] ?>)"
-                                        class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                    <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                                </button>
+                               
                             </div>
                         </div>
                     </div>
@@ -117,13 +114,20 @@ function handleCartClick(event, productId) {
         return;
     <?php endif; ?>
 
+    // Show loading state
+    const button = event.currentTarget;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+
+    // Use simple string for body
     fetch('<?= base_url('cart/add') ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: `id_product=${productId}&jumlah=1`
+        body: 'id_product=' + productId + '&jumlah=1'
     })
     .then(response => response.json())
     .then(data => {
@@ -133,12 +137,19 @@ function handleCartClick(event, productId) {
                 closeCartNotification();
             }, 2000);
         } else {
-            alert(data.message || 'Gagal menambahkan ke keranjang');
+            // Show error message
+            const errorMessage = data.message || 'Gagal menambahkan ke keranjang';
+            alert(errorMessage);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Gagal menambahkan ke keranjang');
+        alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalContent;
+        button.disabled = false;
     });
 }
 

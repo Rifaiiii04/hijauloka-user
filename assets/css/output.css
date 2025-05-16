@@ -2322,6 +2322,11 @@
       margin-bottom: calc(var(--spacing) * 3);
     }
   }
+  .sm\:inline {
+    @media (width >= 40rem) {
+      display: inline;
+    }
+  }
   .sm\:h-48 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 48);
