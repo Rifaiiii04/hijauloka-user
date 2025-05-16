@@ -65,9 +65,17 @@
     
                 <!-- Notifications -->
                 <li>
-                    <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                    <a href="<?= base_url('notification') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
                         <i class="fas fa-bell text-sm text-green-800"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                        <?php 
+                        $notification_count = 0;
+                        if (isset($this->notification_model)) {
+                            $notification_count = $this->notification_model->count_unread($this->session->userdata('id_user') ?? 0);
+                        }
+                        ?>
+                        <span class="notification-counter absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full <?= $notification_count > 0 ? '' : 'hidden' ?>">
+                            <?= $notification_count ?>
+                        </span>
                     </a>
                 </li>
 
