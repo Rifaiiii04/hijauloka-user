@@ -1,5 +1,9 @@
 <?php $this->load->view('templates/header2') ?>
 
+<!-- Add Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <style>
 @keyframes plant-bounce {
   0%, 100% { transform: translateY(0);}
@@ -48,13 +52,20 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>
+                        
+                        <!-- Add button to add new address -->
+                        <div class="flex justify-center mt-4">
+                            <button type="button" onclick="openShippingModal()" class="px-4 py-2 text-sm text-green-600 border border-green-500 rounded-lg hover:bg-green-50">
+                                <i class="fas fa-plus mr-1"></i> Tambah Alamat Baru
+                            </button>
+                        </div>
                     </div>
                 <?php else: ?>
                     <div class="text-center py-4">
                         <p class="text-gray-500 mb-4">Belum ada alamat pengiriman</p>
-                        <a href="<?= base_url('profile/address/add') ?>" class="inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <button type="button" onclick="openShippingModal()" class="inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                             Tambah Alamat
-                        </a>
+                        </button>
                     </div>
                 <?php endif; ?>
             </div>
@@ -209,11 +220,92 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-6 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold">
-                       Beli Sekarang
-                    </button>
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="confirmReturn()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium">
+                            Kembali ke Keranjang
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold">
+                           Beli Sekarang
+                        </button>
+                    </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Alamat Pengiriman -->
+<div id="shippingAddressModal" class="fixed inset-0 backdrop-blur-sm bg-black/30 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-semibold text-gray-800">Tambah Alamat Pengiriman</h3>
+                <button onclick="closeShippingModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form action="<?= base_url('checkout/add_shipping_address') ?>" method="POST" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Label Alamat</label>
+                        <input type="text" name="address_label" required placeholder="Rumah, Kantor, dll" class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Nomor Telepon</label>
+                        <input type="tel" name="phone" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Nama Penerima</label>
+                    <input type="text" name="recipient_name" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Alamat Lengkap</label>
+                    <div class="flex gap-2">
+                        <textarea id="address" name="address" required rows="2" class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Masukkan alamat lengkap"></textarea>
+                        <button type="button" onclick="getCurrentLocation()" class="mt-1 px-3 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </button>
+                    </div>
+                    <div id="map" class="mt-2 h-48 w-full rounded-lg hidden"></div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">RT</label>
+                        <input type="text" name="rt" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">RW</label>
+                        <input type="text" name="rw" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-sm font-medium text-gray-700">No. Rumah</label>
+                        <input type="text" name="house_number" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Kode Pos</label>
+                    <input type="text" name="postal_code" required class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Detail Tambahan</label>
+                    <textarea name="detail_address" rows="2" class="mt-1 w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Patokan, warna rumah, atau instruksi khusus lainnya"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" onclick="closeShippingModal()" class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border rounded-lg">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700">
+                        Simpan Alamat
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -236,6 +328,33 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi Kembali ke Keranjang -->
+<div id="returnConfirmModal" class="fixed inset-0 backdrop-blur-sm bg-black/30 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div class="p-6">
+            <div class="flex items-center mb-4">
+                <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Konfirmasi</h3>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin kembali ke keranjang? Semua informasi checkout yang telah diisi tidak akan disimpan.</p>
+            
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeReturnModal()" class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border rounded-lg">
+                    Batal
+                </button>
+                <button type="button" onclick="returnToCart()" class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700">
+                    Ya, Kembali ke Keranjang
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 document.querySelectorAll('input[name="kurir"]').forEach(radio => {
     radio.addEventListener('change', function() {
@@ -246,6 +365,114 @@ document.querySelectorAll('input[name="kurir"]').forEach(radio => {
         document.getElementById('selected-kurir').value = this.value;
     });
 });
+
+// Add shipping address modal functions
+function openShippingModal() {
+    const modal = document.getElementById('shippingAddressModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            initMap();
+            const form = modal.querySelector('form');
+            if (form) form.reset();
+        }, 100);
+    }
+}
+
+function closeShippingModal() {
+    document.getElementById('shippingAddressModal').classList.add('hidden');
+    document.getElementById('shippingAddressModal').classList.remove('flex');
+}
+
+let map, marker;
+
+function initMap() {
+    if (!document.getElementById('map')) return;
+    
+    const defaultLocation = [-6.200000, 106.816666];
+    
+    map = L.map('map').setView(defaultLocation, 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    marker = L.marker(defaultLocation, {
+        draggable: true
+    }).addTo(map);
+
+    marker.on('dragend', function() {
+        const pos = marker.getLatLng();
+        updateAddressFromMarker(pos);
+    });
+}
+
+function getCurrentLocation() {
+    document.getElementById('map').classList.remove('hidden');
+    
+    if (!map) initMap();
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const pos = [
+                    position.coords.latitude,
+                    position.coords.longitude
+                ];
+                
+                map.setView(pos, 16);
+                marker.setLatLng(pos);
+                updateAddressFromMarker(marker.getLatLng());
+            },
+            function() {
+                alert('Tidak dapat mengakses lokasi Anda. Pastikan GPS aktif dan izin lokasi diberikan.');
+            }
+        );
+    } else {
+        alert('Browser Anda tidak mendukung geolokasi');
+    }
+}
+
+function updateAddressFromMarker(position) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}&addressdetails=1`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.display_name) {
+                document.getElementById('address').value = data.display_name;
+                
+                if (data.address && data.address.postcode) {
+                    document.querySelector('input[name="postal_code"]').value = data.address.postcode;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// Add confirmation function for returning to cart
+function confirmReturn() {
+    const modal = document.getElementById('returnConfirmModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+function closeReturnModal() {
+    const modal = document.getElementById('returnConfirmModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function returnToCart() {
+    window.location.href = '<?= base_url('cart') ?>';
+}
 
 document.getElementById('checkout-form').addEventListener('submit', function(e) {
     e.preventDefault();
