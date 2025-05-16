@@ -41,9 +41,11 @@
                                     $item['gambar']) : 
                                 'default.jpg';
                             ?>
-                            <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
-                                 alt="<?= $item['nama_product'] ?>" 
-                                 class="w-full h-full object-cover rounded-lg">
+                            <!-- Replace the problematic lines with these versions that check if the index exists -->
+                            <img src="<?= base_url('uploads/' . (isset($item['gambar']) ? $item['gambar'] : 'default.jpg')) ?>" alt="<?= isset($item['nama_product']) ? $item['nama_product'] : 'Product Image' ?>" class="w-full h-full object-cover rounded-lg">
+                            
+                            <h3 class="text-lg font-semibold text-gray-800"><?= isset($item['nama_product']) ? $item['nama_product'] : 'Product' ?></h3>
+                            <p class="text-sm text-gray-600 mt-1"><?= isset($item['desk_product']) ? substr($item['desk_product'], 0, 100) . (strlen($item['desk_product']) > 100 ? '...' : '') : '' ?></p>
                         </div>
                         <div class="flex-grow">
                             <div class="font-medium text-gray-900 mb-1"><?= $item['nama_product'] ?></div>
@@ -66,4 +68,4 @@
         <a href="<?= base_url('orders') ?>" class="px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all flex items-center gap-2"><i class="fas fa-list"></i> Daftar Pesanan</a>
     </div>
 </div>
-<?php $this->load->view('templates/footer'); ?> 
+<?php $this->load->view('templates/footer'); ?>

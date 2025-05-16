@@ -16,9 +16,9 @@ class Order_model extends CI_Model {
     }
     
     public function get_order_items($id_order) {
-        $this->db->select('oi.*, p.nama_product as nama_produk, p.gambar');
+        $this->db->select('oi.*, p.nama_product, p.gambar, p.desk_product, p.harga');
         $this->db->from('order_items oi');
-        $this->db->join('product p', 'oi.id_product = p.id_product'); // Changed id_produk to id_product
+        $this->db->join('product p', 'p.id_product = oi.id_product');
         $this->db->where('oi.id_order', $id_order);
         $query = $this->db->get();
         return $query->result_array();
@@ -46,6 +46,18 @@ class Order_model extends CI_Model {
         $this->db->where('id_user', $user_id);
         $this->db->order_by('tgl_pemesanan', 'DESC');
         $query = $this->db->get('orders');
+        return $query->result_array();
+    }
+    
+    public function get_completed_orders_by_user_and_product($user_id, $product_id) {
+        $this->db->select('o.*');
+        $this->db->from('orders o');
+        $this->db->join('order_items oi', 'o.id_order = oi.id_order');
+        $this->db->where('o.id_user', $user_id);
+        $this->db->where('oi.id_product', $product_id);
+        $this->db->where('o.stts_pemesanan', 'selesai');
+        $query = $this->db->get();
+        
         return $query->result_array();
     }
 }
