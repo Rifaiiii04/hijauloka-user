@@ -4,203 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login Page</title>
+    <title>Login - HijauLoka</title>
     <link rel="stylesheet" href="<?= base_url('assets/') ;?>css/output.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
-    <!-- Add Snackbar Notifications -->
+<body class="bg-gradient-to-br from-green-50 to-gray-100 min-h-screen flex items-center justify-center py-8 px-4">
+    <!-- Notifications -->
     <?php if($this->session->flashdata('success')): ?>
-    <div id="snackbar" class="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
-        <i class="fas fa-check-circle text-xl"></i>
-        <div>
-            <h4 class="font-semibold">Success!</h4>
-            <p class="text-sm"><?= $this->session->flashdata('success') ?></p>
-        </div>
+    <div id="notification" class="fixed top-4 right-4 bg-green-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <p><?= $this->session->flashdata('success') ?></p>
     </div>
     <?php endif; ?>
 
     <?php if($this->session->flashdata('error')): ?>
-    <div id="snackbar" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500 flex items-center gap-2 z-50">
-        <i class="fas fa-exclamation-circle text-xl"></i>
-        <div>
-            <h4 class="font-semibold">Error!</h4>
-            <p class="text-sm"><?= $this->session->flashdata('error') ?></p>
-        </div>
+    <div id="notification" class="fixed top-4 right-4 bg-red-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 flex items-center">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        <p><?= $this->session->flashdata('error') ?></p>
     </div>
     <?php endif; ?>
 
-    <!-- Back to Home Button -->
-    <a href="<?= base_url('home') ?>" class="fixed top-4 left-4 flex items-center gap-2 text-green-800 hover:text-green-600 transition-colors">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Home</span>
+    <!-- Back Button -->
+    <a href="<?= base_url('home') ?>" class="fixed top-4 left-4 text-gray-700 hover:text-green-600 bg-white/80 backdrop-blur-sm py-2 px-4 rounded-full shadow-sm transition-all hover:shadow">
+        <i class="fas fa-arrow-left mr-1"></i> Back to Home
     </a>
 
-    <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row p-4 md:p-8 w-full max-w-4xl mx-4">
-        <!-- Left Section: Plant Image and Title -->
-        <div class="hidden md:w-1/2 md:flex md:flex-col md:items-center md:justify-center">
-            <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="Plant Image" class="rounded-full w-80 h-80 object-cover">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+        <div class="text-center mb-8">
+            <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="HijauLoka" class="w-24 h-24 mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mt-4">Welcome Back</h2>
+            <div class="w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></div>
         </div>
 
-        <!-- Right Section: Login Form -->
-        <div class="w-full md:w-1/2 px-4 md:px-8">
-            <!-- Mobile Logo -->
-            <div class="flex md:hidden justify-center mb-6">
-                <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="Plant Image" class="rounded-full w-32 h-32 object-cover">
-            </div>
-          
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Welcome to HijauLoka</h2>
-
-            <!-- Add loader HTML after the snackbar notifications -->
-            <div id="loader" class="fixed inset-0 bg-white/95 backdrop-blur-sm hidden items-center justify-center z-50">
-                <div class="relative w-32 h-32">
-                    <div class="loader">
-                        <div class="absolute top-0 left-1/2 w-5 h-5 bg-green-800 rounded-full"></div>
-                        <div class="text-4xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">🌱</div>
-                    </div>
+        <form id="loginForm" action="<?= base_url('auth/login') ?>" method="post" class="space-y-5">
+            <div class="relative">
+                <label class="block text-gray-700 text-sm font-medium mb-1.5">Email Address</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input type="email" name="email" required
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
+                        placeholder="Enter your email">
                 </div>
             </div>
 
-            <style>
-                .loader {
-                    position: relative;
-                    width: 120px;
-                    height: 120px;
-                }
-
-                .loader div:first-child {
-                    animation: grow 1s ease-in-out infinite;
-                }
-
-                @keyframes grow {
-                    0% {
-                        transform: translateX(-50%) scale(0);
-                        opacity: 0;
-                    }
-                    50% {
-                        transform: translateX(-50%) scale(1);
-                        opacity: 1;
-                    }
-                    100% {
-                        transform: translateX(-50%) scale(0);
-                        opacity: 0;
-                    }
-                }
-            </style>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const loginForm = document.getElementById('loginForm');
-                    const loader = document.getElementById('loader');
-
-                    loginForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        loader.classList.remove('hidden');
-                        loader.classList.add('flex');
-                        
-                        setTimeout(() => {
-                            this.submit();
-                        }, 2000); // 2 seconds delay to match logout
-                    });
-                });
-            </script>
-
-            <!-- Update the form with an ID -->
-            <form action="<?= base_url('auth/login') ?>" method="post" id="loginForm">
-                <!-- Email Input -->
-                <div class="mb-4">
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="Email" 
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                        required
-                    >
+            <div class="relative">
+                <label class="block text-gray-700 text-sm font-medium mb-1.5">Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" name="password" required
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
+                        placeholder="Enter your password">
                 </div>
+            </div>
 
-                <!-- Password Input -->
-                <div class="mb-4">
-                    <div class="relative">
-                        <input 
-                            type="password" 
-                            name="password" 
-                            placeholder="Password" 
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required
-                        >
-                    </div>
-                </div>
+            <div class="flex items-center justify-between">
+                <label class="flex items-center">
+                    <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
+                <a href="#" class="text-sm text-green-600 hover:underline">Forgot password?</a>
+            </div>
 
-                <!-- Remember Me & Forgot Password -->
-                <div class="flex items-center justify-between mb-6">
-                    <label class="flex items-center">
-                        <input type="checkbox" class="mr-2">
-                        <span class="text-sm text-gray-600">Remember me</span>
-                    </label>
-                    <a href="#" class="text-sm text-green-600 hover:underline">Forgot password?</a>
-                </div>
+            <button type="submit" 
+                class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md hover:shadow-lg font-medium mt-2">
+                Sign In
+            </button>
+        </form>
 
-                <!-- Sign In Button -->
-                <button 
-                    type="submit" 
-                    class="w-full  text-white py-2 rounded-lg hover:bg-green-700 bg-green-800 transition duration-200">
-                    Sign In
-                </button>
-            </form>
-
-            <!-- Sign Up Link -->
-            <p class="text-center mt-6 text-sm">
-                Don’t have an account? 
-                <a href="<?php echo base_url('auth/register') ?>" class="text-green-600 font-semibold hover:underline">Sign up</a>
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">
+                Don't have an account? 
+                <a href="<?= base_url('auth/register') ?>" class="text-green-600 font-medium hover:underline">Sign up</a>
             </p>
-
-            <!-- OR Divider -->
-            <div class="flex items-center my-6">
-                <hr class="flex-grow border-gray-300">
-                <span class="mx-2 text-sm text-gray-500">or continue with</span>
-                <hr class="flex-grow border-gray-300">
-            </div>
-
-           <!-- Social Login Buttons -->
-           <div class="flex justify-center space-x-2 md:space-x-4">
-            <button class="flex items-center space-x-1 md:space-x-2 border px-3 md:px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="<?= base_url('assets/')?>img/google.png" class="w-5 md:w-6 h-5 md:h-6" alt="Google">
-                <span class="text-xs md:text-sm">Google</span>
-            </button>
-
-            <button class="flex items-center space-x-1 md:space-x-2 border px-3 md:px-4 py-2 rounded-lg hover:bg-gray-100">
-                <img src="<?= base_url('assets/')?>img/fb.png" class="w-5 md:w-6 h-5 md:h-6" alt="Facebook">
-                <span class="text-xs md:text-sm">Facebook</span>
-            </button>
         </div>
+
+        <!-- OR Divider -->
+        <div class="flex items-center my-6">
+            <hr class="flex-grow border-gray-200">
+            <span class="mx-4 text-sm text-gray-500">or continue with</span>
+            <hr class="flex-grow border-gray-200">
+        </div>
+
+        <!-- Social Login Buttons -->
+        <div class="flex justify-center space-x-4">
+            <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
+                <img src="<?= base_url('assets/img/google.png') ?>" class="w-5 h-5" alt="Google">
+                <span class="text-sm font-medium">Google</span>
+            </button>
+
+            <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
+                <img src="<?= base_url('assets/img/fb.png') ?>" class="w-5 h-5" alt="Facebook">
+                <span class="text-sm font-medium">Facebook</span>
+            </button>
         </div>
     </div>
 
-</body>
-</html>
-
-<!-- Remove this duplicate error message -->
-<!-- <?php if($this->session->flashdata('error')): ?>
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <?= $this->session->flashdata('error') ?>
+    <!-- Loading Overlay -->
+    <div id="loader" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-xl shadow-xl flex items-center gap-3">
+            <div class="animate-spin rounded-full h-7 w-7 border-4 border-gray-200 border-t-green-600"></div>
+            <p class="text-gray-700 font-medium">Signing you in...</p>
+        </div>
     </div>
-<?php endif; ?> -->
 
-    <!-- Add this script before closing body tag -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const snackbar = document.getElementById('snackbar');
-            if (snackbar) {
+            // Notification handling
+            const notification = document.getElementById('notification');
+            if (notification) {
                 setTimeout(() => {
-                    snackbar.style.opacity = '0';
-                    snackbar.style.transform = 'translateY(100%)';
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(-20px)';
+                    notification.style.transition = 'opacity 0.5s, transform 0.5s';
                     setTimeout(() => {
-                        snackbar.remove();
+                        notification.remove();
                     }, 500);
                 }, 3000);
             }
 
-            // Add login form handling
+            // Form submission and loader
             const loginForm = document.getElementById('loginForm');
             const loader = document.getElementById('loader');
 
@@ -211,7 +137,9 @@
                 
                 setTimeout(() => {
                     this.submit();
-                }, 1500); // 1.5 seconds delay
+                }, 1500);
             });
         });
-</script>
+    </script>
+</body>
+</html>
