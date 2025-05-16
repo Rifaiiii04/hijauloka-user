@@ -300,7 +300,89 @@ function setRating(button, rating) {
 }
 
 function cancelOrder(orderId) {
-    // Your existing cancelOrder function
+    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+        // Show loading indicator
+        const loadingToast = showToast('Membatalkan pesanan...', 'loading');
+        
+        // Send cancel request to server
+        fetch(`<?= base_url('orders/cancel/') ?>${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide loading indicator
+            hideToast(loadingToast);
+            
+            if (data.success) {
+                showToast('Pesanan berhasil dibatalkan', 'success');
+                // Reload page after short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showToast(data.message || 'Gagal membatalkan pesanan', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            hideToast(loadingToast);
+            showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        });
+    }
+}
+
+// Toast notification functions
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white flex items-center z-50 animate-fade-in';
+    
+    // Set background color based on type
+    if (type === 'success') {
+        toast.classList.add('bg-green-600');
+    } else if (type === 'error') {
+        toast.classList.add('bg-red-600');
+    } else if (type === 'loading') {
+        toast.classList.add('bg-blue-600');
+    } else {
+        toast.classList.add('bg-gray-800');
+    }
+    
+    // Add icon based on type
+    let icon = '';
+    if (type === 'success') {
+        icon = '<i class="fas fa-check-circle mr-2"></i>';
+    } else if (type === 'error') {
+        icon = '<i class="fas fa-exclamation-circle mr-2"></i>';
+    } else if (type === 'loading') {
+        icon = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>';
+    } else {
+        icon = '<i class="fas fa-info-circle mr-2"></i>';
+    }
+    
+    toast.innerHTML = `${icon}<span>${message}</span>`;
+    document.body.appendChild(toast);
+    
+    // Auto remove toast after 5 seconds unless it's a loading toast
+    if (type !== 'loading') {
+        setTimeout(() => {
+            hideToast(toast);
+        }, 5000);
+    }
+    
+    return toast;
+}
+
+function hideToast(toast) {
+    toast.classList.add('opacity-0');
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 300);
 }
 
 document.getElementById('reviewModal').addEventListener('click', function(e) {

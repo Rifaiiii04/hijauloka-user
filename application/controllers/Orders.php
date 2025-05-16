@@ -26,7 +26,7 @@ class Orders extends CI_Controller {
         }
 
         $data['title'] = 'Detail Pesanan';
-        $data['order'] = $this->order_model->get_order_detail($id_order);
+        $data['order'] = $this->order_model->get_order_by_id($id_order);
         
         if (!$data['order'] || $data['order']['id_user'] != $this->session->userdata('id_user')) {
             show_404();
@@ -44,17 +44,33 @@ class Orders extends CI_Controller {
         $this->load->view('orders/detail', $data);
     }
 
-    public function cancel_order() {
+    public function cancel($id_order) {
+        // Check if user is logged in
         if (!$this->session->userdata('logged_in')) {
-            echo json_encode(['success' => false, 'message' => 'Silakan login terlebih dahulu']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
             return;
         }
-
-        $order_id = $this->input->post('order_id');
-        $user_id = $this->session->userdata('id_user');
-
-        $result = $this->order_model->cancel_order($order_id, $user_id);
-        echo json_encode($result);
+        
+        // Get order details
+        $order = $this->order_model->get_order_by_id($id_order);
+        
+        // Check if order exists, belongs to the current user, and is in 'pending' status
+        if (!$order || $order['id_user'] != $this->session->userdata('id_user') || $order['stts_pemesanan'] != 'pending') {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Pesanan tidak dapat dibatalkan']);
+            return;
+        }
+        
+        // Update order status to 'dibatalkan'
+        $success = $this->order_model->update_order_status($id_order, 'dibatalkan');
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => $success,
+            'message' => $success ? 'Pesanan berhasil dibatalkan' : 'Gagal membatalkan pesanan'
+        ]);
     }
 
     public function mark_paid() {

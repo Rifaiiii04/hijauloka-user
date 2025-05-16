@@ -244,7 +244,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form action="<?= base_url('checkout/add_shipping_address') ?>" method="POST" class="space-y-4">
+            <form action="<?= base_url('profile/add_shipping_address') ?>" method="POST" class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-sm font-medium text-gray-700">Label Alamat</label>

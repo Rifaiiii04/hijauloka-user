@@ -1237,6 +1237,9 @@
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
+  .bg-gray-800 {
+    background-color: var(--color-gray-800);
+  }
   .bg-green-50 {
     background-color: var(--color-green-50);
   }
