@@ -28,7 +28,6 @@ class Midtrans extends CI_Controller {
         
         // Ambil data dari POST
         $amount = $this->input->post('amount');
-        $shipping_cost = $this->input->post('shipping_cost');
         $kurir = $this->input->post('kurir');
         $metode_pembayaran = $this->input->post('metode_pembayaran'); // Ambil metode pembayaran
         
@@ -75,11 +74,12 @@ class Midtrans extends CI_Controller {
         }
         
         // Tambahkan biaya pengiriman
+        $shipping_cost = 5000;
         $item_details[] = [
-            'id' => 'SHIPPING',
+            'id' => 'shipping',
             'price' => $shipping_cost,
             'quantity' => 1,
-            'name' => 'Biaya Pengiriman'
+            'name' => 'Ongkos Kirim'
         ];
         
         // Ambil data customer - perbaikan untuk mengakses properti yang benar
@@ -94,7 +94,7 @@ class Midtrans extends CI_Controller {
         // Siapkan parameter transaksi
         $transaction_details = [
             'order_id' => $order_id,
-            'gross_amount' => $amount
+            'gross_amount' => $total + $shipping_cost
         ];
         
         // Perbaikan untuk mengakses properti yang benar
@@ -148,7 +148,7 @@ class Midtrans extends CI_Controller {
                 'id_user' => $id_user,
                 'tgl_pemesanan' => date('Y-m-d H:i:s'),
                 'stts_pemesanan' => 'pending',
-                'total_harga' => $amount,
+                'total_harga' => $total + $shipping_cost,
                 'stts_pembayaran' => 'lunas', // Set to 'lunas' for Midtrans payments
                 'metode_pembayaran' => $metode_pembayaran,
                 'kurir' => $kurir,
@@ -182,7 +182,7 @@ class Midtrans extends CI_Controller {
             $transaksi_data = [
                 'order_id' => $id_order,
                 'user_id' => $id_user,
-                'total_bayar' => $amount,
+                'total_bayar' => $total + $shipping_cost,
                 'metode_pembayaran' => $metode_pembayaran, // Use the payment method from form
                 'status_pembayaran' => 'pending',
                 'tanggal_transaksi' => date('Y-m-d H:i:s'),
@@ -207,7 +207,7 @@ class Midtrans extends CI_Controller {
             $data['snap_token'] = $snapToken;
             $data['order_id'] = $order_id;
             $data['id_order'] = $id_order;
-            $data['amount'] = $amount;
+            $data['amount'] = $total + $shipping_cost;
             $data['customer_name'] = $customer->nama;
             $data['customer_email'] = $customer->email;
             $data['customer_phone'] = $customer->no_tlp;

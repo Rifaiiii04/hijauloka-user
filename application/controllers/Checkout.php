@@ -9,6 +9,16 @@ class Checkout extends CI_Controller {
         $this->load->library('session');
     }
 
+    private function calculate_shipping_cost($primary_address = null) {
+        // Set fixed shipping cost
+        $ongkir = 5000;
+        
+        return [
+            'ongkir' => $ongkir,
+            'total_amount' => $this->cart->total() + $ongkir
+        ];
+    }
+
     public function proses_checkout() {
         $id_user = $this->session->userdata('id_user');
         if (!$id_user) {
@@ -96,12 +106,17 @@ class Checkout extends CI_Controller {
             }
         }
 
+        // Get shipping cost
+        $shipping = $this->calculate_shipping_cost($primary_address);
+        $ongkir = $shipping['ongkir'];
+        $total = $shipping['total_amount'];
+
         // Insert ke orders
         $order_data = [
             'id_user' => $id_user,
             'tgl_pemesanan' => date('Y-m-d H:i:s'),
             'stts_pemesanan' => 'pending',
-            'total_harga' => $total + $ongkir,
+            'total_harga' => $total,
             'stts_pembayaran' => $metode_pembayaran == 'cod' ? 'belum_dibayar' : 'pending',
             'metode_pembayaran' => $metode_pembayaran, // Add this line to save payment method
             'kurir' => $kurir,
@@ -222,12 +237,6 @@ class Checkout extends CI_Controller {
         $data['title'] = 'Checkout';
         $this->load->view('checkout/metode', $data);
     }
-
-    // REMOVE THIS DUPLICATE METHOD
-    // public function proses_checkout() {
-    // First implementation code
-    // ...
-    // }
 
     // Metode lainnya tetap sama
     public function set_primary_address() {
