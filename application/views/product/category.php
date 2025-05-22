@@ -1,6 +1,13 @@
 <?php $this->load->view('templates/header'); ?>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8 mt-12">
+    <!-- Breadcrumb and Back Link -->
+    <div class="mb-4">
+        <a href="<?= base_url('category/plants') ?>" class="text-green-600 hover:text-green-800 flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Kembali ke Kategori Tanaman
+        </a>
+    </div>
+
     <!-- Category Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-green-800 mb-2"><?= $category->nama_kategori ?></h1>
