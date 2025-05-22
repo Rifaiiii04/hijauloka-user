@@ -76,8 +76,10 @@ $query_builder = TRUE;
 $db['default'] = array(
     'dsn'   => '',
     'hostname' => 'localhost',
-    'username' => 'hijc7862_admin',
+    'username' => 'hijc7862_user',
+    // 'username' => 'root',
     'password' => 'wyn[=?alPV%.',
+    // 'password' => '',
     'database' => 'hijc7862_hijauloka',
     'dbdriver' => 'mysqli',
     'dbprefix' => '',

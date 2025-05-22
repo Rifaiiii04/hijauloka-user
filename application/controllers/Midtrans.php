@@ -26,38 +26,20 @@ class Midtrans extends CI_Controller {
             redirect('auth');
         }
         
-        // Ambil data dari POST
-        $amount = $this->input->post('amount');
-        $kurir = $this->input->post('kurir');
-        $metode_pembayaran = $this->input->post('metode_pembayaran'); // Ambil metode pembayaran
+        // Get checkout data from session
+        $checkout_data = $this->session->userdata('checkout_data');
         
-        // Pastikan metode pembayaran adalah midtrans
-        if ($metode_pembayaran !== 'midtrans') {
-            $this->session->set_flashdata('error', 'Metode pembayaran tidak valid');
-            redirect('checkout/metode');
-        }
-        
-        // Ambil data cart
-        // Get selected cart items from session
-        $selected_cart_items = $this->session->userdata('selected_cart_items');
-        
-        if (empty($selected_cart_items)) {
+        if (empty($checkout_data)) {
+            $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
             redirect('cart');
-            return;
         }
         
-        // Convert comma-separated string to array if needed
-        if (is_string($selected_cart_items)) {
-            $selected_cart_items = explode(',', $selected_cart_items);
-        }
-        
-        // Get only the selected cart items
-        $cart_items = $this->cart_model->get_selected_cart_items($id_user, $selected_cart_items);
-        
-        $total = 0;
-        foreach ($cart_items as $item) {
-            $total += $item['harga'] * $item['jumlah'];
-        }
+        // Extract data
+        $cart_items = $checkout_data['cart_items'];
+        $total = $checkout_data['total'];
+        $ongkir = $checkout_data['ongkir'];
+        $kurir = $checkout_data['kurir'];
+        $total_amount = $checkout_data['total_amount'];
         
         // Buat order ID unik
         $order_id = 'HJL-' . time();
@@ -74,15 +56,14 @@ class Midtrans extends CI_Controller {
         }
         
         // Tambahkan biaya pengiriman
-        $shipping_cost = 5000;
         $item_details[] = [
             'id' => 'shipping',
-            'price' => $shipping_cost,
+            'price' => $ongkir,
             'quantity' => 1,
             'name' => 'Ongkos Kirim'
         ];
         
-        // Ambil data customer - perbaikan untuk mengakses properti yang benar
+        // Ambil data customer
         $customer = $this->db->get_where('user', ['id_user' => $id_user])->row();
         
         // Ambil alamat pengiriman utama
@@ -94,298 +75,188 @@ class Midtrans extends CI_Controller {
         // Siapkan parameter transaksi
         $transaction_details = [
             'order_id' => $order_id,
-            'gross_amount' => $total + $shipping_cost
+            'gross_amount' => $total_amount
         ];
         
-        // Perbaikan untuk mengakses properti yang benar
-        $billing_address = [
-            'first_name' => $customer->nama,
-            'phone' => $customer->no_tlp, // Perbaikan: no_tlp bukan no_telp
-            'address' => $shipping_address ? $shipping_address->address : '',
-            'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-            'country_code' => 'IDN'
-        ];
-        
-        // Perbaikan untuk mengakses properti yang benar
-        $shipping_address_params = [
-            'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
-            'phone' => $customer->no_tlp, // Perbaikan: no_tlp bukan no_telp
-            'address' => $shipping_address ? $shipping_address->address : '',
-            'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-            'country_code' => 'IDN'
-        ];
-        
-        // Perbaikan untuk mengakses properti yang benar
+        // Customer details
         $customer_details = [
             'first_name' => $customer->nama,
             'email' => $customer->email,
-            'phone' => $customer->no_tlp, // Perbaikan: no_tlp bukan no_telp
-            'billing_address' => $billing_address,
-            'shipping_address' => $shipping_address_params
+            'phone' => $customer->no_tlp,
+            'billing_address' => [
+                'first_name' => $customer->nama,
+                'phone' => $customer->no_tlp,
+                'address' => $shipping_address ? $shipping_address->address : '',
+                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                'country_code' => 'IDN'
+            ],
+            'shipping_address' => [
+                'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
+                'phone' => $customer->no_tlp,
+                'address' => $shipping_address ? $shipping_address->address : '',
+                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                'country_code' => 'IDN'
+            ]
         ];
         
-        // Siapkan parameter untuk Snap
-        $params = [
+        // Create transaction
+        $transaction = [
             'transaction_details' => $transaction_details,
             'item_details' => $item_details,
             'customer_details' => $customer_details
         ];
         
         try {
-            // Dapatkan Snap Token
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            // Get Snap Token
+            $snapToken = \Midtrans\Snap::getSnapToken($transaction);
             
-            // Get payment method
-            $metode_pembayaran = $this->input->post('metode_pembayaran');
-            
-            // Make sure it's a valid method
-            if (!in_array($metode_pembayaran, ['cod', 'midtrans', 'transfer'])) {
-                $metode_pembayaran = 'midtrans'; // Default to midtrans if invalid
-            }
-            
-            // Add to order data
+            // Insert order to database
             $order_data = [
                 'id_user' => $id_user,
                 'tgl_pemesanan' => date('Y-m-d H:i:s'),
                 'stts_pemesanan' => 'pending',
-                'total_harga' => $total + $shipping_cost,
-                'stts_pembayaran' => 'lunas', // Set to 'lunas' for Midtrans payments
-                'metode_pembayaran' => $metode_pembayaran,
+                'stts_pembayaran' => 'belum_dibayar',
+                'total_harga' => $total,
+                'ongkir' => $ongkir,
                 'kurir' => $kurir,
-                'ongkir' => $shipping_cost,
-                'id_admin' => 1,
-                'midtrans_order_id' => $order_id
+                'metode_pembayaran' => 'midtrans',
+                'order_id' => $order_id,
+                'snap_token' => $snapToken
             ];
+            
             $this->db->insert('orders', $order_data);
             $id_order = $this->db->insert_id();
             
-            // Insert ke order_items dan update stok produk
+            // Insert order items
             foreach ($cart_items as $item) {
-                $this->db->insert('order_items', [
+                $order_item = [
                     'id_order' => $id_order,
                     'id_product' => $item['id_product'],
-                    'quantity' => $item['jumlah'],
+                    'jumlah' => $item['jumlah'],
+                    'harga' => $item['harga'],
                     'subtotal' => $item['harga'] * $item['jumlah']
-                ]);
-                
-                // Update stok produk
-                $product = $this->db->get_where('product', ['id_product' => $item['id_product']])->row_array();
-                if ($product) {
-                    $new_stock = $product['stok'] - $item['jumlah'];
-                    $this->db->where('id_product', $item['id_product']);
-                    $this->db->update('product', ['stok' => $new_stock]);
-                }
+                ];
+                $this->db->insert('order_items', $order_item);
             }
             
-            // Insert ke transaksi
-            // Update transaksi data to include payment method
-            $transaksi_data = [
-                'order_id' => $id_order,
-                'user_id' => $id_user,
-                'total_bayar' => $total + $shipping_cost,
-                'metode_pembayaran' => $metode_pembayaran, // Use the payment method from form
-                'status_pembayaran' => 'pending',
-                'tanggal_transaksi' => date('Y-m-d H:i:s'),
-                'payment_token' => $snapToken,
-                'payment_response' => json_encode(['snap_token' => $snapToken]),
-                'expired_at' => date('Y-m-d H:i:s', strtotime('+1 day'))
+            // Delete cart items
+            foreach ($checkout_data['cart_items'] as $item) {
+                $this->db->where('id_cart', $item['id_cart']);
+                $this->db->delete('cart');
+            }
+            
+            // Clear checkout session
+            $this->session->unset_userdata('checkout_data');
+            $this->session->unset_userdata('selected_cart_items');
+            
+            // Redirect to payment page
+            $data = [
+                'title' => 'Pembayaran',
+                'snap_token' => $snapToken,
+                'order_id' => $order_id,
+                'id_order' => $id_order,
+                'amount' => $total_amount
             ];
-            $this->db->insert('transaksi', $transaksi_data);
             
-            // Hapus cart user di database
-            // CHANGE THIS: Only delete the selected cart items instead of all items
-            if (is_string($selected_cart_items)) {
-                $selected_cart_items = explode(',', $selected_cart_items);
-            }
-            
-            // Delete only selected cart items
-            $this->db->where('id_user', $id_user);
-            $this->db->where_in('id_cart', $selected_cart_items);
-            $this->db->delete('cart');
-            
-            // Kirim token ke view dengan opsi untuk menampilkan langsung di halaman
-            $data['snap_token'] = $snapToken;
-            $data['order_id'] = $order_id;
-            $data['id_order'] = $id_order;
-            $data['amount'] = $total + $shipping_cost;
-            $data['customer_name'] = $customer->nama;
-            $data['customer_email'] = $customer->email;
-            $data['customer_phone'] = $customer->no_tlp;
             $this->load->view('checkout/midtrans_payment', $data);
             
         } catch (\Exception $e) {
-            // Log error
-            error_log('Midtrans Error: ' . $e->getMessage());
-            
-            // Tampilkan pesan error
-            $this->session->set_flashdata('error', 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage());
+            $this->session->set_flashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
             redirect('checkout/metode');
         }
     }
     
-    public function notification_handler() {
-        // Ambil notification JSON dari Midtrans
-        $notification = new \Midtrans\Notification();
-        
-        // Ambil data transaksi
-        $transaction = $notification->transaction_status;
-        $type = $notification->payment_type;
-        $order_id = $notification->order_id;
-        $fraud = $notification->fraud_status;
-        
-        // Cari order berdasarkan midtrans_order_id
-        $order = $this->db->get_where('orders', ['midtrans_order_id' => $order_id])->row();
-        if (!$order) {
-            header('HTTP/1.1 404 Not Found');
-            echo "Order ID not found";
-            exit;
-        }
-        
-        $id_order = $order->id_order;
-        
-        // Handle berbagai status transaksi
-        if ($transaction == 'capture') {
-            if ($type == 'credit_card') {
-                if ($fraud == 'challenge') {
-                    // Update status order
-                    $this->db->where('id_order', $id_order);
-                    $this->db->update('orders', ['stts_pembayaran' => 'challenge']);
-                    
-                    // Update status transaksi
-                    $this->db->where('order_id', $id_order);
-                    $this->db->update('transaksi', ['status_pembayaran' => 'challenge']);
-                } else {
-                    // Update status order
-                    $this->db->where('id_order', $id_order);
-                    $this->db->update('orders', ['stts_pembayaran' => 'lunas', 'stts_pemesanan' => 'diproses']);
-                    
-                    // Update status transaksi
-                    $this->db->where('order_id', $id_order);
-                    $this->db->update('transaksi', ['status_pembayaran' => 'dibayar']);
-                }
+    public function notification() {
+        try {
+            $notification = new \Midtrans\Notification();
+            
+            $transaction = $notification->transaction_status;
+            $type = $notification->payment_type;
+            $order_id = $notification->order_id;
+            $fraud = $notification->fraud_status;
+            
+            // Get order from database
+            $order = $this->db->get_where('orders', ['order_id' => $order_id])->row();
+            
+            if (!$order) {
+                exit;
             }
-        } else if ($transaction == 'settlement') {
-            // Update status order
-            $this->db->where('id_order', $id_order);
-            $this->db->update('orders', ['stts_pembayaran' => 'dibayar', 'stts_pemesanan' => 'diproses']);
             
-            // Update status transaksi
-            $this->db->where('order_id', $id_order);
-            $this->db->update('transaksi', ['status_pembayaran' => 'success']);
-        } else if ($transaction == 'pending') {
-            // Update status order
-            $this->db->where('id_order', $id_order);
-            $this->db->update('orders', ['stts_pembayaran' => 'pending']);
+            // Handle different transaction status
+            if ($transaction == 'capture') {
+                if ($type == 'credit_card') {
+                    if ($fraud == 'challenge') {
+                        $this->db->where('order_id', $order_id);
+                        $this->db->update('orders', ['stts_pembayaran' => 'challenge']);
+                    } else {
+                        $this->db->where('order_id', $order_id);
+                        $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
+                    }
+                }
+            } else if ($transaction == 'settlement') {
+                $this->db->where('order_id', $order_id);
+                $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
+            } else if ($transaction == 'pending') {
+                $this->db->where('order_id', $order_id);
+                $this->db->update('orders', ['stts_pembayaran' => 'pending']);
+            } else if ($transaction == 'deny') {
+                $this->db->where('order_id', $order_id);
+                $this->db->update('orders', ['stts_pembayaran' => 'ditolak']);
+            } else if ($transaction == 'expire') {
+                $this->db->where('order_id', $order_id);
+                $this->db->update('orders', ['stts_pembayaran' => 'kadaluarsa']);
+            } else if ($transaction == 'cancel') {
+                $this->db->where('order_id', $order_id);
+                $this->db->update('orders', ['stts_pembayaran' => 'dibatalkan']);
+            }
             
-            // Update status transaksi
-            $this->db->where('order_id', $id_order);
-            $this->db->update('transaksi', ['status_pembayaran' => 'pending']);
-        } else if ($transaction == 'deny') {
-            // Update status order
-            $this->db->where('id_order', $id_order);
-            $this->db->update('orders', ['stts_pembayaran' => 'ditolak']);
-            
-            // Update status transaksi
-            $this->db->where('order_id', $id_order);
-            $this->db->update('transaksi', ['status_pembayaran' => 'denied']);
-        } else if ($transaction == 'expire') {
-            // Update status order
-            $this->db->where('id_order', $id_order);
-            $this->db->update('orders', ['stts_pembayaran' => 'kadaluarsa']);
-            
-            // Update status transaksi
-            $this->db->where('order_id', $id_order);
-            $this->db->update('transaksi', ['status_pembayaran' => 'expired']);
-        } else if ($transaction == 'cancel') {
-            // Update status order
-            $this->db->where('id_order', $id_order);
-            $this->db->update('orders', ['stts_pembayaran' => 'dibatalkan']);
-            
-            // Update status transaksi
-            $this->db->where('order_id', $id_order);
-            $this->db->update('transaksi', ['status_pembayaran' => 'canceled']);
+            echo "OK";
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
-        
-        // Kirim respon OK ke Midtrans
-        header('HTTP/1.1 200 OK');
     }
     
     public function finish() {
         $order_id = $this->input->get('order_id');
-        $status = $this->input->get('transaction_status');
+        $status_code = $this->input->get('status_code');
         
-        // Cari order berdasarkan midtrans_order_id
-        $order = $this->db->get_where('orders', ['midtrans_order_id' => $order_id])->row();
-        if (!$order) {
-            show_404();
-        }
-        
-        if ($status == 'settlement' || $status == 'capture') {
-            // Pembayaran berhasil
-            $this->session->set_flashdata('success', 'Pembayaran berhasil!');
+        if ($status_code == 200) {
+            $this->session->set_flashdata('success', 'Pembayaran berhasil');
         } else {
-            // Pembayaran gagal atau pending
-            $this->session->set_flashdata('info', 'Status pembayaran: ' . $status);
+            $this->session->set_flashdata('error', 'Pembayaran belum selesai');
         }
         
         redirect('checkout/sukses');
     }
     
     public function check_status($id_order) {
-        // Ambil data order
         $order = $this->db->get_where('orders', ['id_order' => $id_order])->row();
+        
         if (!$order) {
-            show_404();
+            $this->session->set_flashdata('error', 'Order tidak ditemukan');
+            redirect('orders');
         }
         
-        // Ambil midtrans_order_id
-        $midtrans_order_id = $order->midtrans_order_id;
-        
         try {
-            // Get transaction status dari Midtrans API
-            $status = \Midtrans\Transaction::status($midtrans_order_id);
+            $status = \Midtrans\Transaction::status($order->order_id);
             
-            // Update status pembayaran berdasarkan response dari Midtrans
-            $transaction_status = $status->transaction_status;
+            // Update order status based on Midtrans status
+            $transaction = $status->transaction_status;
             
-            if ($transaction_status == 'settlement' || $transaction_status == 'capture') {
-                // Update status order
+            if ($transaction == 'settlement' || $transaction == 'capture') {
                 $this->db->where('id_order', $id_order);
-                $this->db->update('orders', ['stts_pembayaran' => 'dibayar', 'stts_pemesanan' => 'diproses']);
-                
-                // Update status transaksi
-                $this->db->where('order_id', $id_order);
-                $this->db->update('transaksi', ['status_pembayaran' => 'success']);
-                
-                $this->session->set_flashdata('success', 'Pembayaran berhasil!');
-                redirect('checkout/sukses');
-            } else if ($transaction_status == 'pending') {
-                // Redirect kembali ke halaman pembayaran dengan pesan
-                $this->session->set_flashdata('info', 'Pembayaran masih dalam status pending. Silakan selesaikan pembayaran Anda.');
-                
-                // Ambil token dari database
-                $transaksi = $this->db->get_where('transaksi', ['order_id' => $id_order])->row();
-                
-                if ($transaksi) {
-                    $data['snap_token'] = $transaksi->payment_token;
-                    $data['order_id'] = $midtrans_order_id;
-                    $data['id_order'] = $id_order;
-                    $this->load->view('checkout/midtrans_payment', $data);
-                } else {
-                    redirect('checkout/metode');
-                }
-            } else {
-                // Status lainnya (deny, cancel, expire, dll)
-                $this->session->set_flashdata('error', 'Status pembayaran: ' . $transaction_status . '. Silakan coba lagi.');
-                redirect('checkout/metode');
+                $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
+                $this->session->set_flashdata('success', 'Pembayaran telah selesai');
+            } else if ($transaction == 'pending') {
+                $this->session->set_flashdata('info', 'Pembayaran masih dalam proses');
+            } else if ($transaction == 'deny' || $transaction == 'cancel' || $transaction == 'expire') {
+                $this->session->set_flashdata('error', 'Pembayaran ' . $transaction);
             }
-        } catch (\Exception $e) {
-            // Log error
-            error_log('Midtrans Status Check Error: ' . $e->getMessage());
             
-            // Tampilkan pesan error
-            $this->session->set_flashdata('error', 'Terjadi kesalahan saat memeriksa status pembayaran: ' . $e->getMessage());
-            redirect('checkout/metode');
+            redirect('orders/detail/' . $id_order);
+        } catch (\Exception $e) {
+            $this->session->set_flashdata('error', 'Gagal memeriksa status: ' . $e->getMessage());
+            redirect('orders/detail/' . $id_order);
         }
     }
 

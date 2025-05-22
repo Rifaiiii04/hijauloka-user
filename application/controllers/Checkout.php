@@ -43,33 +43,34 @@ class Checkout extends CI_Controller {
             $metode_pembayaran = 'cod'; // Default to COD if invalid
         }
         
+        // Calculate total
+        $total = 0;
+        foreach ($cart_items as $item) {
+            $total += $item['harga'] * $item['jumlah'];
+        }
+        
+        // Ambil kurir dari POST
+        $kurir = $this->input->post('kurir') ?? 'hijauloka';
+        
+        // Hitung ongkir berdasarkan jarak
+        $ongkir = 0;
+        if ($kurir === 'hijauloka') {
+            // Ambil alamat utama user
+            $primary_address = $this->db->get_where('shipping_addresses', [
+                'user_id' => $id_user,
+                'is_primary' => 1
+            ])->row_array();
+    
+            if ($primary_address) {
+                $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
+            } else {
+                $ongkir = 5000; // Default ongkir jika tidak ada alamat
+            }
+        }
+        
         // Jika metode pembayaran adalah Midtrans, redirect ke controller Midtrans
         if ($metode_pembayaran == 'midtrans') {
             // Simpan data checkout ke session untuk digunakan oleh controller Midtrans
-            $total = 0;
-            foreach ($cart_items as $item) {
-                $total += $item['harga'] * $item['jumlah'];
-            }
-            
-            // Ambil kurir dari POST
-            $kurir = $this->input->post('kurir') ?? 'hijauloka';
-            
-            // Hitung ongkir berdasarkan jarak
-            $ongkir = 0;
-            if ($kurir === 'hijauloka') {
-                // Ambil alamat utama user
-                $primary_address = $this->db->get_where('shipping_addresses', [
-                    'user_id' => $id_user,
-                    'is_primary' => 1
-                ])->row_array();
-
-                if ($primary_address) {
-                    $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
-                } else {
-                    $ongkir = 5000; // Default ongkir jika tidak ada alamat
-                }
-            }
-            
             $this->session->set_userdata('checkout_data', [
                 'cart_items' => $cart_items,
                 'total' => $total,
@@ -79,6 +80,7 @@ class Checkout extends CI_Controller {
             ]);
             
             redirect('midtrans/process_payment');
+            return;
         }
         
         // Proses untuk COD
@@ -184,16 +186,7 @@ class Checkout extends CI_Controller {
 
     // Metode lainnya tetap sama
     public function sukses() {
-        $id_user = $this->session->userdata('id_user');
-        
-        // Remove this line that deletes all cart items
-        // $this->db->where('id_user', $id_user);
-        // $this->db->delete('cart');
-        
-        // Clear cart in session if exists
-        $this->session->unset_userdata('cart');
-        
-        $data['title'] = 'Checkout Berhasil';
+        $data['title'] = 'Pesanan Berhasil';
         $this->load->view('checkout/sukses', $data);
     }
 
