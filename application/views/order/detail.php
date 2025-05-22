@@ -10,10 +10,9 @@
 <body class="bg-gray-50 min-h-screen">
     <?php $this->load->view('templates/navbar'); ?>
 
-    <div class="container mx-auto px-4 pt-20 pb-16 md:pt-28">
+    <div class="container mx-auto px-4 pt-20 pb-16 md:pt-32">
         <div class="text-center relative mb-12">
-            <h1 class="text-3xl font-bold text-green-800 mt-10 mb-6">Detail Pesanan</h1>
-            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+            <h1 class="text-3xl font-bold text-green-800 mt-22 mb-6">Detail Pesanan</h1>
         </div>
 
         <div class="max-w-4xl mx-auto">

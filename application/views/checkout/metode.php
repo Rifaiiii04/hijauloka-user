@@ -14,7 +14,7 @@
 }
 </style>
 
-<div class="container mx-auto max-w-4xl py-8">
+<div class="container mx-auto max-w-4xl py-8 p-3">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-green-800">Checkout</h1>
         <p class="text-gray-600">Lengkapi informasi pengiriman dan pembayaran</p>
@@ -137,7 +137,7 @@
                     <?php foreach ($cart_items as $item): ?>
                         <div class="flex gap-4">
                             <div class="w-20 h-20 flex-shrink-0">
-                                <img src="http://localhost/hijauloka/uploads/<?= $item['gambar'] ?>" 
+                                <img src="http://admin.hijauloka.my.id/uploads<?= $item['gambar'] ?>" 
                                      alt="<?= $item['nama_product'] ?>" 
                                      class="w-full h-full object-cover rounded-lg">
                             </div>
@@ -222,9 +222,9 @@
 
                     <div class="flex justify-between mt-6">
                         <button type="button" onclick="confirmReturn()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium">
-                            Kembali ke Keranjang
+                            Kembali
                         </button>
-                        <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold">
+                        <button type="submit" class="px-6 py-3  bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold">
                            Beli Sekarang
                         </button>
                     </div>
@@ -244,7 +244,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form action="<?= base_url('profile/add_shipping_address') ?>" method="POST" class="space-y-4">
+            <form action="<?= base_url('checkout/add_shipping_address') ?>" method="POST" class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-sm font-medium text-gray-700">Label Alamat</label>
@@ -580,5 +580,3 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
     }
 });
 </script>
-
-<?php $this->load->view('templates/footer'); ?>

@@ -31,7 +31,7 @@
 
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-100">
         <div class="text-center mb-8">
-            <img src="<?= base_url('assets/')?>img/hijauloka.png" alt="HijauLoka" class="w-24 h-24 mx-auto">
+            <img src="<?= base_url('assets/')?>img/HijauLoka.png" alt="HijauLoka" class="w-24 h-24 mx-auto rounded-full">
             <h2 class="text-2xl font-bold text-gray-800 mt-4">Welcome Back</h2>
             <div class="w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></div>
         </div>
@@ -41,10 +41,10 @@
                 <label class="block text-gray-700 text-sm font-medium mb-1.5">Email Address</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                        <i class="fas fa-envelope"></i>
+                       
                     </span>
                     <input type="email" name="email" required
-                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
+                        class="w-full pl-10 pr-4 py-3 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
                         placeholder="Enter your email">
                 </div>
             </div>
@@ -53,15 +53,15 @@
                 <label class="block text-gray-700 text-sm font-medium mb-1.5">Password</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                        <i class="fas fa-lock"></i>
+                        
                     </span>
                     <input type="password" name="password" required
-                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
+                        class="w-full pl-10 pr-4 py-3 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50"
                         placeholder="Enter your password">
                 </div>
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-3">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
@@ -82,26 +82,7 @@
             </p>
         </div>
 
-        <!-- OR Divider -->
-        <div class="flex items-center my-6">
-            <hr class="flex-grow border-gray-200">
-            <span class="mx-4 text-sm text-gray-500">or continue with</span>
-            <hr class="flex-grow border-gray-200">
-        </div>
-
-        <!-- Social Login Buttons -->
-        <div class="flex justify-center space-x-4">
-            <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
-                <img src="<?= base_url('assets/img/google.png') ?>" class="w-5 h-5" alt="Google">
-                <span class="text-sm font-medium">Google</span>
-            </button>
-
-            <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
-                <img src="<?= base_url('assets/img/fb.png') ?>" class="w-5 h-5" alt="Facebook">
-                <span class="text-sm font-medium">Facebook</span>
-            </button>
-        </div>
-    </div>
+      
 
     <!-- Loading Overlay -->
     <div id="loader" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">

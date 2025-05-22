@@ -255,4 +255,25 @@ class Checkout extends CI_Controller {
         ];
         $this->load->view('checkout/qris', $data);
     }
+    
+    public function add_shipping_address() {
+        $user_id = $this->session->userdata('id_user');
+        $data = [
+            'user_id' => $user_id,
+            'recipient_name' => $this->input->post('recipient_name'),
+            'phone' => $this->input->post('phone'),
+            'address_label' => $this->input->post('address_label'),
+            'address' => $this->input->post('address'),
+            'rt' => $this->input->post('rt'),
+            'rw' => $this->input->post('rw'),
+            'house_number' => $this->input->post('house_number'),
+            'postal_code' => $this->input->post('postal_code'),
+            'detail_address' => $this->input->post('detail_address'),
+            'is_primary' => empty($this->db->get_where('shipping_addresses', ['user_id' => $user_id])->result()) ? 1 : 0
+        ];
+
+        $this->db->insert('shipping_addresses', $data);
+        $this->session->set_flashdata('success', 'Shipping address added successfully');
+        redirect('checkout/metode');
+    }
 }

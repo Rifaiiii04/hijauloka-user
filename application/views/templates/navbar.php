@@ -136,9 +136,17 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/30 transition-all duration-300">
-                        <i class="fas fa-bell text-xl text-green-800"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-xs w-5 h-5 flex text-white items-center justify-center rounded-full">3</span>
+                    <a href="<?= base_url('notification') ?>" class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-700/50 transition-all duration-300">
+                        <i class="fas fa-bell text-lg text-green-800"></i>
+                        <?php 
+                        $notification_count = 0;
+                        if (isset($this->notification_model)) {
+                            $notification_count = $this->notification_model->count_unread($this->session->userdata('id_user') ?? 0);
+                        }
+                        ?>
+                        <span class="notification-counter absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full <?= $notification_count > 0 ? '' : 'hidden' ?>">
+                            <?= $notification_count ?>
+                        </span>
                     </a>
                 </li>
                 <li>
@@ -157,9 +165,9 @@
     </nav>
     
     <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 mb-4 left-0 right-0 text-center mx-auto bg-white/80 backdrop-blur-2xl border-2 border-green-800 rounded-full h-14 shadow-lg z-50 w-64">
+    <nav class="md:hidden fixed bottom-0 mb-4 left-0 right-0 text-center mx-auto bg-white/80 backdrop-blur-2xl border-2 border-green-800 rounded-full h-14 shadow-lg z-50 w-72">
         <div class="mx-auto">
-            <ul class="grid grid-cols-4 h-full items-center">
+            <ul class="grid grid-cols-4 h-full items-center" style="position: relative; top:8px;">
                 <li>
                     <a href="<?= base_url('home') ?>" class="flex flex-col items-center justify-center py-2 text-green-800 hover:bg-green-700/30 rounded-lg transition-all duration-300">
                         <i class="fas fa-home text-lg"></i>

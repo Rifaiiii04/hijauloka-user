@@ -338,7 +338,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                                 <option value="popular">Popularitas</option>
                                 <option value="price_low">Harga: Rendah ke Tinggi</option>
                                 <option value="price_high">Harga: Tinggi ke Rendah</option>
-                                <option value="rating">Rating Tertinggi</option>
+                                 sticky<option value="rating">Rating Tertinggi</option>
                                 <option value="newest">Terbaru</option>
                             </select>
                         </div>
@@ -358,9 +358,9 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         </div>
 
         <!-- Desktop Filters -->
-        <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
+        <div class="w-full md:w-64 hidden md:flex sticky flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-4 sticky top-24">
-                <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2">Filter Produk</h3>
+                <h3 class="font-semibold text-lg text-green-800 mb-4 sticky border-b pb-2">Filter Produk</h3>
                 
                 <!-- Price Range Filter -->
                 <div class="mb-6">
@@ -495,7 +495,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                          data-categories="<?= $category_ids_str ?>">
                         <a href="<?= base_url('product/detail/' . (isset($produk['id_product']) ? $produk['id_product'] : '0')) ?>" class="block flex-grow">
                             <div class="aspect-w-1 aspect-h-1">
-                                <img src="http://localhost/hijauloka/uploads/<?= $gambar; ?>" 
+                                <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar; ?>" 
                                      alt="<?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?>" 
                                      class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
                             </div>

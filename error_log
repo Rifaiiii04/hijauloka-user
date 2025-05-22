@@ -1,0 +1,6 @@
+[15-May-2025 19:04:39 Asia/Jakarta] Selected cart items deleted for user ID: 4 - Items: 115
+[16-May-2025 07:40:50 Asia/Jakarta] Midtrans Status Check Error: Midtrans API is returning API error. HTTP status code: 404 API response: {"status_code":"404","status_message":"Transaction doesn't exist.","id":"b4c16c0a-1e92-42a0-ac87-11d9ddb2b6ca"}
+[16-May-2025 11:49:48 Asia/Jakarta] Selected cart items deleted for user ID: 4 - Items: 122
+[16-May-2025 14:01:20 Asia/Jakarta] Selected cart items deleted for user ID: 29 - Items: 123
+[19-May-2025 12:14:58 Asia/Jakarta] Selected cart items deleted for user ID: 4 - Items: 151
+[19-May-2025 12:58:02 Asia/Jakarta] Selected cart items deleted for user ID: 4 - Items: 152

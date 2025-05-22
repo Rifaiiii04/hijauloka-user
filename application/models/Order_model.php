@@ -49,6 +49,7 @@ class Order_model extends CI_Model {
         return $query->result_array();
     }
     
+     
     public function get_completed_orders_by_user_and_product($user_id, $product_id) {
         $this->db->select('o.*');
         $this->db->from('orders o');

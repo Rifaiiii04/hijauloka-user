@@ -281,7 +281,7 @@ function showNotification(type, title, message) {
                     <div class="w-72 flex-shrink-0">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <a href="<?= base_url('product/detail/' . $product['id_product']) ?>">
-                                <img src="http://localhost/hijauloka/uploads/<?= $productImage ?>" 
+                                <img src="https://admin.hijauloka.my.id/uploads/<?= $productImage ?>" 
                                      alt="<?= $product['nama_product'] ?>"
                                      class="w-full h-48 object-cover hover:scale-110 transition-all duration-300">
                             </a>
@@ -333,7 +333,7 @@ function showNotification(type, title, message) {
 </section>
 
 <!-- Kategori Section - Enhanced UX -->
-<section class="px-4 py-12 bg-gray-50">
+<section class="px-4 py-12">
     <div class="container mx-auto">
         <!-- Desktop Header -->
         <div class="hidden md:flex items-center justify-between mb-8">
@@ -350,9 +350,9 @@ function showNotification(type, title, message) {
         <!-- Mobile Header -->
         <div class="flex md:hidden items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-green-800">Kategori Tanaman</h2>
-            <a href="<?= base_url('category') ?>" class="text-green-700 text-sm hover:text-green-900 font-medium flex items-center">
-                Lihat <i class="fas fa-chevron-right ml-1 text-xs"></i>
-            </a>
+            <!--<a href="<?= base_url('category') ?>" class="text-green-700 text-sm hover:text-green-900 font-medium flex items-center">-->
+            <!--    Lihat <i class="fas fa-chevron-right ml-1 text-xs"></i>-->
+            <!--</a>-->
         </div>
         
         <!-- Desktop Layout -->
@@ -485,7 +485,7 @@ function showNotification(type, title, message) {
                 <?php foreach ($featured_blog_posts as $post): ?>
                     <!-- Featured Post - Modern Design -->
                     <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
-                        <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                        <img src="<?= !empty($post['featured_image']) ? 'http:https://admin.hijauloka.my.id/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
                              alt="<?= $post['title'] ?>"
                              onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -516,7 +516,7 @@ function showNotification(type, title, message) {
                         <!-- Small Post -->
                         <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                                <img src="<?= !empty($post['featured_image']) ? 'https://admin.hijauloka.my.id/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
                                      alt="<?= $post['title'] ?>"
                                      onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">

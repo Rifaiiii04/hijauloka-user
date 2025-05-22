@@ -1,6 +1,6 @@
 <?php $this->load->view('templates/header'); ?>
 
-<main class="container mx-auto px-1 py-1 mt-4 md:mt-20 max-w-5xl">
+<main class="container mx-auto px-1 py-1 mt-4 md:mt-20 mt-5 max-w-5xl">
     <!-- Breadcrumb -->
     <div class="mb-1">
         <nav class="text-[10px] text-gray-600">
@@ -36,7 +36,7 @@
                         $mainImage = $images[0];
                     }
                     ?>
-                    <img src="http://localhost/hijauloka/uploads/<?= $mainImage ?>" 
+                    <img src="https://admin.hijauloka.my.id/uploads/<?= $mainImage ?>" 
                          alt="<?= $product['nama_product'] ?>" 
                          class="w-full h-full object-contain rounded-lg">
                 </div>
@@ -45,7 +45,7 @@
                 <div class="grid grid-cols-4 gap-0.5 mt-0.5">
                     <?php foreach($images as $image): ?>
                     <div class="relative h-14 left-1.5 gap-5">
-                        <img src="http://localhost/hijauloka/uploads/<?= $image ?>" 
+                        <img src="https://admin.hijauloka.my.id/uploads/<?= $image ?>" 
                              alt="Product thumbnail" 
                              class="w-full h-full object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
                     </div>
@@ -92,18 +92,28 @@
                     <p class="text-[11px] text-gray-600"><?= nl2br($product['desk_product']) ?></p>
                 </div>
 
-                <!-- Plant Care Instructions -->
-                <div>
-                    <h2 class="text-sm font-semibold">Cara Merawat Tanaman</h2>
-                    <div class="bg-gray-50 rounded p-2 text-center">
-                        <div class="text-gray-400">
-                            <i class="fas fa-seedling text-lg"></i>
-                        </div>
-                        <p class="text-[11px] text-gray-600 font-medium">Coming Soon!</p>
-                        <p class="text-[10px] text-gray-500">Panduan perawatan tanaman dengan ilustrasi akan tersedia segera.</p>
-                    </div>
-                </div>
-
+              <div>
+    <h2 class="text-sm font-semibold">Cara Merawat Tanaman</h2>
+    
+    <?php if (!empty($product['cara_rawat_video'])): ?>
+        <!-- Video Section -->
+        <div class="mt-2">
+            <video controls class="w-full rounded-lg" style="max-height: 300px">
+                <source src="https://admin.hijauloka.my.id/uploads/videos/<?= $product['cara_rawat_video'] ?>" type="video/mp4">
+                Browser tidak mendukung pemutar video
+            </video>
+        </div>
+    <?php else: ?>
+        <!-- Placeholder jika tidak ada video -->
+        <div class="bg-gray-50 rounded p-2 text-center">
+            <div class="text-gray-400">
+                <i class="fas fa-seedling text-lg"></i>
+            </div>
+            <p class="text-[11px] text-gray-600 font-medium">Coming Soon!</p>
+            <p class="text-[10px] text-gray-500">Panduan perawatan tanaman dengan ilustrasi akan tersedia segera.</p>
+        </div>
+    <?php endif; ?>
+</div>
                 <!-- Quantity and Actions -->
                 <div class="flex items-center gap-1.5 pt-1">
                     <div class="flex items-center border rounded">

@@ -36,7 +36,7 @@
                                                 $item['gambar']) : 
                                             'default.jpg';
                                         ?>
-                                        <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
+                                        <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar ?>" 
                                              alt="<?= $item['nama_product'] ?>" 
                                              class="w-full h-full object-cover">
                                     </div>

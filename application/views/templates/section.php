@@ -23,7 +23,7 @@
 				</a>
 			</div>
 			<div class="w-1/2  hidden md:flex">
-				<!-- <model-viewer
+				 <model-viewer
 					alt="HijauLoka Car Delivery"
 					src="<?= site_url('assets/models/HijauLoka.glb')?> " 
 					ar
@@ -31,8 +31,7 @@
 					camera-controls
 					auto-rotate
 					class="w-full h-[500px] items-center justify-center"
-				></model-viewer> -->
-				<img src="<?= site_url('assets/images/hero.png')?>" class="animate-subtle-zoom animate-fade-in">
+				></model-viewer> 
 			</div>
 		</section>
 

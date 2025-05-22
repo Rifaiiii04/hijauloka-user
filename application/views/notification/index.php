@@ -12,8 +12,7 @@
 
     <div class="container mx-auto px-4 pt-20 pb-16 md:pt-28">
         <div class="text-center relative mb-12">
-            <h1 class="text-3xl font-bold text-green-800 mt-10 mb-6">Notifikasi</h1>
-            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-green-600 to-green-800 rounded-full"></div>
+            <h1 class="text-3xl font-bold text-green-800 mt-22 mb-6">Notifikasi</h1>
         </div>
 
         <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
@@ -136,7 +135,6 @@
         </div>
     </div>
 
-    <?php $this->load->view('templates/footer'); ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

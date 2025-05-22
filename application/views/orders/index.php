@@ -15,14 +15,14 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
     return $o['stts_pemesanan'] === $status;
 });
 ?>
-<div class="container mx-auto max-w-2xl py-12 min-h-[60vh]">
+<div class="container mx-auto max-w-2xl py-12 p-3 min-h-[60vh]">
     <div class="mb-6 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <a href="<?= base_url() ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 <i class="fas fa-home"></i>
                 <span class="font-medium">Beranda</span>
             </a>
-            <h2 class="text-3xl font-extrabold text-green-800 tracking-tight">Pesanan Saya</h2>
+            <h2 class="md:text-3xl text-lg font-extrabold text-green-800 tracking-tight">Pesanan Saya</h2>
         </div>
     </div>
     <!-- Top Bar Tab Filter -->
@@ -391,4 +391,3 @@ document.getElementById('reviewModal').addEventListener('click', function(e) {
     }
 });
 </script>
-<?php $this->load->view('templates/footer'); ?>

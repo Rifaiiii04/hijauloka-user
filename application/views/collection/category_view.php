@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-5">
     <!-- Add animation styles -->
     <style>
         @keyframes heartbeat {
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Filter and Sort Section -->
-    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="bg-white rounded-xl shadow-md p-4 mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center">
                 <span class="text-gray-700 font-medium mr-3">Urutkan:</span>
@@ -134,14 +134,14 @@
                     $gambar = trim($gambarArr[0]);
                 }
                 ?>
-                <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
+                <div class="product-card w-full md:w-full bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
                      data-id="<?= $product->id_product ?>"
                      data-name="<?= strtolower($product->nama_product) ?>"
                      data-price="<?= $product->harga ?>"
                      data-rating="<?= floatval($product->rating ?? 0) ?>">
                     <a href="<?= base_url('product/detail/' . $product->id_product) ?>" class="block flex-grow">
                         <div class="aspect-w-1 aspect-h-1">
-                            <img src="http://localhost/hijauloka/uploads/<?= $gambar ?>" 
+                            <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar ?>" 
                                  alt="<?= htmlspecialchars($product->nama_product) ?>" 
                                  class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
                         </div>
@@ -155,7 +155,7 @@
                         </div>
                     </a>
 
-                    <div class="p-3 sm:p-4">
+                    <div class="p-1 sm:p-4">
                         <div class="flex items-center mb-2">
                             <div class="flex text-yellow-400">
                                 <?php 
