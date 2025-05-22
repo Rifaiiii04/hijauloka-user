@@ -29,113 +29,6 @@
             </span>
         </div>
 
-        <!-- Order Tracking Timeline -->
-        <div class="mt-6">
-            <div class="font-semibold text-green-700 mb-4">Status Pengiriman</div>
-            <?php
-            $status_timeline = [
-                'pending' => [
-                    'icon' => 'fa-hourglass-half',
-                    'color' => 'text-yellow-500',
-                    'title' => 'Pesanan Diterima',
-                    'description' => 'Pesanan Anda telah diterima dan sedang diproses',
-                    'time' => date('d M Y, H:i', strtotime($order['tgl_pemesanan']))
-                ],
-                'diproses' => [
-                    'icon' => 'fa-cogs',
-                    'color' => 'text-blue-500',
-                    'title' => 'Pesanan Diproses',
-                    'description' => 'Pesanan Anda sedang dipersiapkan untuk pengiriman',
-                    'time' => $order['stts_pemesanan'] == 'diproses' || $order['stts_pemesanan'] == 'dikirim' || $order['stts_pemesanan'] == 'selesai' 
-                        ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +1 day'))
-                        : null
-                ],
-                'dikirim' => [
-                    'icon' => 'fa-truck',
-                    'color' => 'text-indigo-500',
-                    'title' => 'Pesanan Dikirim',
-                    'description' => 'Pesanan Anda sedang dalam perjalanan',
-                    'time' => $order['stts_pemesanan'] == 'dikirim' || $order['stts_pemesanan'] == 'selesai'
-                        ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +2 days'))
-                        : null
-                ],
-                'selesai' => [
-                    'icon' => 'fa-check-circle',
-                    'color' => 'text-green-500',
-                    'title' => 'Pesanan Selesai',
-                    'description' => 'Pesanan telah diterima',
-                    'time' => $order['stts_pemesanan'] == 'selesai'
-                        ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +3 days'))
-                        : null
-                ]
-            ];
-
-            $current_status = $order['stts_pemesanan'];
-            $status_order = ['pending', 'diproses', 'dikirim', 'selesai'];
-            $current_index = array_search($current_status, $status_order);
-            ?>
-
-            <div class="relative">
-                <!-- Timeline Line -->
-                <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-
-                <?php foreach ($status_timeline as $status => $info): ?>
-                    <?php 
-                    $status_index = array_search($status, $status_order);
-                    $is_completed = $status_index <= $current_index;
-                    $is_current = $status === $current_status;
-                    ?>
-                    <div class="relative pl-10 pb-8 last:pb-0">
-                        <!-- Status Icon -->
-                        <div class="absolute left-0 w-8 h-8 rounded-full flex items-center justify-center <?= $is_completed ? $info['color'] : 'bg-gray-200 text-gray-400' ?>">
-                            <i class="fas <?= $info['icon'] ?>"></i>
-                        </div>
-
-                        <!-- Status Content -->
-                        <div class="bg-gray-50 rounded-lg p-4 <?= $is_current ? 'ring-2 ring-green-500' : '' ?>">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800"><?= $info['title'] ?></h4>
-                                    <p class="text-sm text-gray-600 mt-1"><?= $info['description'] ?></p>
-                                </div>
-                                <?php if ($info['time']): ?>
-                                    <span class="text-xs text-gray-500"><?= $info['time'] ?></span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Estimated Delivery -->
-            <?php if ($current_status != 'selesai' && $current_status != 'dibatalkan'): ?>
-                <?php
-                $estimated_days = 0;
-                switch($current_status) {
-                    case 'pending':
-                        $estimated_days = 3;
-                        break;
-                    case 'diproses':
-                        $estimated_days = 2;
-                        break;
-                    case 'dikirim':
-                        $estimated_days = 1;
-                        break;
-                }
-                $estimated_date = date('d M Y', strtotime($order['tgl_pemesanan'] . " +{$estimated_days} days"));
-                ?>
-                <div class="mt-6 p-4 bg-green-50 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-clock text-green-600"></i>
-                        <div>
-                            <h4 class="font-semibold text-green-800">Estimasi Pengiriman</h4>
-                            <p class="text-sm text-green-700">Pesanan diperkirakan akan sampai pada <?= $estimated_date ?></p>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </div>
-
         <!-- Shipping Address -->
         <div class="mt-2">
             <div class="font-semibold text-green-700 mb-1">Alamat Pengiriman</div>
@@ -212,6 +105,124 @@
         </div>
     </div>
 
+    <!-- Order Tracking Timeline -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div class="font-semibold text-green-700 mb-4">Status Pengiriman</div>
+        <?php
+        $status_timeline = [
+            'pending' => [
+                'icon' => 'fa-hourglass-half',
+                'color' => 'text-yellow-500',
+                'title' => 'Pesanan Diterima',
+                'description' => 'Pesanan Anda telah diterima dan sedang diproses',
+                'time' => date('d M Y, H:i', strtotime($order['tgl_pemesanan']))
+            ],
+            'diproses' => [
+                'icon' => 'fa-cogs',
+                'color' => 'text-blue-500',
+                'title' => 'Pesanan Diproses',
+                'description' => 'Pesanan Anda sedang dipersiapkan untuk pengiriman',
+                'time' => $order['stts_pemesanan'] == 'diproses' || $order['stts_pemesanan'] == 'dikirim' || $order['stts_pemesanan'] == 'selesai' 
+                    ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +1 day'))
+                    : null
+            ],
+            'dikirim' => [
+                'icon' => 'fa-truck',
+                'color' => 'text-indigo-500',
+                'title' => 'Pesanan Dikirim',
+                'description' => 'Pesanan Anda sedang dalam perjalanan',
+                'time' => $order['stts_pemesanan'] == 'dikirim' || $order['stts_pemesanan'] == 'selesai'
+                    ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +2 days'))
+                    : null
+            ],
+            'selesai' => [
+                'icon' => 'fa-check-circle',
+                'color' => 'text-green-500',
+                'title' => 'Pesanan Selesai',
+                'description' => 'Pesanan telah diterima',
+                'time' => $order['stts_pemesanan'] == 'selesai'
+                    ? date('d M Y, H:i', strtotime($order['tgl_pemesanan'] . ' +3 days'))
+                    : null
+            ]
+        ];
+
+        $current_status = $order['stts_pemesanan'];
+        $status_order = ['pending', 'diproses', 'dikirim', 'selesai'];
+        $current_index = array_search($current_status, $status_order);
+        ?>
+
+        <div class="relative">
+            <!-- Timeline Line -->
+            <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+
+            <?php foreach ($status_timeline as $status => $info): ?>
+                <?php 
+                $status_index = array_search($status, $status_order);
+                $is_completed = $status_index <= $current_index;
+                $is_current = $status === $current_status;
+                ?>
+                <div class="relative pl-10 pb-8 last:pb-0">
+                    <!-- Status Icon -->
+                    <div class="absolute left-0 w-8 h-8 rounded-full flex items-center justify-center <?= $is_completed ? $info['color'] : 'bg-gray-200 text-gray-400' ?>">
+                        <i class="fas <?= $info['icon'] ?>"></i>
+                    </div>
+
+                    <!-- Status Content -->
+                    <div class="bg-gray-50 rounded-lg p-4 <?= $is_current ? 'ring-2 ring-green-500' : '' ?>">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-gray-800"><?= $info['title'] ?></h4>
+                                <p class="text-sm text-gray-600 mt-1"><?= $info['description'] ?></p>
+                            </div>
+                            <?php if ($info['time']): ?>
+                                <span class="text-xs text-gray-500"><?= $info['time'] ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Estimated Delivery -->
+        <?php if ($current_status != 'selesai' && $current_status != 'dibatalkan'): ?>
+            <?php
+            $estimated_days = 0;
+            switch($current_status) {
+                case 'pending':
+                    $estimated_days = 3;
+                    break;
+                case 'diproses':
+                    $estimated_days = 2;
+                    break;
+                case 'dikirim':
+                    $estimated_days = 1;
+                    break;
+            }
+            $estimated_date = date('d M Y', strtotime($order['tgl_pemesanan'] . " +{$estimated_days} days"));
+            ?>
+            <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-clock text-green-600"></i>
+                    <div>
+                        <h4 class="font-semibold text-green-800">Estimasi Pengiriman</h4>
+                        <p class="text-sm text-green-700">Pesanan diperkirakan akan sampai pada <?= $estimated_date ?></p>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Complete Order Button -->
+        <?php if ($current_status == 'dikirim'): ?>
+            <div class="mt-6">
+                <button onclick="completeOrder(<?= $order['id_order'] ?>)" 
+                        class="w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-check-circle"></i>
+                    Tandai Pesanan Selesai
+                </button>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <!-- Back Button -->
     <div class="flex justify-end">
         <a href="<?= base_url('orders') ?>" 
@@ -220,5 +231,13 @@
         </a>
     </div>
 </div>
+
+<script>
+function completeOrder(orderId) {
+    if (confirm('Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?')) {
+        window.location.href = `<?= base_url('order/complete/') ?>${orderId}`;
+    }
+}
+</script>
 
 <?php $this->load->view('templates/footer'); ?>
