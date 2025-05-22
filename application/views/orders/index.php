@@ -323,6 +323,39 @@ function closeReviewModal() {
     currentOrderId = null;
 }
 
+// Add these new functions for image preview
+function previewImage(input) {
+    const previewContainer = input.closest('form').querySelector('.preview-container');
+    const previewImage = previewContainer.querySelector('.preview-image');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewContainer.classList.remove('hidden');
+            previewContainer.classList.add('relative');
+            input.closest('label').classList.add('hidden');
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeImage(button) {
+    const previewContainer = button.closest('.preview-container');
+    const form = previewContainer.closest('form');
+    const fileInput = form.querySelector('input[type="file"]');
+    const uploadLabel = form.querySelector('label.flex.flex-col');
+    
+    // Reset file input
+    fileInput.value = '';
+    
+    // Hide preview, show upload button
+    previewContainer.classList.add('hidden');
+    uploadLabel.classList.remove('hidden');
+}
+
 function setRating(button, rating) {
     const starsContainer = button.parentElement;
     const ratingInput = starsContainer.parentElement.querySelector('.rating-input');
