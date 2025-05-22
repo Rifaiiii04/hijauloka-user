@@ -54,9 +54,9 @@ class Checkout extends CI_Controller {
                 ])->row_array();
 
                 if ($primary_address) {
-                    $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
+                    $ongkir = $primary_address['jarak'] <= 1 ? 10 : 10000;
                 } else {
-                    $ongkir = 5000; // Default ongkir jika tidak ada alamat
+                    $ongkir = 10; // Default ongkir jika tidak ada alamat
                 }
             }
             
@@ -90,9 +90,9 @@ class Checkout extends CI_Controller {
             ])->row_array();
 
             if ($primary_address) {
-                $ongkir = $primary_address['jarak'] <= 1 ? 5000 : 10000;
+                $ongkir = $primary_address['jarak'] <= 1 ? 10 : 10000;
             } else {
-                $ongkir = 5000; // Default ongkir jika tidak ada alamat
+                $ongkir = 10; // Default ongkir jika tidak ada alamat
             }
         }
 

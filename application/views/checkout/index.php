@@ -12,7 +12,7 @@
                         <span class="font-medium text-gray-900">HijauLoka Kurir</span>
                         <p class="text-sm text-gray-500">Pengiriman dalam 1-2 hari kerja</p>
                     </div>
-                    <span class="font-semibold text-green-600">Rp 15.000</span>
+                    <span class="font-semibold text-green-600">Rp 10</span>
                 </div>
             </label>
         </div>
@@ -58,11 +58,11 @@
         </div>
         <div class="flex justify-between text-gray-600">
             <span>Ongkos Kirim</span>
-            <span id="shipping-cost">Rp 15.000</span>
+            <span id="shipping-cost">Rp 10</span>
         </div>
         <div class="border-t pt-3 flex justify-between font-semibold text-gray-900">
             <span>Total</span>
-            <span id="total-amount">Rp <?= number_format($total + 15000, 0, ',', '.') ?></span>
+            <span id="total-amount">Rp <?= number_format($total + 10, 0, ',', '.') ?></span>
         </div>
     </div>
 </div>
@@ -70,7 +70,7 @@
 <script>
 document.querySelectorAll('input[name="kurir"]').forEach(radio => {
     radio.addEventListener('change', function() {
-        const shippingCost = this.value === 'hijauloka' ? 15000 : 0;
+        const shippingCost = this.value === 'hijauloka' ? 10 : 0;
         document.getElementById('shipping-cost').textContent = `Rp ${shippingCost.toLocaleString('id-ID')}`;
         document.getElementById('total-amount').textContent = `Rp ${(<?= $total ?> + shippingCost).toLocaleString('id-ID')}`;
     });
