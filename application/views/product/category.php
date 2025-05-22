@@ -160,54 +160,38 @@
         transition: color 0.2s ease-in-out;
     }
     
-    @keyframes bounce-once {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .animate-bounce-once {
-        animation: bounce-once 0.5s ease-in-out;
+    
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-20px); }
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+    
+    .animate-fadeOut {
+        animation: fadeOut 0.3s ease-in forwards;
     }
 </style>
 
-<!-- Add this cart notification modal before the script section -->
-<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
-        <div class="text-center mb-4">
-            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
-            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
-            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
+<!-- Replace the existing cart notification modal with this toast-style notification -->
+<div id="cartNotification" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 hidden transform transition-all duration-300 max-w-sm">
+    <div class="flex items-center">
+        <div class="flex-shrink-0 bg-green-100 rounded-full p-2 mr-3">
+            <i class="fas fa-check text-green-600"></i>
         </div>
-        <button onclick="closeCartNotification()" 
-                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
-            Lanjut Belanja
+        <div>
+            <h3 class="font-medium text-gray-900">Berhasil!</h3>
+            <p class="text-sm text-gray-600">Produk telah ditambahkan ke keranjang</p>
+        </div>
+        <button onclick="closeCartNotification()" class="ml-4 text-gray-400 hover:text-gray-500">
+            <i class="fas fa-times"></i>
         </button>
-    </div>
-</div>
-
-<!-- Login Prompt Modal - Moved outside of script tags -->
-<div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
-        <div class="text-center mb-6">
-            <i class="fas fa-lock text-4xl text-green-600 mb-4"></i>
-            <h3 class="text-2xl font-semibold text-gray-900">Login Required</h3>
-            <p class="text-gray-600 mt-2">Please login or create an account to add items to your wishlist</p>
-        </div>
-        <div class="space-y-3">
-            <a href="<?= base_url('auth') ?>" 
-               class="flex items-center justify-center gap-2 w-full bg-green-600 text-white py-3 rounded-lg text-center hover:bg-green-700 transition-all duration-300">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login to Your Account</span>
-            </a>
-            <a href="<?= base_url('auth/register') ?>" 
-               class="flex items-center justify-center gap-2 w-full bg-gray-100 text-gray-700 py-3 rounded-lg text-center hover:bg-gray-200 transition-all duration-300">
-                <i class="fas fa-user-plus"></i>
-                <span>Create New Account</span>
-            </a>
-            <button onclick="closeLoginPrompt()" 
-                    class="w-full text-gray-500 hover:text-gray-700 py-2 transition-colors duration-300">
-                Maybe Later
-            </button>
-        </div>
     </div>
 </div>
 
@@ -336,10 +320,18 @@ function addToCart(productId, button) {
     })
     .then(data => {
         if (data.success) {
-            document.getElementById('cartNotification').classList.remove('hidden');
+            // Show toast notification
+            const notification = document.getElementById('cartNotification');
+            notification.classList.remove('hidden');
+            notification.classList.add('animate-fadeIn');
+            
+            // Auto-hide after 3 seconds
             setTimeout(() => {
                 closeCartNotification();
-            }, 2000);
+            }, 3000);
+            
+            // Update cart count if needed
+            updateCartCount();
         } else {
             // Show error message
             const errorMessage = data.message || 'Gagal menambahkan ke keranjang';
@@ -358,7 +350,35 @@ function addToCart(productId, button) {
 }
 
 function closeCartNotification() {
-    document.getElementById('cartNotification').classList.add('hidden');
+    const notification = document.getElementById('cartNotification');
+    notification.classList.add('animate-fadeOut');
+    setTimeout(() => {
+        notification.classList.add('hidden');
+        notification.classList.remove('animate-fadeOut', 'animate-fadeIn');
+    }, 300);
+}
+
+// Function to update cart count in the header
+function updateCartCount() {
+    fetch('<?= base_url('cart/count') ?>', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.count !== undefined) {
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = data.count;
+                if (data.count > 0) {
+                    cartCountElement.classList.remove('hidden');
+                }
+            }
+        }
+    })
+    .catch(error => console.error('Error updating cart count:', error));
 }
 
 // Close notification when clicking outside
