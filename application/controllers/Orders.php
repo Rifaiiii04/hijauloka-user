@@ -111,29 +111,63 @@ class Orders extends CI_Controller {
         echo json_encode(['success' => true, 'products' => $products]);
     }
 
-    public function complete($id_order) {
-        // Check if user is logged in
+    public function complete($id_order)
+    {
         if (!$this->session->userdata('logged_in')) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-            return;
+            redirect('auth');
         }
-        
-        // Get order details
+
         $order = $this->order_model->get_order_by_id($id_order);
         
-        // Check if order exists, belongs to the current user, and is in 'dikirim' status
-        if (!$order || $order['id_user'] != $this->session->userdata('id_user') || $order['stts_pemesanan'] != 'dikirim') {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Invalid order']);
-            return;
+        if (!$order || $order['id_user'] != $this->session->userdata('id_user')) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Pesanan tidak ditemukan'
+                ]);
+                return;
+            }
+            redirect('orders');
         }
-        
-        // Update order status to 'selesai'
-        $success = $this->order_model->update_order_status($id_order, 'selesai');
-        
-        // Return JSON response
-        header('Content-Type: application/json');
-        echo json_encode(['success' => $success]);
+
+        if ($order['stts_pemesanan'] != 'dikirim') {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Status pesanan tidak valid'
+                ]);
+                return;
+            }
+            redirect('orders/detail/' . $id_order);
+        }
+
+        $data = [
+            'stts_pemesanan' => 'selesai',
+            'tgl_selesai' => date('Y-m-d H:i:s')
+        ];
+
+        if ($this->order_model->update_order($id_order, $data)) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Pesanan berhasil ditandai sebagai selesai'
+                ]);
+                return;
+            }
+            $this->session->set_flashdata('success', 'Pesanan berhasil ditandai sebagai selesai');
+        } else {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Gagal memperbarui status pesanan'
+                ]);
+                return;
+            }
+            $this->session->set_flashdata('error', 'Gagal memperbarui status pesanan');
+        }
+
+        if (!$this->input->is_ajax_request()) {
+            redirect('orders/detail/' . $id_order);
+        }
     }
 }

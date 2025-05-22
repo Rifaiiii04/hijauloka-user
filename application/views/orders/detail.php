@@ -234,9 +234,64 @@
 
 <script>
 function completeOrder(orderId) {
-    if (confirm('Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?')) {
-        window.location.href = `<?= base_url('orders/complete/') ?>${orderId}`;
-    }
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, tandai selesai',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Memproses...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Send AJAX request
+            fetch(`<?= base_url('orders/complete/') ?>${orderId}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Pesanan berhasil ditandai sebagai selesai',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => {
+                        // Reload the page to show updated status
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: data.message || 'Terjadi kesalahan saat memproses pesanan',
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat memproses permintaan',
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6'
+                });
+            });
+        }
+    });
 }
 </script>
 
