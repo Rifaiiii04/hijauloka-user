@@ -132,7 +132,23 @@
     <?php endif; ?>
 </div>
 
-<!-- Add these styles before the existing script section -->
+<!-- Replace the existing cart notification modal with this toast-style notification -->
+<div id="cartNotification" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 hidden transform transition-all duration-300 max-w-sm">
+    <div class="flex items-center">
+        <div class="flex-shrink-0 bg-green-100 rounded-full p-2 mr-3">
+            <i class="fas fa-check text-green-600"></i>
+        </div>
+        <div>
+            <h3 class="font-medium text-gray-900">Berhasil!</h3>
+            <p class="text-sm text-gray-600">Produk telah ditambahkan ke keranjang</p>
+        </div>
+        <button onclick="closeCartNotification()" class="ml-4 text-gray-400 hover:text-gray-500">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Add these styles to your existing style section -->
 <style>
     @keyframes heartbeat {
         0% { transform: scale(1); }
@@ -160,40 +176,68 @@
         transition: color 0.2s ease-in-out;
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes bounce-once {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .animate-bounce-once {
+        animation: bounce-once 0.5s ease-in-out;
     }
     
-    @keyframes fadeOut {
-        from { opacity: 1; transform: translateY(0); }
-        to { opacity: 0; transform: translateY(-20px); }
+    /* Custom notification styles */
+    .custom-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 16px;
+        z-index: 1000;
+        max-width: 350px;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease;
     }
     
-    .animate-fadeIn {
-        animation: fadeIn 0.3s ease-out forwards;
+    .custom-notification.show {
+        transform: translateY(0);
+        opacity: 1;
     }
     
-    .animate-fadeOut {
-        animation: fadeOut 0.3s ease-in forwards;
+    .custom-notification.error {
+        border-left: 4px solid #ef4444;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+    }
+    
+    .notification-icon {
+        margin-right: 12px;
+        font-size: 24px;
+    }
+    
+    .notification-icon.success {
+        color: #22c55e;
+    }
+    
+    .notification-icon.error {
+        color: #ef4444;
+    }
+    
+    .notification-text h4 {
+        margin: 0 0 4px 0;
+        font-weight: 600;
+    }
+    
+    .notification-text p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
     }
 </style>
-
-<!-- Replace the existing cart notification modal with this toast-style notification -->
-<div id="cartNotification" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 hidden transform transition-all duration-300 max-w-sm">
-    <div class="flex items-center">
-        <div class="flex-shrink-0 bg-green-100 rounded-full p-2 mr-3">
-            <i class="fas fa-check text-green-600"></i>
-        </div>
-        <div>
-            <h3 class="font-medium text-gray-900">Berhasil!</h3>
-            <p class="text-sm text-gray-600">Produk telah ditambahkan ke keranjang</p>
-        </div>
-        <button onclick="closeCartNotification()" class="ml-4 text-gray-400 hover:text-gray-500">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-</div>
 
 <script>
 // Search functionality
@@ -292,7 +336,7 @@ function toggleWishlist(button, productId) {
     });
 }
 
-// Add to cart functionality
+// Add to cart functionality - replace with the new version
 function addToCart(productId, button) {
     <?php if (!$this->session->userdata('logged_in')): ?>
         document.getElementById('loginPrompt').classList.remove('hidden');
@@ -304,58 +348,73 @@ function addToCart(productId, button) {
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     button.disabled = true;
 
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', 1);
+
     fetch('<?= base_url('cart/add') ?>', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `id_product=${productId}&quantity=1`
+        body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
+        button.innerHTML = originalContent;
+        button.disabled = false;
+        
         if (data.success) {
-            // Show toast notification
-            const notification = document.getElementById('cartNotification');
-            notification.classList.remove('hidden');
-            notification.classList.add('animate-fadeIn');
-            
-            // Auto-hide after 3 seconds
-            setTimeout(() => {
-                closeCartNotification();
-            }, 3000);
-            
-            // Update cart count if needed
-            updateCartCount();
+            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
         } else {
-            // Show error message
-            const errorMessage = data.message || 'Gagal menambahkan ke keranjang';
-            alert(errorMessage);
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
-    })
-    .finally(() => {
-        // Restore button state
         button.innerHTML = originalContent;
         button.disabled = false;
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
     });
 }
 
-function closeCartNotification() {
-    const notification = document.getElementById('cartNotification');
-    notification.classList.add('animate-fadeOut');
+// Add the showNotification function
+function showNotification(type, title, message) {
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon ${type}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            </div>
+            <div class="notification-text">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
     setTimeout(() => {
-        notification.classList.add('hidden');
-        notification.classList.remove('animate-fadeOut', 'animate-fadeIn');
-    }, 300);
+        notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// You can keep the existing closeCartNotification function for backward compatibility
+function closeCartNotification() {
+    document.getElementById('cartNotification').classList.add('hidden');
 }
 
 // Function to update cart count in the header
