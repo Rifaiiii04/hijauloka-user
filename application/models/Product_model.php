@@ -180,23 +180,34 @@ class Product_model extends CI_Model {
         return $this->db->get()->result_array();
     }
 
-    // Updated method to handle both string category names and numeric category IDs
+    // Updated method to properly handle product categories
     public function get_products_by_category($category) {
         $this->db->select('product.*');
         $this->db->from('product');
         
         if ($category != 'all') {
             if (is_numeric($category)) {
-                // If category is a number, treat it as id_kategori
+                // Check both direct category and junction table
+                $this->db->group_start();
+                // Check direct category in product table
                 $this->db->where('product.id_kategori', $category);
+                // Also check junction table
+                $this->db->or_where_in('product.id_product', function($subquery) use ($category) {
+                    $subquery->select('id_product')
+                             ->from('product_category')
+                             ->where('id_kategori', $category);
+                });
+                $this->db->group_end();
             } else {
-                // If category is a string, treat it as kategori name
-                $this->db->where('kategori', $category);
+                // If category is a string, join with category table to find by name
+                $this->db->join('category', 'product.id_kategori = category.id_kategori', 'left');
+                $this->db->where('category.nama_kategori', $category);
             }
         }
         
         $this->db->where('product.stok >', 0); // Only show products in stock
         $this->db->order_by('product.id_product', 'DESC'); // Newest first
+        $this->db->group_by('product.id_product'); // Prevent duplicates
         
         $query = $this->db->get();
         return $query->result_array();
