@@ -152,11 +152,12 @@ class Product extends CI_Controller {
         $data['title'] = $category->nama_kategori;
         $data['category'] = $category;
         
-        // Get products in this category
-        $this->db->where('id_kategori', $id_kategori);
-        $this->db->where('stok >', 0); // Only show products in stock
-        $data['products'] = $this->db->get('product')->result_array();
+        // Get products in this category - using the product model instead of direct DB query
+        $data['products'] = $this->product_model->get_products_by_category($id_kategori);
         
+        // Load views with header and footer
+        $this->load->view('templates/header', $data);
         $this->load->view('product/category', $data);
+        $this->load->view('templates/footer');
     }
 }

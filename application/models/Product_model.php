@@ -192,6 +192,17 @@ class Product_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_products_by_category($id_kategori) {
+        $this->db->select('product.*');
+        $this->db->from('product');
+        $this->db->where('product.id_kategori', $id_kategori);
+        $this->db->where('product.stok >', 0); // Only show products in stock
+        $this->db->order_by('product.id_product', 'DESC'); // Newest first
+        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function get_products_by_category_id($category_id)
     {
         $this->db->where('id_kategori', $category_id);
