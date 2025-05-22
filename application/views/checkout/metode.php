@@ -86,12 +86,11 @@
                                     <?php if (!empty($primary_address)): ?>
                                         <p class="text-sm text-gray-500 mt-1">
                                             Jarak: <?= number_format($primary_address['jarak'], 1) ?> KM
-                                            (<?= $primary_address['jarak'] <= 1 ? 'Rp 5.000' : 'Rp 10.000' ?>)
                                         </p>
                                     <?php endif; ?>
                                 </div>
                                 <span class="font-semibold text-green-600" id="shipping-cost-display">
-                                    Rp <?= !empty($primary_address) ? number_format($primary_address['jarak'] <= 1 ? 5000 : 10000, 0, ',', '.') : '5.000' ?>
+                                    Rp 5.000
                                 </span>
                             </div>
                         </label>
@@ -160,13 +159,13 @@
                     <div class="flex justify-between text-gray-600">
                         <span>Ongkos Kirim</span>
                         <span id="shipping-cost">
-                            Rp <?= !empty($primary_address) ? number_format($primary_address['jarak'] <= 1 ? 5000 : 10000, 0, ',', '.') : '5.000' ?>
+                            Rp 5.000
                         </span>
                     </div>
                     <div class="flex justify-between font-semibold text-gray-900 text-lg">
                         <span>Total</span>
                         <span id="total-amount">
-                            Rp <?= number_format($total + (!empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000), 0, ',', '.') ?>
+                            Rp <?= number_format($total + 5000, 0, ',', '.') ?>
                         </span>
                     </div>
                 </div>
@@ -358,8 +357,7 @@
 <script>
 document.querySelectorAll('input[name="kurir"]').forEach(radio => {
     radio.addEventListener('change', function() {
-        const shippingCost = this.value === 'hijauloka' ? 
-            (<?= !empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000 ?>) : 0;
+        const shippingCost = this.value === 'hijauloka' ? 5000 : 0;
         document.getElementById('shipping-cost').textContent = `Rp ${shippingCost.toLocaleString('id-ID')}`;
         document.getElementById('total-amount').textContent = `Rp ${(<?= $total ?> + shippingCost).toLocaleString('id-ID')}`;
         document.getElementById('selected-kurir').value = this.value;
@@ -558,13 +556,13 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
         const amountInput = document.createElement('input');
         amountInput.type = 'hidden';
         amountInput.name = 'amount';
-        amountInput.value = <?= $total + (!empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000) ?>;
+        amountInput.value = <?= $total + 5000 ?>;
         midtransForm.appendChild(amountInput);
         
         const shippingInput = document.createElement('input');
         shippingInput.type = 'hidden';
         shippingInput.name = 'shipping_cost';
-        shippingInput.value = <?= !empty($primary_address) ? ($primary_address['jarak'] <= 1 ? 5000 : 10000) : 5000 ?>;
+        shippingInput.value = 5000;
         midtransForm.appendChild(shippingInput);
         
         // Tambahkan metode pembayaran secara eksplisit
