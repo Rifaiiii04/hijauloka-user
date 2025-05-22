@@ -40,7 +40,7 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
             <a href="<?= base_url('popular') ?>" class="inline-block mt-4 px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all font-semibold text-lg shadow-md hover:scale-105">Belanja Sekarang</a>
         </div>
     <?php else: ?>
-        <div class="space-y-7">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <?php foreach ($filtered_orders as $order): ?>
                 <?php
                 $status_icon = [
@@ -61,38 +61,53 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
                 $badge = $badge_color[$order['stts_pemesanan']] ?? 'bg-gray-100 text-gray-700';
                 $pay_badge = $order['stts_pembayaran'] == 'lunas' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
                 ?>
-                <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:shadow-xl transition-all duration-300 animate-slide-in hover:scale-[1.02]">
-                    <div class="flex items-center gap-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-lg transition-all duration-300 animate-slide-in hover:scale-[1.02] flex flex-col">
+                    <!-- Order Header -->
+                    <div class="flex items-center gap-3 mb-3">
                         <div class="flex-shrink-0">
-                            <i class="fas <?= $icon ?> text-3xl animate-pulse"></i>
+                            <i class="fas <?= $icon ?> text-2xl animate-pulse"></i>
                         </div>
-                        <div>
-                            <div class="font-bold text-green-800 text-lg mb-1">#<?= $order['id_order'] ?> <span class="text-xs text-gray-400">| <?= date('d M Y, H:i', strtotime($order['tgl_pemesanan'])) ?></span></div>
-                            <div class="flex flex-wrap gap-2 mb-1">
-                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold <?= $badge ?> capitalize animate-fade-in"><?= $order['stts_pemesanan'] ?></span>
-                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold <?= $pay_badge ?> capitalize animate-fade-in">Pembayaran: <?= $order['stts_pembayaran'] ?></span>
-                            </div>
-                            <div class="text-sm text-gray-700 mb-1">Total: <span class="font-bold text-green-700">Rp<?= number_format($order['total_harga'], 0, ',', '.') ?></span></div>
+                        <div class="flex-grow min-w-0">
+                            <div class="font-bold text-green-800 text-base truncate">#<?= $order['id_order'] ?></div>
+                            <div class="text-xs text-gray-400"><?= date('d M Y, H:i', strtotime($order['tgl_pemesanan'])) ?></div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2 sm:gap-0 sm:flex-row sm:items-center">
-                        <a href="<?= base_url('orders/detail/' . $order['id_order']) ?>" class="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow text-sm flex items-center gap-2 hover:scale-105">
+
+                    <!-- Status Badges -->
+                    <div class="flex flex-wrap gap-1.5 mb-3">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold <?= $badge ?> capitalize animate-fade-in"><?= $order['stts_pemesanan'] ?></span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold <?= $pay_badge ?> capitalize animate-fade-in"><?= $order['stts_pembayaran'] ?></span>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="text-sm text-gray-700 mb-4">
+                        Total: <span class="font-bold text-green-700">Rp<?= number_format($order['total_harga'], 0, ',', '.') ?></span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-auto space-y-2">
+                        <a href="<?= base_url('orders/detail/' . $order['id_order']) ?>" 
+                           class="w-full px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow text-sm flex items-center justify-center gap-2 hover:scale-105">
                             <i class="fas fa-eye"></i> Detail
                         </a>
+                        
                         <?php if ($order['stts_pemesanan'] === 'pending'): ?>
-                            <button onclick="cancelOrder(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
+                            <button onclick="cancelOrder(<?= $order['id_order'] ?>)" 
+                                    class="w-full px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all shadow text-sm flex items-center justify-center gap-2 hover:scale-105">
                                 <i class="fas fa-times"></i> Batalkan
                             </button>
                         <?php endif; ?>
                         
                         <?php if ($order['stts_pemesanan'] === 'dikirim'): ?>
-                            <button onclick="completeOrder(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
+                            <button onclick="completeOrder(<?= $order['id_order'] ?>)" 
+                                    class="w-full px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow text-sm flex items-center justify-center gap-2 hover:scale-105">
                                 <i class="fas fa-check"></i> Selesai
                             </button>
                         <?php endif; ?>
                         
                         <?php if ($order['stts_pemesanan'] === 'selesai'): ?>
-                            <button onclick="showReviewModal(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
+                            <button onclick="showReviewModal(<?= $order['id_order'] ?>)" 
+                                    class="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-all shadow text-sm flex items-center justify-center gap-2 hover:scale-105">
                                 <i class="fas fa-star"></i> Beri Ulasan
                             </button>
                         <?php endif; ?>
