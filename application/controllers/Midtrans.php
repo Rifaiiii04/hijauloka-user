@@ -1,7 +1,26 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once APPPATH . '../vendor/autoload.php';
+// Fix the path to the autoload file
+if (file_exists(FCPATH . 'vendor/autoload.php')) {
+    require_once FCPATH . 'vendor/autoload.php';
+} else {
+    // Fallback to manual class loading if autoload.php doesn't exist
+    require_once APPPATH . 'libraries/Midtrans/Midtrans.php';
+    require_once APPPATH . 'libraries/Midtrans/Snap.php';
+    require_once APPPATH . 'libraries/Midtrans/Transaction.php';
+    require_once APPPATH . 'libraries/Midtrans/ApiRequestor.php';
+    require_once APPPATH . 'libraries/Midtrans/Notification.php';
+    require_once APPPATH . 'libraries/Midtrans/CoreApi.php';
+    require_once APPPATH . 'libraries/Midtrans/Config.php';
+}
+
+// Set Midtrans configuration with your sandbox keys
+\Midtrans\Config::$serverKey = 'SB-Mid-server-cHC4Z3JHh_Z8dHnQ8f4kK89x';
+\Midtrans\Config::$clientKey = 'SB-Mid-client-nJRhbIURiIRk4n5S';
+\Midtrans\Config::$isProduction = false;
+\Midtrans\Config::$isSanitized = true;
+\Midtrans\Config::$is3ds = true;
 
 class Midtrans extends CI_Controller {
 
