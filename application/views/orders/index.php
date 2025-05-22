@@ -15,7 +15,7 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
     return $o['stts_pemesanan'] === $status;
 });
 ?>
-<div class="container mx-auto max-w-2xl py-12 p-3 min-h-[60vh]">
+<div class="container mx-auto max-w-7xl py-12 p-3 min-h-[60vh]">
     <div class="mb-6 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <a href="<?= base_url() ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
@@ -40,7 +40,7 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
             <a href="<?= base_url('popular') ?>" class="inline-block mt-4 px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all font-semibold text-lg shadow-md hover:scale-105">Belanja Sekarang</a>
         </div>
     <?php else: ?>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
             <?php foreach ($filtered_orders as $order): ?>
                 <?php
                 $status_icon = [
