@@ -40,7 +40,7 @@
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800 group-hover:text-green-600 transition-colors duration-300"><?= htmlspecialchars($category->nama_kategori) ?></h3>
-                    <p class="text-sm text-gray-500"><?= $product_count ?> produk</p>
+                    
                 </div>
             </div>
         </a>

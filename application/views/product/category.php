@@ -326,7 +326,7 @@ function addToCart(productId, button) {
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: `id_product=${productId}&jumlah=1`
+        body: `id_product=${productId}&quantity=1`
     })
     .then(response => {
         if (!response.ok) {
