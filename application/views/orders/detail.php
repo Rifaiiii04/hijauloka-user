@@ -235,7 +235,7 @@
 <script>
 function completeOrder(orderId) {
     if (confirm('Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?')) {
-        window.location.href = `<?= base_url('order/complete/') ?>${orderId}`;
+        window.location.href = `<?= base_url('orders/complete/') ?>${orderId}`;
     }
 }
 </script>
