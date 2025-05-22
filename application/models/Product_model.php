@@ -182,8 +182,12 @@ class Product_model extends CI_Model {
 
     public function get_products_by_category($category) {
         if ($category != 'all') {
-            $this->db->where('id_kategori', $category);
+            $this->db->where('kategori', $category);
         }
+        
+        $this->db->where('stok >', 0); // Only show products in stock
+        $this->db->order_by('id_product', 'DESC'); // Newest first
+        
         $query = $this->db->get('product');
         return $query->result_array();
     }

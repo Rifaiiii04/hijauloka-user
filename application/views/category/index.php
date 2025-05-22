@@ -47,7 +47,7 @@
                                 $product['gambar']) : 
                             'default.jpg';
                         ?>
-                        <img src="<?= base_url('uploads/' . $gambar) ?>" 
+                        <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar ?>" 
                              alt="<?= $product['nama_product'] ?>" 
                              class="absolute inset-0 w-full h-full object-cover">
                     </div>

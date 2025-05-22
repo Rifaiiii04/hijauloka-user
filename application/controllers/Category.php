@@ -12,11 +12,17 @@ class Category extends CI_Controller {
         $this->load->library('pagination');
     }
     
-    public function index() {
-        // Get all categories with product count
-        $data['categories'] = $this->category_model->get_category_with_product_count();
-        $data['title'] = 'All Categories';
+    public function index($category = 'all') {
+        // Set page title
+        $data['title'] = ucfirst($category) . ' Products';
         
+        // Pass category to view
+        $data['category'] = $category;
+        
+        // Get products by category
+        $data['products'] = $this->product_model->get_products_by_category($category);
+        
+        // Load views
         $this->load->view('templates/header', $data);
         $this->load->view('category/index', $data);
         $this->load->view('templates/footer');
