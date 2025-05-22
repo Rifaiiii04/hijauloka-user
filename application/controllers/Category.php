@@ -76,7 +76,7 @@ class Category extends CI_Controller {
         
         $this->load->view('templates/header', $data);
         $this->load->view('category/plants', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
     
     public function view($category_slug) {
@@ -130,7 +130,7 @@ class Category extends CI_Controller {
         
         $this->load->view('templates/header', $data);
         $this->load->view('category/view', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/footer');
     }
     
     public function filter() {
