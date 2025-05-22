@@ -180,28 +180,39 @@ class Product_model extends CI_Model {
         return $this->db->get()->result_array();
     }
 
+    // Updated method to handle both string category names and numeric category IDs
     public function get_products_by_category($category) {
-        if ($category != 'all') {
-            $this->db->where('kategori', $category);
-        }
-        
-        $this->db->where('stok >', 0); // Only show products in stock
-        $this->db->order_by('id_product', 'DESC'); // Newest first
-        
-        $query = $this->db->get('product');
-        return $query->result_array();
-    }
-
-    public function get_products_by_category($id_kategori) {
         $this->db->select('product.*');
         $this->db->from('product');
-        $this->db->where('product.id_kategori', $id_kategori);
+        
+        if ($category != 'all') {
+            if (is_numeric($category)) {
+                // If category is a number, treat it as id_kategori
+                $this->db->where('product.id_kategori', $category);
+            } else {
+                // If category is a string, treat it as kategori name
+                $this->db->where('kategori', $category);
+            }
+        }
+        
         $this->db->where('product.stok >', 0); // Only show products in stock
         $this->db->order_by('product.id_product', 'DESC'); // Newest first
         
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    // Remove this duplicate method
+    // public function get_products_by_category($id_kategori) {
+    //     $this->db->select('product.*');
+    //     $this->db->from('product');
+    //     $this->db->where('product.id_kategori', $id_kategori);
+    //     $this->db->where('product.stok >', 0); // Only show products in stock
+    //     $this->db->order_by('product.id_product', 'DESC'); // Newest first
+    //     
+    //     $query = $this->db->get();
+    //     return $query->result_array();
+    // }
 
     public function get_products_by_category_id($category_id)
     {
