@@ -7,13 +7,14 @@ class Midtrans extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('order_model');
         $this->load->model('cart_model');
         $this->load->library('session');
         
-        // Load Midtrans config
+        // Load Midtrans configuration
         $this->load->config('midtrans');
         
-        // Configure Midtrans with values from config file
+        // Initialize Midtrans configuration
         \Midtrans\Config::$serverKey = $this->config->item('midtrans_server_key');
         \Midtrans\Config::$isProduction = $this->config->item('midtrans_is_production');
         \Midtrans\Config::$isSanitized = $this->config->item('midtrans_is_sanitized');
@@ -258,34 +259,5 @@ class Midtrans extends CI_Controller {
             $this->session->set_flashdata('error', 'Gagal memeriksa status: ' . $e->getMessage());
             redirect('orders/detail/' . $id_order);
         }
-    }
-
-    public function direct_payment($id_order) {
-        // Ambil data order
-        $order = $this->db->get_where('orders', ['id_order' => $id_order])->row();
-        if (!$order) {
-            show_404();
-        }
-        
-        // Ambil data transaksi
-        $transaksi = $this->db->get_where('transaksi', ['order_id' => $id_order])->row();
-        if (!$transaksi) {
-            $this->session->set_flashdata('error', 'Data transaksi tidak ditemukan');
-            redirect('user/orders');
-        }
-        
-        // Ambil data user
-        $user = $this->db->get_where('user', ['id_user' => $order->id_user])->row();
-        
-        // Siapkan data untuk view
-        $data['snap_token'] = $transaksi->payment_token;
-        $data['order_id'] = $order->midtrans_order_id;
-        $data['id_order'] = $id_order;
-        $data['amount'] = $order->total_harga;
-        $data['customer_name'] = $user->nama;
-        $data['customer_email'] = $user->email;
-        $data['customer_phone'] = $user->no_tlp;
-        
-        $this->load->view('checkout/midtrans_payment', $data);
     }
 }

@@ -33,4 +33,3 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /node_modules/
 
 # Ignore Midtrans configuration with sensitive data
-application/config/midtrans.php
