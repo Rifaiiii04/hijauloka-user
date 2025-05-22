@@ -210,17 +210,6 @@
                 </div>
             </div>
         <?php endif; ?>
-
-        <!-- Complete Order Button -->
-        <?php if ($current_status == 'dikirim'): ?>
-            <div class="mt-6">
-                <button onclick="completeOrder(<?= $order['id_order'] ?>)" 
-                        class="w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-check-circle"></i>
-                    Tandai Pesanan Selesai
-                </button>
-            </div>
-        <?php endif; ?>
     </div>
 
     <!-- Back Button -->
@@ -231,68 +220,5 @@
         </a>
     </div>
 </div>
-
-<script>
-function completeOrder(orderId) {
-    Swal.fire({
-        title: 'Konfirmasi',
-        text: 'Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, tandai selesai',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Show loading state
-            Swal.fire({
-                title: 'Memproses...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            // Send AJAX request
-            fetch(`<?= base_url('orders/complete/') ?>${orderId}`, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Pesanan berhasil ditandai sebagai selesai',
-                        icon: 'success',
-                        confirmButtonColor: '#3085d6'
-                    }).then(() => {
-                        // Reload the page to show updated status
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Gagal!',
-                        text: data.message || 'Terjadi kesalahan saat memproses pesanan',
-                        icon: 'error',
-                        confirmButtonColor: '#3085d6'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Terjadi kesalahan saat memproses permintaan',
-                    icon: 'error',
-                    confirmButtonColor: '#3085d6'
-                });
-            });
-        }
-    });
-}
-</script>
 
 <?php $this->load->view('templates/footer'); ?>
