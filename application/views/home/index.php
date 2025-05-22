@@ -485,7 +485,7 @@ function showNotification(type, title, message) {
                 <?php foreach ($featured_blog_posts as $post): ?>
                     <!-- Featured Post - Modern Design -->
                     <div class="rounded-xl overflow-hidden shadow-lg group h-[400px] relative hover:shadow-xl transition-all duration-300">
-                        <img src="<?= !empty($post['featured_image']) ? 'http:https://admin.hijauloka.my.id/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                        <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
                              alt="<?= $post['title'] ?>"
                              onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -516,7 +516,7 @@ function showNotification(type, title, message) {
                         <!-- Small Post -->
                         <div class="flex gap-4 group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="<?= !empty($post['featured_image']) ? 'https://admin.hijauloka.my.id/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
+                                <img src="<?= !empty($post['featured_image']) ? 'http://localhost/hijauloka/uploads/blog/' . $post['featured_image'] : base_url('assets/img/news1.png') ?>" 
                                      alt="<?= $post['title'] ?>"
                                      onerror="this.onerror=null; this.src='<?= base_url('assets/img/news1.png') ?>';" 
                                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">

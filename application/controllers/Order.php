@@ -16,7 +16,12 @@ class Order extends CI_Controller {
         }
     }
     
-    public function detail($id_order) {
+    public function detail($id_order = null) {
+        // If no ID provided, redirect to history
+        if ($id_order === null) {
+            redirect('order/history');
+        }
+        
         // Check if user is logged in
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');

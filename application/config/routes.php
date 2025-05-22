@@ -61,3 +61,4 @@ $route['wishlist'] = 'wishlist/index';
 $route['collection/plants/outdoor'] = 'plants/outdoor';
 $route['collection/plants/indoor'] = 'plants/indoor';
 $route['collection/plants/mudah-dirawat'] = 'plants/mudah_dirawat';
+$route['order/detail'] = 'order/history';
