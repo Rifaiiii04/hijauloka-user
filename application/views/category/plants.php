@@ -12,47 +12,21 @@
     <!-- Categories Grid -->
     <div id="categoriesGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <?php
-        // Display collection categories
-        foreach ($collection_categories as $category) {
-            // Generate a consistent color based on category name
-            $colorHash = substr(md5($category['name']), 0, 6);
-        ?>
-        <a href="<?= base_url($category['route']) ?>" class="category-card group">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 text-center h-full border border-gray-100">
-                <div class="relative h-48 overflow-hidden bg-gradient-to-br from-green-500 to-green-700" style="background-color: #<?= $colorHash ?>;">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-leaf text-white text-4xl opacity-50"></i>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-green-600 transition-colors duration-300"><?= htmlspecialchars($category['name']) ?></h3>
-                    <?php if(isset($category['description'])): ?>
-                    <p class="text-sm text-gray-500"><?= htmlspecialchars($category['description']) ?></p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </a>
-        <?php } ?>
-        
-        <?php
-        // Get additional categories from database
+        // Get all categories from database
         $this->db->select('id_kategori, nama_kategori');
         $this->db->from('category');
-        // Exclude categories that we've already hardcoded
-        if (!empty($exclude_names)) {
-            $this->db->where_not_in('nama_kategori', $exclude_names);
-        }
         $this->db->order_by('nama_kategori', 'ASC');
         $query = $this->db->get();
         $categories = $query->result();
         
-        // Display each additional category from database
+        // Display each category from database
         foreach ($categories as $category) {
-            // Create URL-friendly slug from category name
-            $slug = url_title($category->nama_kategori, 'dash', TRUE);
-            
             // Generate a consistent color based on category name
             $colorHash = substr(md5($category->nama_kategori), 0, 6);
+            
+            // Count products in this category
+            $this->db->where('id_kategori', $category->id_kategori);
+            $product_count = $this->db->count_all_results('product');
         ?>
         <a href="<?= base_url('category/view/' . $category->id_kategori) ?>" class="category-card group">
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 text-center h-full border border-gray-100">
@@ -63,12 +37,13 @@
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800 group-hover:text-green-600 transition-colors duration-300"><?= htmlspecialchars($category->nama_kategori) ?></h3>
+                    <p class="text-sm text-gray-500"><?= $product_count ?> produk</p>
                 </div>
             </div>
         </a>
         <?php } ?>
         
-        <?php if (empty($categories) && empty($collection_categories)): ?>
+        <?php if (empty($categories)): ?>
         <div class="col-span-full text-center py-12">
             <div class="bg-gray-50 rounded-lg p-8 inline-block">
                 <i class="fas fa-leaf text-gray-300 text-5xl mb-4"></i>
@@ -140,42 +115,44 @@
 <script>
 // Prevent multiple event listeners by removing any existing ones
 const quickSearchInput = document.getElementById('quickSearch');
-const oldQuickSearch = quickSearchInput.cloneNode(true);
-quickSearchInput.parentNode.replaceChild(oldQuickSearch, quickSearchInput);
+if (quickSearchInput) {
+    const oldQuickSearch = quickSearchInput.cloneNode(true);
+    quickSearchInput.parentNode.replaceChild(oldQuickSearch, quickSearchInput);
 
-// Add the event listener once
-document.getElementById('quickSearch').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase().trim();
-    const categoryCards = document.querySelectorAll('.category-card');
-    let visibleCount = 0;
-    
-    categoryCards.forEach((card, index) => {
-        const categoryName = card.querySelector('h3').textContent.toLowerCase();
-        const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+    // Add the event listener once
+    document.getElementById('quickSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        const categoryCards = document.querySelectorAll('.category-card');
+        let visibleCount = 0;
         
-        if (categoryName.includes(searchTerm) || description.includes(searchTerm)) {
-            card.style.display = '';
-            card.style.setProperty('--animation-order', visibleCount);
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
+        categoryCards.forEach((card, index) => {
+            const categoryName = card.querySelector('h3').textContent.toLowerCase();
+            const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+            
+            if (categoryName.includes(searchTerm) || description.includes(searchTerm)) {
+                card.style.display = '';
+                card.style.setProperty('--animation-order', visibleCount);
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show message if no categories match
+        const noResultsMessage = document.querySelector('.no-results-message');
+        
+        if (visibleCount === 0 && searchTerm !== '') {
+            if (!noResultsMessage) {
+                const message = document.createElement('div');
+                message.className = 'col-span-full text-center py-8 no-results-message';
+                message.innerHTML = '<div class="bg-gray-50 rounded-lg p-8 inline-block"><i class="fas fa-search text-gray-300 text-4xl mb-4"></i><p class="text-gray-500 text-lg">Tidak ada kategori yang sesuai dengan pencarian Anda.</p></div>';
+                document.getElementById('categoriesGrid').appendChild(message);
+            }
+        } else if (noResultsMessage) {
+            noResultsMessage.remove();
         }
     });
-    
-    // Show message if no categories match
-    const noResultsMessage = document.querySelector('.no-results-message');
-    
-    if (visibleCount === 0 && searchTerm !== '') {
-        if (!noResultsMessage) {
-            const message = document.createElement('div');
-            message.className = 'col-span-full text-center py-8 no-results-message';
-            message.innerHTML = '<div class="bg-gray-50 rounded-lg p-8 inline-block"><i class="fas fa-search text-gray-300 text-4xl mb-4"></i><p class="text-gray-500 text-lg">Tidak ada kategori yang sesuai dengan pencarian Anda.</p></div>';
-            document.getElementById('categoriesGrid').appendChild(message);
-        }
-    } else if (noResultsMessage) {
-        noResultsMessage.remove();
-    }
-});
+}
 
 function closeLoginPrompt() {
     const modal = document.getElementById('loginPrompt');
