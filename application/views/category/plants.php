@@ -24,11 +24,14 @@
             // Generate a consistent color based on category name
             $colorHash = substr(md5($category->nama_kategori), 0, 6);
             
-            // Count products in this category
+            // Count products in this category - fixed query to properly count products
+            $this->db->select('COUNT(*) as count');
+            $this->db->from('product');
             $this->db->where('id_kategori', $category->id_kategori);
-            $product_count = $this->db->count_all_results('product');
+            $count_query = $this->db->get();
+            $product_count = $count_query->row()->count;
         ?>
-        <a href="<?= base_url('category/view/' . $category->id_kategori) ?>" class="category-card group">
+        <a href="<?= base_url('product/category/' . $category->id_kategori) ?>" class="category-card group">
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 text-center h-full border border-gray-100">
                 <div class="relative h-48 overflow-hidden bg-gradient-to-br from-green-500 to-green-700" style="background-color: #<?= $colorHash ?>;">
                     <div class="absolute inset-0 flex items-center justify-center">

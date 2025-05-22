@@ -139,4 +139,27 @@ class Product extends CI_Controller {
             $this->product_model->update_product_rating($id_product, $average_rating);
         }
     }
+
+    public function category($id_kategori) {
+        $data['title'] = 'Products by Category';
+        
+        // Get category details
+        $this->load->model('category_model');
+        $category = $this->db->get_where('category', ['id_kategori' => $id_kategori])->row();
+        
+        if (!$category) {
+            show_404();
+        }
+        
+        $data['category'] = $category;
+        
+        // Get products in this category
+        $this->db->where('id_kategori', $id_kategori);
+        $this->db->where('stok >', 0); // Only show products in stock
+        $data['products'] = $this->db->get('product')->result_array();
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('product/category', $data);
+        $this->load->view('templates/footer');
+    }
 }
