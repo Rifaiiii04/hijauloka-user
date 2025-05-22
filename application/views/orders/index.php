@@ -220,7 +220,7 @@ function showReviewModal(orderId) {
                             </div>
                         </div>
                         
-                        <form action="<?= base_url('product/submit_review') ?>" method="post" class="review-form">
+                        <form action="<?= base_url('product/submit_review') ?>" method="post" class="review-form" enctype="multipart/form-data">
                             <input type="hidden" name="id_product" value="${product.id_product}">
                             <input type="hidden" name="id_order" value="${orderId}">
                             
@@ -242,6 +242,27 @@ function showReviewModal(orderId) {
                                 <textarea name="ulasan" rows="3" 
                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                                           placeholder="Bagikan pengalaman Anda dengan produk ini"></textarea>
+                            </div>
+                            
+                            <!-- New photo upload field -->
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Foto Produk (Opsional)</label>
+                                <div class="flex items-center justify-center w-full">
+                                    <label class="flex flex-col w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-all">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <i class="fas fa-cloud-upload-alt text-gray-400 text-2xl mb-2"></i>
+                                            <p class="text-xs text-gray-500">Klik untuk upload foto</p>
+                                            <p class="text-xs text-gray-400 mt-1">JPG, PNG atau JPEG (Maks. 2MB)</p>
+                                        </div>
+                                        <input type="file" name="foto_review" class="hidden" accept="image/png, image/jpeg, image/jpg" onchange="previewImage(this)"/>
+                                    </label>
+                                </div>
+                                <div class="mt-2 hidden preview-container">
+                                    <img src="#" alt="Preview" class="h-32 rounded-lg object-cover preview-image">
+                                    <button type="button" onclick="removeImage(this)" class="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                             
                             <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-all">

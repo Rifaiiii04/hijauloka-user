@@ -3,53 +3,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Review_model extends CI_Model {
     
-    public function add_review($data)
-    {
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    public function add_review($data) {
         $this->db->insert('review_rating', $data);
         return $this->db->insert_id();
     }
     
-    public function update_review($id_review, $data)
-    {
-        $this->db->where('id_review', $id_review);
-        return $this->db->update('review_rating', $data);
+    public function get_product_reviews($product_id, $limit = 10, $offset = 0) {
+        $this->db->select('r.*, u.nama, u.foto_profil');
+        $this->db->from('review_rating r');
+        $this->db->join('user u', 'r.id_user = u.id_user');
+        $this->db->where('r.id_product', $product_id);
+        $this->db->where('r.stts_review', 'disetujui');
+        $this->db->order_by('r.tgl_review', 'DESC');
+        $this->db->limit($limit, $offset);
+        
+        return $this->db->get()->result_array();
     }
     
-    public function get_review_by_id($id_review)
-    {
-        $this->db->where('id_review', $id_review);
-        $query = $this->db->get('review_rating');
-        return $query->row_array();
-    }
-    
-    public function get_review_by_user_and_product($id_user, $id_product)
-    {
-        $this->db->where('id_user', $id_user);
-        $this->db->where('id_product', $id_product);
-        $query = $this->db->get('review_rating');
-        return $query->row_array();
-    }
-    
-    public function get_approved_reviews_by_product($id_product)
-    {
-        $this->db->select('review_rating.*, user.nama, user.profile_image');
+    public function get_product_rating($product_id) {
+        $this->db->select('AVG(rating) as average_rating, COUNT(*) as review_count');
         $this->db->from('review_rating');
-        $this->db->join('user', 'user.id_user = review_rating.id_user');
-        $this->db->where('review_rating.id_product', $id_product);
-        $this->db->where('review_rating.stts_review', 'disetujui');
-        $this->db->order_by('review_rating.tgl_review', 'DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+        $this->db->where('id_product', $product_id);
+        $this->db->where('stts_review', 'disetujui');
+        
+        $result = $this->db->get()->row_array();
+        
+        return [
+            'average' => round($result['average_rating'], 1),
+            'count' => $result['review_count']
+        ];
     }
     
-    public function get_all_reviews_by_product($id_product)
-    {
-        $this->db->select('review_rating.*, user.nama, user.profile_image');
-        $this->db->from('review_rating');
-        $this->db->join('user', 'user.id_user = review_rating.id_user');
-        $this->db->where('review_rating.id_product', $id_product);
-        $this->db->order_by('review_rating.tgl_review', 'DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+    public function has_user_reviewed($user_id, $product_id) {
+        $this->db->where('id_user', $user_id);
+        $this->db->where('id_product', $product_id);
+        $count = $this->db->count_all_results('review_rating');
+        
+        return $count > 0;
+    }
+    
+    public function get_user_reviews($user_id, $limit = 10, $offset = 0) {
+        $this->db->select('r.*, p.nama_product, p.gambar');
+        $this->db->from('review_rating r');
+        $this->db->join('product p', 'r.id_product = p.id_product');
+        $this->db->where('r.id_user', $user_id);
+        $this->db->order_by('r.tgl_review', 'DESC');
+        $this->db->limit($limit, $offset);
+        
+        return $this->db->get()->result_array();
     }
 }
