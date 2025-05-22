@@ -11,8 +11,18 @@ class Midtrans extends CI_Controller {
         $this->load->model('cart_model');
         $this->load->library('session');
         
+        // Enable error reporting for debugging
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+        
         // Load Midtrans configuration
         $this->load->config('midtrans');
+        
+        // Check if Midtrans library is available
+        if (!class_exists('\Midtrans\Config')) {
+            log_message('error', 'Midtrans library not found. Make sure it is installed via Composer.');
+            show_error('Midtrans library not found. Please contact administrator.');
+        }
         
         // Initialize Midtrans configuration
         \Midtrans\Config::$serverKey = $this->config->item('midtrans_server_key');
@@ -22,92 +32,92 @@ class Midtrans extends CI_Controller {
     }
     
     public function process_payment() {
-        $id_user = $this->session->userdata('id_user');
-        if (!$id_user) {
-            redirect('auth');
-        }
-        
-        // Get checkout data from session
-        $checkout_data = $this->session->userdata('checkout_data');
-        
-        if (empty($checkout_data)) {
-            $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
-            redirect('cart');
-        }
-        
-        // Extract data
-        $cart_items = $checkout_data['cart_items'];
-        $total = $checkout_data['total'];
-        $ongkir = $checkout_data['ongkir'];
-        $kurir = $checkout_data['kurir'];
-        $total_amount = $checkout_data['total_amount'];
-        
-        // Buat order ID unik
-        $order_id = 'HJL-' . time();
-        
-        // Siapkan item details untuk Midtrans
-        $item_details = [];
-        foreach ($cart_items as $item) {
-            $item_details[] = [
-                'id' => $item['id_product'],
-                'price' => $item['harga'],
-                'quantity' => $item['jumlah'],
-                'name' => substr($item['nama_product'], 0, 50) // Batasi panjang nama
-            ];
-        }
-        
-        // Tambahkan biaya pengiriman
-        $item_details[] = [
-            'id' => 'shipping',
-            'price' => $ongkir,
-            'quantity' => 1,
-            'name' => 'Ongkos Kirim'
-        ];
-        
-        // Ambil data customer
-        $customer = $this->db->get_where('user', ['id_user' => $id_user])->row();
-        
-        // Ambil alamat pengiriman utama
-        $shipping_address = $this->db->get_where('shipping_addresses', [
-            'user_id' => $id_user,
-            'is_primary' => 1
-        ])->row();
-        
-        // Siapkan parameter transaksi
-        $transaction_details = [
-            'order_id' => $order_id,
-            'gross_amount' => $total_amount
-        ];
-        
-        // Customer details
-        $customer_details = [
-            'first_name' => $customer->nama,
-            'email' => $customer->email,
-            'phone' => $customer->no_tlp,
-            'billing_address' => [
-                'first_name' => $customer->nama,
-                'phone' => $customer->no_tlp,
-                'address' => $shipping_address ? $shipping_address->address : '',
-                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-                'country_code' => 'IDN'
-            ],
-            'shipping_address' => [
-                'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
-                'phone' => $customer->no_tlp,
-                'address' => $shipping_address ? $shipping_address->address : '',
-                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-                'country_code' => 'IDN'
-            ]
-        ];
-        
-        // Create transaction
-        $transaction = [
-            'transaction_details' => $transaction_details,
-            'item_details' => $item_details,
-            'customer_details' => $customer_details
-        ];
-        
         try {
+            $id_user = $this->session->userdata('id_user');
+            if (!$id_user) {
+                redirect('auth');
+            }
+            
+            // Get checkout data from session
+            $checkout_data = $this->session->userdata('checkout_data');
+            
+            if (empty($checkout_data)) {
+                $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
+                redirect('cart');
+            }
+            
+            // Extract data
+            $cart_items = $checkout_data['cart_items'];
+            $total = $checkout_data['total'];
+            $ongkir = $checkout_data['ongkir'];
+            $kurir = $checkout_data['kurir'];
+            $total_amount = $checkout_data['total_amount'];
+            
+            // Buat order ID unik
+            $order_id = 'HJL-' . time();
+            
+            // Siapkan item details untuk Midtrans
+            $item_details = [];
+            foreach ($cart_items as $item) {
+                $item_details[] = [
+                    'id' => $item['id_product'],
+                    'price' => $item['harga'],
+                    'quantity' => $item['jumlah'],
+                    'name' => substr($item['nama_product'], 0, 50) // Batasi panjang nama
+                ];
+            }
+            
+            // Tambahkan biaya pengiriman
+            $item_details[] = [
+                'id' => 'shipping',
+                'price' => $ongkir,
+                'quantity' => 1,
+                'name' => 'Ongkos Kirim'
+            ];
+            
+            // Ambil data customer
+            $customer = $this->db->get_where('user', ['id_user' => $id_user])->row();
+            
+            // Ambil alamat pengiriman utama
+            $shipping_address = $this->db->get_where('shipping_addresses', [
+                'user_id' => $id_user,
+                'is_primary' => 1
+            ])->row();
+            
+            // Siapkan parameter transaksi
+            $transaction_details = [
+                'order_id' => $order_id,
+                'gross_amount' => $total_amount
+            ];
+            
+            // Customer details
+            $customer_details = [
+                'first_name' => $customer->nama,
+                'email' => $customer->email,
+                'phone' => $customer->no_tlp,
+                'billing_address' => [
+                    'first_name' => $customer->nama,
+                    'phone' => $customer->no_tlp,
+                    'address' => $shipping_address ? $shipping_address->address : '',
+                    'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                    'country_code' => 'IDN'
+                ],
+                'shipping_address' => [
+                    'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
+                    'phone' => $customer->no_tlp,
+                    'address' => $shipping_address ? $shipping_address->address : '',
+                    'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                    'country_code' => 'IDN'
+                ]
+            ];
+            
+            // Create transaction
+            $transaction = [
+                'transaction_details' => $transaction_details,
+                'item_details' => $item_details,
+                'customer_details' => $customer_details
+            ];
+            
             // Get Snap Token
             $snapToken = \Midtrans\Snap::getSnapToken($transaction);
             
@@ -156,12 +166,14 @@ class Midtrans extends CI_Controller {
                 'snap_token' => $snapToken,
                 'order_id' => $order_id,
                 'id_order' => $id_order,
-                'amount' => $total_amount
+                'amount' => $total_amount,
+                'client_key' => $this->config->item('midtrans_client_key')
             ];
             
             $this->load->view('checkout/midtrans_payment', $data);
             
         } catch (\Exception $e) {
+            log_message('error', 'Midtrans Error: ' . $e->getMessage());
             $this->session->set_flashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
             redirect('checkout/metode');
         }
