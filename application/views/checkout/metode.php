@@ -538,7 +538,7 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
             submitBtn.innerHTML = originalBtnText;
         });
     } else if (selectedPaymentMethod === 'midtrans') {
-        // Perbaikan untuk Midtrans: Gunakan form baru dan submit langsung
+        // Perbaikan untuk Midtrans: Gunakan form baru dan submit langsung ke controller Midtrans
         const midtransForm = document.createElement('form');
         midtransForm.method = 'POST';
         midtransForm.action = '<?= base_url('midtrans/process_payment') ?>';
@@ -565,12 +565,18 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
         shippingInput.value = 5000;
         midtransForm.appendChild(shippingInput);
         
-        // Tambahkan metode pembayaran secara eksplisit
-        const paymentMethodInput = document.createElement('input');
-        paymentMethodInput.type = 'hidden';
-        paymentMethodInput.name = 'metode_pembayaran';
-        paymentMethodInput.value = selectedPaymentMethod; // Use the actual selected value
-        midtransForm.appendChild(paymentMethodInput);
+        // Tambahkan field untuk checkout data yang akan disimpan di session
+        const checkoutDataInput = document.createElement('input');
+        checkoutDataInput.type = 'hidden';
+        checkoutDataInput.name = 'checkout_data';
+        checkoutDataInput.value = JSON.stringify({
+            cart_items: <?= json_encode($cart_items) ?>,
+            total: <?= $total ?>,
+            ongkir: 5000,
+            kurir: document.getElementById('selected-kurir').value,
+            total_amount: <?= $total + 5000 ?>
+        });
+        midtransForm.appendChild(checkoutDataInput);
         
         // Tambahkan form ke body dan submit
         document.body.appendChild(midtransForm);

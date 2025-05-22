@@ -26,98 +26,107 @@ class Midtrans extends CI_Controller {
         
         // Initialize Midtrans configuration
         \Midtrans\Config::$serverKey = $this->config->item('midtrans_server_key');
+        \Midtrans\Config::$clientKey = $this->config->item('midtrans_client_key');
         \Midtrans\Config::$isProduction = $this->config->item('midtrans_is_production');
         \Midtrans\Config::$isSanitized = $this->config->item('midtrans_is_sanitized');
         \Midtrans\Config::$is3ds = $this->config->item('midtrans_is_3ds');
     }
     
     public function process_payment() {
-        try {
-            $id_user = $this->session->userdata('id_user');
-            if (!$id_user) {
-                redirect('auth');
-            }
-            
-            // Get checkout data from session
+        // Check if user is logged in
+        $id_user = $this->session->userdata('id_user');
+        if (!$id_user) {
+            redirect('auth');
+        }
+        
+        // Get checkout data from POST
+        $checkout_data = $this->input->post('checkout_data');
+        if ($checkout_data) {
+            $checkout_data = json_decode($checkout_data, true);
+            $this->session->set_userdata('checkout_data', $checkout_data);
+        } else {
+            // If no checkout data in POST, try to get from session
             $checkout_data = $this->session->userdata('checkout_data');
-            
-            if (empty($checkout_data)) {
-                $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
-                redirect('cart');
-            }
-            
-            // Extract data
-            $cart_items = $checkout_data['cart_items'];
-            $total = $checkout_data['total'];
-            $ongkir = $checkout_data['ongkir'];
-            $kurir = $checkout_data['kurir'];
-            $total_amount = $checkout_data['total_amount'];
-            
-            // Buat order ID unik
-            $order_id = 'HJL-' . time();
-            
-            // Siapkan item details untuk Midtrans
-            $item_details = [];
-            foreach ($cart_items as $item) {
-                $item_details[] = [
-                    'id' => $item['id_product'],
-                    'price' => $item['harga'],
-                    'quantity' => $item['jumlah'],
-                    'name' => substr($item['nama_product'], 0, 50) // Batasi panjang nama
-                ];
-            }
-            
-            // Tambahkan biaya pengiriman
+        }
+        
+        if (empty($checkout_data)) {
+            $this->session->set_flashdata('error', 'Sesi checkout telah berakhir, silakan pilih produk kembali');
+            redirect('cart');
+        }
+        
+        // Extract data
+        $cart_items = $checkout_data['cart_items'];
+        $total = $checkout_data['total'];
+        $ongkir = $checkout_data['ongkir'];
+        $kurir = $checkout_data['kurir'];
+        $total_amount = $checkout_data['total_amount'];
+        
+        // Create unique order ID
+        $order_id = 'HJL-' . time();
+        
+        // Prepare item details for Midtrans
+        $item_details = [];
+        foreach ($cart_items as $item) {
             $item_details[] = [
-                'id' => 'shipping',
-                'price' => $ongkir,
-                'quantity' => 1,
-                'name' => 'Ongkos Kirim'
+                'id' => $item['id_product'],
+                'price' => $item['harga'],
+                'quantity' => $item['jumlah'],
+                'name' => substr($item['nama_product'], 0, 50) // Limit name length
             ];
-            
-            // Ambil data customer
-            $customer = $this->db->get_where('user', ['id_user' => $id_user])->row();
-            
-            // Ambil alamat pengiriman utama
-            $shipping_address = $this->db->get_where('shipping_addresses', [
-                'user_id' => $id_user,
-                'is_primary' => 1
-            ])->row();
-            
-            // Siapkan parameter transaksi
-            $transaction_details = [
-                'order_id' => $order_id,
-                'gross_amount' => $total_amount
-            ];
-            
-            // Customer details
-            $customer_details = [
+        }
+        
+        // Add shipping cost
+        $item_details[] = [
+            'id' => 'shipping',
+            'price' => $ongkir,
+            'quantity' => 1,
+            'name' => 'Ongkos Kirim'
+        ];
+        
+        // Get customer data
+        $customer = $this->db->get_where('user', ['id_user' => $id_user])->row();
+        
+        // Get primary shipping address
+        $shipping_address = $this->db->get_where('shipping_addresses', [
+            'user_id' => $id_user,
+            'is_primary' => 1
+        ])->row();
+        
+        // Prepare transaction parameters
+        $transaction_details = [
+            'order_id' => $order_id,
+            'gross_amount' => $total_amount
+        ];
+        
+        // Customer details
+        $customer_details = [
+            'first_name' => $customer->nama,
+            'email' => $customer->email,
+            'phone' => $customer->no_tlp,
+            'billing_address' => [
                 'first_name' => $customer->nama,
-                'email' => $customer->email,
                 'phone' => $customer->no_tlp,
-                'billing_address' => [
-                    'first_name' => $customer->nama,
-                    'phone' => $customer->no_tlp,
-                    'address' => $shipping_address ? $shipping_address->address : '',
-                    'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-                    'country_code' => 'IDN'
-                ],
-                'shipping_address' => [
-                    'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
-                    'phone' => $customer->no_tlp,
-                    'address' => $shipping_address ? $shipping_address->address : '',
-                    'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
-                    'country_code' => 'IDN'
-                ]
-            ];
-            
-            // Create transaction
-            $transaction = [
-                'transaction_details' => $transaction_details,
-                'item_details' => $item_details,
-                'customer_details' => $customer_details
-            ];
-            
+                'address' => $shipping_address ? $shipping_address->address : '',
+                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                'country_code' => 'IDN'
+            ],
+            'shipping_address' => [
+                'first_name' => $shipping_address ? $shipping_address->recipient_name : $customer->nama,
+                'phone' => $customer->no_tlp,
+                'address' => $shipping_address ? $shipping_address->address : '',
+                'postal_code' => $shipping_address ? $shipping_address->postal_code : '',
+                'country_code' => 'IDN'
+            ]
+        ];
+        
+        // Create transaction
+        $transaction = [
+            'transaction_details' => $transaction_details,
+            'item_details' => $item_details,
+            'customer_details' => $customer_details
+        ];
+        
+        try {
             // Get Snap Token
             $snapToken = \Midtrans\Snap::getSnapToken($transaction);
             
@@ -160,7 +169,7 @@ class Midtrans extends CI_Controller {
             $this->session->unset_userdata('checkout_data');
             $this->session->unset_userdata('selected_cart_items');
             
-            // Redirect to payment page
+            // Load payment view
             $data = [
                 'title' => 'Pembayaran',
                 'snap_token' => $snapToken,
@@ -240,36 +249,5 @@ class Midtrans extends CI_Controller {
         }
         
         redirect('checkout/sukses');
-    }
-    
-    public function check_status($id_order) {
-        $order = $this->db->get_where('orders', ['id_order' => $id_order])->row();
-        
-        if (!$order) {
-            $this->session->set_flashdata('error', 'Order tidak ditemukan');
-            redirect('orders');
-        }
-        
-        try {
-            $status = \Midtrans\Transaction::status($order->order_id);
-            
-            // Update order status based on Midtrans status
-            $transaction = $status->transaction_status;
-            
-            if ($transaction == 'settlement' || $transaction == 'capture') {
-                $this->db->where('id_order', $id_order);
-                $this->db->update('orders', ['stts_pembayaran' => 'lunas']);
-                $this->session->set_flashdata('success', 'Pembayaran telah selesai');
-            } else if ($transaction == 'pending') {
-                $this->session->set_flashdata('info', 'Pembayaran masih dalam proses');
-            } else if ($transaction == 'deny' || $transaction == 'cancel' || $transaction == 'expire') {
-                $this->session->set_flashdata('error', 'Pembayaran ' . $transaction);
-            }
-            
-            redirect('orders/detail/' . $id_order);
-        } catch (\Exception $e) {
-            $this->session->set_flashdata('error', 'Gagal memeriksa status: ' . $e->getMessage());
-            redirect('orders/detail/' . $id_order);
-        }
     }
 }
