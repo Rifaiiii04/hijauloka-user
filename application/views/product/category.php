@@ -184,9 +184,7 @@
     </div>
 </div>
 
-<!-- Replace the existing script with this updated version -->
-<script>
-<!-- Login Prompt Modal -->
+<!-- Login Prompt Modal - Moved outside of script tags -->
 <div id="loginPrompt" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all">
         <div class="text-center mb-6">
@@ -213,6 +211,7 @@
     </div>
 </div>
 
+<script>
 // Search functionality
 document.getElementById('searchInput').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
