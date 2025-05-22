@@ -110,4 +110,30 @@ class Orders extends CI_Controller {
         
         echo json_encode(['success' => true, 'products' => $products]);
     }
+
+    public function complete($id_order) {
+        // Check if user is logged in
+        if (!$this->session->userdata('logged_in')) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+        
+        // Get order details
+        $order = $this->order_model->get_order_by_id($id_order);
+        
+        // Check if order exists, belongs to the current user, and is in 'dikirim' status
+        if (!$order || $order['id_user'] != $this->session->userdata('id_user') || $order['stts_pemesanan'] != 'dikirim') {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Invalid order']);
+            return;
+        }
+        
+        // Update order status to 'selesai'
+        $success = $this->order_model->update_order_status($id_order, 'selesai');
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode(['success' => $success]);
+    }
 }

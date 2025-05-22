@@ -85,6 +85,12 @@ $filtered_orders = ($status === 'all') ? $orders : array_filter($orders, functio
                             </button>
                         <?php endif; ?>
                         
+                        <?php if ($order['stts_pemesanan'] === 'dikirim'): ?>
+                            <button onclick="completeOrder(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
+                                <i class="fas fa-check"></i> Selesai
+                            </button>
+                        <?php endif; ?>
+                        
                         <?php if ($order['stts_pemesanan'] === 'selesai'): ?>
                             <button onclick="showReviewModal(<?= $order['id_order'] ?>)" class="px-5 py-2 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-all shadow text-sm flex items-center gap-2 hover:scale-105 ml-2">
                                 <i class="fas fa-star"></i> Beri Ulasan
@@ -325,6 +331,42 @@ function cancelOrder(orderId) {
                 }, 1500);
             } else {
                 showToast(data.message || 'Gagal membatalkan pesanan', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            hideToast(loadingToast);
+            showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        });
+    }
+}
+
+function completeOrder(orderId) {
+    if (confirm('Apakah Anda yakin ingin menyelesaikan pesanan ini?')) {
+        // Show loading indicator
+        const loadingToast = showToast('Menyelesaikan pesanan...', 'loading');
+        
+        // Send complete request to server
+        fetch(`<?= base_url('order/complete/') ?>${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide loading indicator
+            hideToast(loadingToast);
+            
+            if (data.success) {
+                showToast('Pesanan berhasil diselesaikan', 'success');
+                // Reload page after short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showToast(data.message || 'Gagal menyelesaikan pesanan', 'error');
             }
         })
         .catch(error => {
