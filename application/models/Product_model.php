@@ -181,40 +181,11 @@ class Product_model extends CI_Model {
     }
 
     public function get_products_by_category($category) {
-        // Convert category name to match database
-        $category_map = [
-            'plants' => 'Indoor', // Menggunakan kategori Indoor untuk plants
-            'seeds' => 'Outdoor', // Menggunakan kategori Outdoor untuk seeds
-            'pots' => 'Florikultura' // Menggunakan kategori Florikultura untuk pots
-        ];
-        
-        $category_name = $category_map[$category] ?? $category;
-        
-        // Debug: Log the category name
-        log_message('debug', 'Searching for category: ' . $category_name);
-        
-        // First check if category exists
-        $category_exists = $this->db->get_where('category', ['nama_kategori' => $category_name])->row_array();
-        
-        if (!$category_exists) {
-            log_message('debug', 'Category not found: ' . $category_name);
-            return []; // Return empty array if category doesn't exist
+        if ($category != 'all') {
+            $this->db->where('id_kategori', $category);
         }
-
-        $this->db->select('p.*, c.nama_kategori');
-        $this->db->from('product p');
-        $this->db->join('category c', 'c.id_kategori = p.id_kategori');
-        $this->db->where('c.nama_kategori', $category_name);
-        $this->db->where('p.stok >', 0);
-        $this->db->order_by('p.id_product', 'DESC');
-        
-        $result = $this->db->get()->result_array();
-        
-        // Debug: Log the query and result count
-        log_message('debug', 'Query: ' . $this->db->last_query());
-        log_message('debug', 'Found ' . count($result) . ' products');
-        
-        return $result;
+        $query = $this->db->get('product');
+        return $query->result_array();
     }
 
     public function get_products_by_category_id($category_id)
