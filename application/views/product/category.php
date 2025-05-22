@@ -139,5 +139,3 @@ function addToCart(productId) {
     });
 }
 </script>
-
-<?php $this->load->view('templates/footer'); ?>
