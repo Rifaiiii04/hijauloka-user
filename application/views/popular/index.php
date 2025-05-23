@@ -236,7 +236,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between mx-auto w-96">
         <div class="relative flex-grow">
             <input type="text" 
                    id="searchProduct" 
@@ -265,43 +265,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         </button>
                     </div>
                     <div class="overflow-y-auto h-[calc(100vh-8rem)]">
-                        <!-- Price Range Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
-                            <div class="px-2">
-                                <div class="flex gap-2 items-center">
-                                    <div class="flex-1">
-                                        <label for="minPrice" class="block text-sm text-gray-600 mb-1">Harga Minimum</label>
-                                        <div class="relative">
-                                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
-                                            <input type="number" 
-                                                   id="minPrice" 
-                                                   placeholder="0" 
-                                                   value="0"
-                                                   class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                                   min="0" 
-                                                   max="5000000" 
-                                                   step="50000">
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <label for="maxPrice" class="block text-sm text-gray-600 mb-1">Harga Maksimum</label>
-                                        <div class="relative">
-                                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
-                                            <input type="number" 
-                                                   id="maxPrice" 
-                                                   placeholder="5000000" 
-                                                   value="5000000"
-                                                   class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                                   min="0" 
-                                                   max="5000000" 
-                                                   step="50000">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <!-- Category Filter -->
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-3">Kategori</h4>
@@ -342,18 +305,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                             </div>
                         </div>
                         
-                        <!-- Sort By -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Urutkan</h4>
-                            <select id="sortBy" class="w-full p-2 border rounded-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                <option value="popular">Popularitas</option>
-                                <option value="price_low">Harga: Rendah ke Tinggi</option>
-                                <option value="price_high">Harga: Tinggi ke Rendah</option>
-                                 sticky<option value="rating">Rating Tertinggi</option>
-                                <option value="newest">Terbaru</option>
-                            </select>
-                        </div>
-                        
                         <!-- Apply/Reset Buttons -->
                         <div class="flex gap-2">
                             <button id="resetFilters" class="w-1/2 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">
@@ -372,43 +323,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
                 <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2 sticky top-0 bg-white z-10">Filter Produk</h3>
-                
-                <!-- Price Range Filter -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
-                    <div class="px-2">
-                        <div class="flex gap-2 items-center">
-                            <div class="flex-1">
-                                <label for="minPrice" class="block text-sm text-gray-600 mb-1">Harga Minimum</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
-                                    <input type="number" 
-                                           id="minPrice" 
-                                           placeholder="0" 
-                                           value="0"
-                                           class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                           min="0" 
-                                           max="5000000" 
-                                           step="50000">
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <label for="maxPrice" class="block text-sm text-gray-600 mb-1">Harga Maksimum</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
-                                    <input type="number" 
-                                           id="maxPrice" 
-                                           placeholder="5000000" 
-                                           value="5000000"
-                                           class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                           min="0" 
-                                           max="5000000" 
-                                           step="50000">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
                 <!-- Category Filter -->
                 <div class="mb-6">
@@ -448,18 +362,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         </label>
                         <?php endfor; ?>
                     </div>
-                </div>
-                
-                <!-- Sort By -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Urutkan</h4>
-                    <select id="sortBy" class="w-full p-2 border rounded-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="popular">Popularitas</option>
-                        <option value="price_low">Harga: Rendah ke Tinggi</option>
-                        <option value="price_high">Harga: Tinggi ke Rendah</option>
-                        <option value="rating">Rating Tertinggi</option>
-                        <option value="newest">Terbaru</option>
-                    </select>
                 </div>
                 
                 <!-- Apply/Reset Buttons -->
@@ -644,133 +546,54 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 <!-- Add this to your existing script section -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Price slider styling
-    const minPriceSlider = document.getElementById('minPriceSlider');
-    const maxPriceSlider = document.getElementById('maxPriceSlider');
-    const minPriceInput = document.getElementById('minPrice');
-    const maxPriceInput = document.getElementById('maxPrice');
-    const minPriceLabel = document.getElementById('minPriceLabel');
-    const maxPriceLabel = document.getElementById('maxPriceLabel');
     const searchInput = document.getElementById('searchProduct');
     const productGrid = document.getElementById('productGrid');
     const noResults = document.getElementById('noResults');
     const resetFiltersBtn = document.getElementById('resetFilters');
     const applyFiltersBtn = document.getElementById('applyFilters');
     const clearFiltersBtn = document.getElementById('clearFilters');
-    const sortBySelect = document.getElementById('sortBy');
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
     const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     
-    const priceGap = 50000;
-    
-    function formatCurrency(value) {
-        return 'Rp' + parseInt(value).toLocaleString('id-ID');
-    }
-    
-    // Initialize price labels
-    minPriceLabel.textContent = formatCurrency(minPriceSlider.value);
-    maxPriceLabel.textContent = formatCurrency(maxPriceSlider.value);
-    
-    // Min price slider
-    minPriceSlider.addEventListener('input', function() {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
-        
-        if(maxVal - minVal < priceGap) {
-            minVal = maxVal - priceGap;
-            minPriceSlider.value = minVal;
-        }
-        
-        minPriceInput.value = minVal;
-        minPriceLabel.textContent = formatCurrency(minVal);
-    });
-    
-    // Max price slider
-    maxPriceSlider.addEventListener('input', function() {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
-        
-        if(maxVal - minVal < priceGap) {
-            maxVal = minVal + priceGap;
-            maxPriceSlider.value = maxVal;
-        }
-        
-        maxPriceInput.value = maxVal;
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-    });
-    
-    // Min price input
-    minPriceInput.addEventListener('input', function() {
-        let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 5000000;
-        
-        if(minVal < 0) minVal = 0;
-        if(minVal > 5000000) minVal = 5000000;
-        if(minVal > maxVal - priceGap) minVal = maxVal - priceGap;
-        
-        minPriceSlider.value = minVal;
-        minPriceLabel.textContent = formatCurrency(minVal);
-    });
-    
-    // Max price input
-    maxPriceInput.addEventListener('input', function() {
-        let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 5000000;
-        
-        if(maxVal > 5000000) maxVal = 5000000;
-        if(maxVal < minVal + priceGap) maxVal = minVal + priceGap;
-        
-        maxPriceSlider.value = maxVal;
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-    });
-    
-    // Update filterProducts function to handle both client-side filtering and server-side pagination
+    // Update filterProducts function
     function filterProducts() {
         const searchTerm = searchInput.value.toLowerCase();
-        const minPrice = parseInt(minPriceSlider.value);
-        const maxPrice = parseInt(maxPriceSlider.value);
         const selectedCategories = Array.from(categoryCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
         const selectedRatings = Array.from(ratingCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => parseInt(cb.value));
-        const sortBy = sortBySelect.value;
         
         // Only redirect if apply button is clicked
-        if (event && event.target && event.target.id === 'applyFilters') {
+        if (event?.target?.id === 'applyFilters') {
             const params = new URLSearchParams(window.location.search);
-            params.set('page', '1'); // Reset to first page when applying filters
+            params.set('page', '1');
             
             if (searchTerm) params.set('search', searchTerm);
-            if (minPrice > 0) params.set('min_price', minPrice);
-            if (maxPrice < 5000000) params.set('max_price', maxPrice);
             if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
             if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
-            if (sortBy !== 'popular') params.set('sort', sortBy);
             
             window.location.href = window.location.pathname + '?' + params.toString();
             return;
         }
         
-        // Client-side filtering for immediate feedback
+        // Client-side filtering
         const productCards = document.querySelectorAll('.product-card');
         let visibleCount = 0;
         
         productCards.forEach(card => {
             const productName = card.getAttribute('data-name');
-            const productPrice = parseInt(card.getAttribute('data-price'));
             const productRating = parseFloat(card.getAttribute('data-rating'));
             const productCategories = card.getAttribute('data-categories').split(',');
             
             const matchesSearch = productName.includes(searchTerm);
-            const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
             const matchesCategory = selectedCategories.length === 0 || 
                                   productCategories.some(cat => selectedCategories.includes(cat));
             const matchesRating = selectedRatings.length === 0 || 
                                 selectedRatings.some(r => productRating >= r);
             
-            if (matchesSearch && matchesPrice && matchesCategory && matchesRating) {
+            if (matchesSearch && matchesCategory && matchesRating) {
                 card.classList.remove('hidden');
                 visibleCount++;
             } else {
@@ -786,74 +609,26 @@ document.addEventListener('DOMContentLoaded', function() {
             productGrid.classList.remove('hidden');
             noResults.classList.add('hidden');
         }
-        
-        // Sort visible products
-        sortProducts(sortBy);
     }
     
-    // Sort products function
-    function sortProducts(sortBy) {
-        const productCards = Array.from(document.querySelectorAll('.product-card:not(.hidden)'));
-        
-        productCards.sort((a, b) => {
-            const aPrice = parseInt(a.getAttribute('data-price'));
-            const bPrice = parseInt(b.getAttribute('data-price'));
-            const aRating = parseFloat(a.getAttribute('data-rating'));
-            const bRating = parseFloat(b.getAttribute('data-rating'));
-            const aId = parseInt(a.getAttribute('data-id'));
-            const bId = parseInt(b.getAttribute('data-id'));
-            
-            switch(sortBy) {
-                case 'price_low':
-                    return aPrice - bPrice;
-                case 'price_high':
-                    return bPrice - aPrice;
-                case 'rating':
-                    return bRating - aRating;
-                case 'newest':
-                    return bId - aId; // Assuming newer products have higher IDs
-                default: // popular
-                    return 0; // Keep original order
-            }
-        });
-        
-        // Reorder elements in the DOM
-        const parent = productGrid;
-        productCards.forEach(card => {
-            parent.appendChild(card);
-        });
-    }
-    
-    // Update event listeners
-    searchInput.addEventListener('input', filterProducts);
-    applyFiltersBtn.addEventListener('click', filterProducts);
-    resetFiltersBtn.addEventListener('click', function() {
-        // Clear all filters
+    // Update resetFilters function
+    function resetFilters() {
         searchInput.value = '';
-        minPriceSlider.value = 0;
-        maxPriceSlider.value = 5000000;
-        minPriceInput.value = 0;
-        maxPriceInput.value = 5000000;
-        minPriceLabel.textContent = formatCurrency(0);
-        maxPriceLabel.textContent = formatCurrency(5000000);
-        
         categoryCheckboxes.forEach(cb => cb.checked = false);
         ratingCheckboxes.forEach(cb => cb.checked = false);
-        sortBySelect.value = 'popular';
         
-        // Only redirect if reset button is clicked
-        if (event && event.target && event.target.id === 'resetFilters') {
+        if (event?.target?.id === 'resetFilters') {
             window.location.href = window.location.pathname;
         } else {
             filterProducts();
         }
-    });
+    }
     
-    clearFiltersBtn.addEventListener('click', function() {
-        window.location.href = window.location.pathname;
-    });
-    
-    sortBySelect.addEventListener('change', () => sortProducts(sortBySelect.value));
+    // Event listeners
+    searchInput.addEventListener('input', filterProducts);
+    applyFiltersBtn.addEventListener('click', filterProducts);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    clearFiltersBtn.addEventListener('click', () => window.location.href = window.location.pathname);
     
     // Add event listeners to all checkboxes
     categoryCheckboxes.forEach(cb => {
