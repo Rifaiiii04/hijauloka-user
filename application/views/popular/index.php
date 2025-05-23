@@ -233,7 +233,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                    autocomplete="off">
             <button type="button" 
                     id="searchButton"
-                    class="absolute right-1 top-1/2 -translate-y-1/2 
+                    class="absolute left-3 top-1/2 -translate-y-1/2 
                            w-10 h-10 flex items-center justify-center
                            bg-green-600 text-white rounded-lg
                            hover:bg-green-700 active:bg-green-800
