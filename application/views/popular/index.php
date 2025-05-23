@@ -358,9 +358,9 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         </div>
 
         <!-- Desktop Filters -->
-        <div class="w-full md:w-64 hidden md:flex sticky flex-shrink-0">
-            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24">
-                <h3 class="font-semibold text-lg text-green-800 mb-4 sticky border-b pb-2">Filter Produk</h3>
+        <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
+            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+                <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2 sticky top-0 bg-white z-10">Filter Produk</h3>
                 
                 <!-- Price Range Filter -->
                 <div class="mb-6">
