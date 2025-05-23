@@ -389,7 +389,7 @@ function showNotification(type, title, message) {
 
                 <!-- Pots Category -->
                 <div class="relative h-[190px] rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
-                    <img src="<?= base_url('assets/img/category-pots.png') ?>" alt="Pots" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="<?= base_url('assets/img/potscategory.png') ?>" alt="Pots" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-80"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300 group-hover:translate-y-[-5px]">
                         <h3 class="text-xl font-bold text-white mb-1">Pots</h3>
