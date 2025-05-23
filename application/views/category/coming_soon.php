@@ -17,7 +17,7 @@
     <div class="container mx-auto px-4 py-12 md:py-16 relative">
         <div class="max-w-xl mx-auto">
             <!-- Simple Hero Section -->
-            <div class="text-center mb-10">
+            <div class="text-center mt-10">
                 <h1 class="text-3xl font-bold text-gray-800">Coming Soon</h1>
                 <p class="text-gray-600">
                     <?php if (isset($category) && $category === 'seeds'): ?>
