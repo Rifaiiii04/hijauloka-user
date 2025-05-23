@@ -65,6 +65,7 @@ class Product extends CI_Controller {
         
         // Get form data
         $id_product = $this->input->post('id_product');
+        $id_order = $this->input->post('id_order'); // Add this line to get order ID from form
         $rating = $this->input->post('rating');
         $ulasan = $this->input->post('ulasan');
         $id_user = $this->session->userdata('id_user');
@@ -86,6 +87,30 @@ class Product extends CI_Controller {
         // Check if user has already reviewed this product
         $existing_review = $this->review_model->get_review_by_user_and_product($id_user, $id_product);
         
+        // Handle file upload if present
+        $foto_review = null;
+        if (!empty($_FILES['foto_review']['name'])) {
+            $config['upload_path'] = './uploads/reviews/';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 2048; // 2MB
+            $config['encrypt_name'] = TRUE;
+            
+            // Create directory if it doesn't exist
+            if (!is_dir($config['upload_path'])) {
+                mkdir($config['upload_path'], 0777, TRUE);
+            }
+            
+            $this->load->library('upload', $config);
+            
+            if (!$this->upload->do_upload('foto_review')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('product/detail/' . $id_product);
+            } else {
+                $upload_data = $this->upload->data();
+                $foto_review = $upload_data['file_name'];
+            }
+        }
+        
         if ($existing_review) {
             // Update existing review
             $review_data = [
@@ -95,6 +120,11 @@ class Product extends CI_Controller {
                 'stts_review' => 'pending'
             ];
             
+            // Add photo if uploaded
+            if ($foto_review) {
+                $review_data['foto_review'] = $foto_review;
+            }
+            
             $this->review_model->update_review($existing_review['id_review'], $review_data);
             $this->session->set_flashdata('success', 'Ulasan Anda telah diperbarui dan sedang menunggu persetujuan');
         } else {
@@ -103,11 +133,12 @@ class Product extends CI_Controller {
             
             // Create new review
             $review_data = [
-                'id_order' => $order['id_order'],
+                'id_order' => $id_order ? $id_order : $order['id_order'],
                 'id_user' => $id_user,
                 'id_product' => $id_product,
                 'rating' => $rating,
                 'ulasan' => $ulasan,
+                'foto_review' => $foto_review,
                 'tgl_review' => date('Y-m-d H:i:s'),
                 'stts_review' => 'pending'
             ];
@@ -125,7 +156,7 @@ class Product extends CI_Controller {
     private function update_product_rating($id_product)
     {
         // Get all approved reviews for this product
-        $reviews = $this->review_model->get_approved_reviews_by_product($id_product);
+        $reviews = $this->review_model->get_product_reviews($id_product);
         
         if (!empty($reviews)) {
             $total_rating = 0;

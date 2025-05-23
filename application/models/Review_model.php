@@ -12,12 +12,16 @@ class Review_model extends CI_Model {
         return $this->db->insert_id();
     }
     
-    // Add this new method
     public function get_review_by_user_and_product($user_id, $product_id) {
         $this->db->where('id_user', $user_id);
         $this->db->where('id_product', $product_id);
         $query = $this->db->get('review_rating');
         return $query->row_array();
+    }
+    
+    public function update_review($id_review, $data) {
+        $this->db->where('id_review', $id_review);
+        return $this->db->update('review_rating', $data);
     }
     
     public function get_product_reviews($product_id, $limit = 10, $offset = 0) {
@@ -30,6 +34,11 @@ class Review_model extends CI_Model {
         $this->db->limit($limit, $offset);
         
         return $this->db->get()->result_array();
+    }
+    
+    // Alias for get_product_reviews to match the method name used in the controller
+    public function get_approved_reviews_by_product($product_id, $limit = 10, $offset = 0) {
+        return $this->get_product_reviews($product_id, $limit, $offset);
     }
     
     public function get_product_rating($product_id) {
