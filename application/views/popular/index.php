@@ -589,35 +589,136 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
     }, $categories)) ?>;
 
-    // Function to show suggestions
+    // Add search history functionality
+    const MAX_HISTORY_ITEMS = 5;
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+    // Function to save search history
+    function saveToHistory(term) {
+        if (!term.trim()) return;
+        
+        // Remove if exists and add to front
+        searchHistory = searchHistory.filter(item => item !== term);
+        searchHistory.unshift(term);
+        
+        // Keep only last 5 items
+        searchHistory = searchHistory.slice(0, MAX_HISTORY_ITEMS);
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    }
+
+    // Function to get search suggestions with fuzzy matching
+    function getFuzzyMatches(term, items) {
+        const searchTerm = term.toLowerCase();
+        return items.filter(item => {
+            const itemName = item.toLowerCase();
+            // Exact match
+            if (itemName.includes(searchTerm)) return true;
+            
+            // Fuzzy match (allow for typos)
+            const words = itemName.split(' ');
+            return words.some(word => {
+                // Check if word starts with search term
+                if (word.startsWith(searchTerm)) return true;
+                
+                // Check for similar words (Levenshtein distance <= 2)
+                if (levenshteinDistance(word, searchTerm) <= 2) return true;
+                
+                return false;
+            });
+        });
+    }
+
+    // Levenshtein distance function for fuzzy matching
+    function levenshteinDistance(a, b) {
+        if (a.length === 0) return b.length;
+        if (b.length === 0) return a.length;
+
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= a.length; j++) {
+            matrix[0][j] = j;
+        }
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    // Function to show suggestions with enhanced features
     function showSuggestions(term) {
         if (!term.trim()) {
-            searchSuggestions.classList.add('hidden');
+            // Show search history when input is empty
+            if (searchHistory.length > 0) {
+                searchSuggestions.innerHTML = `
+                    <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Riwayat Pencarian</div>
+                    ${searchHistory.map(item => `
+                        <button class="w-full px-4 py-2 text-left hover:bg-green-50 text-gray-700 
+                                     transition-colors duration-150 flex items-center justify-between group"
+                                onclick="setSearchTerm('${item}')">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-history text-gray-400 text-sm"></i>
+                                <span>${item}</span>
+                            </div>
+                            <button onclick="event.stopPropagation(); removeFromHistory('${item}')" 
+                                    class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </button>
+                    `).join('')}
+                `;
+                searchSuggestions.classList.remove('hidden');
+            } else {
+                searchSuggestions.classList.add('hidden');
+            }
             return;
         }
 
         const searchTerm = term.toLowerCase();
         let suggestions = [];
 
-        // Get product suggestions
+        // Get product suggestions with fuzzy matching
         const products = Array.from(document.querySelectorAll('.product-card'))
             .map(card => ({
                 name: card.getAttribute('data-name'),
                 categories: card.getAttribute('data-categories').split(','),
-                rating: parseFloat(card.getAttribute('data-rating'))
+                rating: parseFloat(card.getAttribute('data-rating')),
+                price: parseFloat(card.getAttribute('data-price'))
             }))
-            .filter(product => 
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.categories.some(catId => {
+            .filter(product => {
+                const nameMatch = getFuzzyMatches(searchTerm, [product.name]).length > 0;
+                const categoryMatch = product.categories.some(catId => {
                     const category = categories.find(c => c.id === catId);
-                    return category && category.name.toLowerCase().includes(searchTerm);
-                })
-            )
+                    return category && getFuzzyMatches(searchTerm, [category.name]).length > 0;
+                });
+                return nameMatch || categoryMatch;
+            })
+            .sort((a, b) => {
+                // Sort by relevance (exact matches first, then fuzzy matches)
+                const aExactMatch = a.name.toLowerCase().includes(searchTerm);
+                const bExactMatch = b.name.toLowerCase().includes(searchTerm);
+                if (aExactMatch !== bExactMatch) return bExactMatch - aExactMatch;
+                
+                // Then sort by rating
+                return b.rating - a.rating;
+            })
             .slice(0, 5);
 
-        // Get category suggestions
+        // Get category suggestions with fuzzy matching
         const categoryMatches = categories
-            .filter(cat => cat.name.toLowerCase().includes(searchTerm))
+            .filter(cat => getFuzzyMatches(searchTerm, [cat.name]).length > 0)
             .slice(0, 3);
 
         // Format suggestions
@@ -629,6 +730,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     .filter(Boolean)
                     .join(', ');
                 
+                const price = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(product.price);
+                
                 return `
                     <button class="w-full px-4 py-2 text-left hover:bg-green-50 text-gray-700 
                                  transition-colors duration-150 flex items-start gap-3"
@@ -636,10 +743,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="flex-1">
                             <div class="font-medium">${product.name}</div>
                             <div class="text-sm text-gray-500">${categoryNames}</div>
+                            <div class="text-sm font-medium text-green-600 mt-1">${price}</div>
                         </div>
-                        <div class="flex items-center text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <span class="ml-1 text-gray-600">${product.rating.toFixed(1)}</span>
+                        <div class="flex flex-col items-end gap-1">
+                            <div class="flex items-center text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <span class="ml-1 text-gray-600">${product.rating.toFixed(1)}</span>
+                            </div>
                         </div>
                     </button>
                 `;
@@ -665,33 +775,52 @@ document.addEventListener('DOMContentLoaded', function() {
             searchSuggestions.innerHTML = suggestions.join('');
             searchSuggestions.classList.remove('hidden');
         } else {
-            searchSuggestions.classList.add('hidden');
+            // Show "no results" message
+            searchSuggestions.innerHTML = `
+                <div class="px-4 py-3 text-center text-gray-500">
+                    <i class="fas fa-search text-2xl mb-2"></i>
+                    <p>Tidak ada hasil yang ditemukan</p>
+                    <p class="text-sm mt-1">Coba kata kunci lain atau periksa ejaan</p>
+                </div>
+            `;
+            searchSuggestions.classList.remove('hidden');
         }
     }
 
-    // Handle search input
+    // Function to remove item from search history
+    window.removeFromHistory = function(term) {
+        searchHistory = searchHistory.filter(item => item !== term);
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        showSuggestions(searchInput.value);
+    };
+
+    // Update setSearchTerm function
+    window.setSearchTerm = function(term) {
+        searchInput.value = term;
+        saveToHistory(term);
+        filterProducts();
+        searchSuggestions.classList.add('hidden');
+    };
+
+    // Handle search input with debouncing
     searchInput.addEventListener('input', function(e) {
         clearTimeout(searchTimeout);
         const term = e.target.value;
         
-        // Show suggestions
         showSuggestions(term);
         
-        // Debounce the search
         searchTimeout = setTimeout(() => {
             filterProducts();
         }, 300);
     });
 
-    // Handle search button click
-    searchButton.addEventListener('click', function() {
-        filterProducts();
-        searchInput.focus();
-    });
-
     // Handle enter key
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
+            const term = e.target.value.trim();
+            if (term) {
+                saveToHistory(term);
+            }
             filterProducts();
             searchSuggestions.classList.add('hidden');
         }
@@ -1100,6 +1229,47 @@ input[type="range"]::-moz-range-thumb {
 
 #searchSuggestions .border-t {
     margin: 0.5rem 0;
+}
+
+/* Add animation for suggestions */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#searchSuggestions:not(.hidden) {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Style for search history items */
+#searchSuggestions button .fa-history {
+    transition: color 0.2s ease;
+}
+
+#searchSuggestions button:hover .fa-history {
+    color: #059669;
+}
+
+/* Style for no results message */
+#searchSuggestions .fa-search {
+    color: #9ca3af;
+}
+
+/* Add responsive styles */
+@media (max-width: 640px) {
+    #searchSuggestions {
+        max-height: 60vh;
+    }
+    
+    #searchSuggestions button {
+        padding: 0.75rem 1rem;
+    }
 }
 </style>
 
