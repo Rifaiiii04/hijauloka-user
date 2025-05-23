@@ -44,152 +44,97 @@
     }
     
     .animate-heartbeat {
-        animation: heartbeat 0.8s ease-in-out;
+        animation: heartbeat 0.5s ease-in-out;
     }
     
     .animate-heartbeat-out {
         animation: heartbeat-out 0.5s ease-in-out;
     }
     
-    /* Custom notification styles */
-    .custom-notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        padding: 16px;
-        z-index: 1000;
-        max-width: 350px;
-        transform: translateX(400px);
-        transition: transform 0.3s ease-out;
-    }
-    
-    .custom-notification.show {
-        transform: translateX(0);
-    }
-    
-    .custom-notification.error {
-        border-left: 4px solid #ef4444;
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-    }
-    
-    .notification-icon {
-        margin-right: 12px;
-        font-size: 24px;
-    }
-    
-    .notification-icon.success {
-        color: #10b981;
-    }
-    
-    .notification-icon.error {
-        color: #ef4444;
-    }
-    
-    .notification-text h4 {
-        margin: 0 0 4px 0;
-        font-weight: 600;
-        font-size: 16px;
-    }
-    
-    .notification-text p {
-        margin: 0;
-        color: #6b7280;
-        font-size: 14px;
-    }
-    
-    /* Range slider styles */
-    input[type="range"] {
-        -webkit-appearance: none;
-        height: 5px;
-        border-radius: 5px;
-        background: #d1d5db;
-        outline: none;
-    }
-    
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #10b981;
-        cursor: pointer;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #10b981;
-        cursor: pointer;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Aspect ratio container for product images */
-    .aspect-w-1 {
-        position: relative;
-        padding-bottom: 100%;
-        height: 0;
-        overflow: hidden;
-    }
-    
-    .aspect-w-1 img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    /* Line clamp for product titles */
-    .line-clamp-1 {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    /* Improved scrollbar for filter sidebar */
-    .sticky::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .sticky::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-    
-    .sticky::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 10px;
-    }
-    
-    .sticky::-webkit-scrollbar-thumb:hover {
-        background: #a1a1a1;
-    }
-    
-    /* Smooth transitions */
-    #searchSuggestions {
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-    
-    /* Improved search input */
-    #searchProduct:focus {
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    .fa-heart {
+        transition: color 0.2s ease-in-out;
     }
 </style>
+
+<!-- Replace the toggleWishlist function with this improved version -->
+<script>
+function toggleWishlist(button, productId) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    const icon = button.querySelector('i');
+    
+    // Toggle heart color immediately with animation
+    if (icon.classList.contains('text-red-500')) {
+        icon.classList.remove('text-red-500');
+        icon.classList.add('animate-heartbeat-out');
+    } else {
+        icon.classList.add('text-red-500');
+        icon.classList.add('animate-heartbeat');
+    }
+    
+    // Remove animation class after it completes
+    setTimeout(() => {
+        icon.classList.remove('animate-heartbeat', 'animate-heartbeat-out');
+    }, 500);
+
+    // Send AJAX request to server
+    fetch('<?= base_url('wishlist/toggle') ?>/' + productId, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Wishlist updated:', data);
+        // No need to update UI here as we've already done it
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert the UI change if there was an error
+        if (icon.classList.contains('text-red-500')) {
+            icon.classList.remove('text-red-500');
+        } else {
+            icon.classList.add('text-red-500');
+        }
+    });
+}
+
+function closeLoginPrompt() {
+    const modal = document.getElementById('loginPrompt');
+    modal.classList.add('hidden');
+}
+
+document.getElementById('loginPrompt').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLoginPrompt();
+    }
+});
+</script>
+
+<!-- Add this after the login prompt modal -->
+<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
+        <div class="text-center mb-4">
+            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
+            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
+            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
+        </div>
+        <button onclick="closeCartNotification()" 
+                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
+            Lanjut Belanja
+        </button>
+    </div>
+</div>
 
 <div class="mb-12 mt-28 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
@@ -208,7 +153,6 @@
                    placeholder="Cari tanaman..." 
                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
             <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <div id="searchSuggestions" class="absolute z-10 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
         <!-- Mobile Filter Button -->
         <button id="mobileFilterBtn" class="md:hidden ml-4 p-2 bg-green-600 text-white rounded-lg">
@@ -222,7 +166,7 @@
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Mobile Filter Sidebar -->
         <div id="mobileFilterSidebar" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden">
-            <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto">
+            <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-semibold text-lg text-green-800">Filter Produk</h3>
@@ -303,7 +247,7 @@
                                 <option value="popular">Popularitas</option>
                                 <option value="price_low">Harga: Rendah ke Tinggi</option>
                                 <option value="price_high">Harga: Tinggi ke Rendah</option>
-                                <option value="rating">Rating Tertinggi</option>
+                                 sticky<option value="rating">Rating Tertinggi</option>
                                 <option value="newest">Terbaru</option>
                             </select>
                         </div>
@@ -322,10 +266,10 @@
             </div>
         </div>
 
-        <!-- Desktop Filters - Make it sticky -->
-        <div class="w-full md:w-64 hidden md:block flex-shrink-0">
-            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
-                <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2">Filter Produk</h3>
+        <!-- Desktop Filters -->
+        <div class="w-full md:w-64 hidden md:flex sticky flex-shrink-0">
+            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24">
+                <h3 class="font-semibold text-lg text-green-800 mb-4 sticky border-b pb-2">Filter Produk</h3>
                 
                 <!-- Price Range Filter -->
                 <div class="mb-6">
@@ -459,10 +403,10 @@
                          data-rating="<?= floatval(isset($produk['rating']) ? $produk['rating'] : 0) ?>"
                          data-categories="<?= $category_ids_str ?>">
                         <a href="<?= base_url('product/detail/' . (isset($produk['id_product']) ? $produk['id_product'] : '0')) ?>" class="block flex-grow">
-                            <div class="aspect-w-1">
+                            <div class="aspect-w-1 aspect-h-1">
                                 <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar; ?>" 
                                      alt="<?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?>" 
-                                     class="w-full h-full object-cover transform hover:scale-110 transition-all duration-300">
+                                     class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
                             </div>
                             <div class="p-3 sm:p-4">
                                 <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?></h3>
@@ -526,44 +470,18 @@
                     Hapus Semua Filter
                 </button>
             </div>
-            
-            <!-- Pagination Controls -->
-            <div id="paginationControls" class="mt-8 flex justify-center items-center">
-                <button id="prevPage" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-l-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-chevron-left mr-1"></i> Prev
-                </button>
-                <div id="pageNumbers" class="flex mx-2"></div>
-                <button id="nextPage" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-r-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Next <i class="fas fa-chevron-right ml-1"></i>
-                </button>
-            </div>
         </div>
     </div>
 </main>
 
-<!-- Add this after the login prompt modal -->
-<div id="cartNotification" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all animate-bounce-once">
-        <div class="text-center mb-4">
-            <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
-            <h3 class="text-xl font-semibold text-gray-900">Berhasil!</h3>
-            <p class="text-gray-600 mt-2">Produk telah ditambahkan ke keranjang</p>
-        </div>
-        <button onclick="closeCartNotification()" 
-                class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors mt-4">
-            Lanjut Belanja
-        </button>
-    </div>
-</div>
-
+<!-- Pass PHP variables to JavaScript -->
 <script>
-// Pass PHP variables to JavaScript
 var isUserLoggedIn = <?= $this->session->userdata('logged_in') ? 'true' : 'false' ?>;
 var baseUrl = '<?= base_url() ?>';
 </script>
 
-<!-- Include the external JavaScript file -->
+<!-- Include external CSS and JS files -->
+<link rel="stylesheet" href="<?= base_url('assets/css/popular.css') ?>">
 <script src="<?= base_url('assets/js/popular.js') ?>"></script>
 
-
-<?php $this->load->view('templates/footer'); ?>
+<?php $this->load->view('templates/footer') ?>
