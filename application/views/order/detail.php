@@ -192,14 +192,14 @@
                             </div>
                             <div class="ml-4 flex-1">
                                 <div class="flex justify-between">
-                                    <div>
-                                        <h3 class="text-sm font-medium text-gray-900"><?= $item['nama_product'] ?></h3>
+                                    <div class="min-w-0 flex-1">
+                                        <h3 class="text-sm font-medium text-gray-900 truncate" title="<?= $item['nama_product'] ?>"><?= $item['nama_product'] ?></h3>
                                         <p class="text-sm text-gray-500 mt-1">
                                             <?= isset($item['quantity']) ? $item['quantity'] : 1 ?> x 
                                             Rp <?= number_format(isset($item['harga']) ? $item['harga'] : 0, 0, ',', '.') ?>
                                         </p>
                                     </div>
-                                    <p class="text-sm font-medium text-gray-900">
+                                    <p class="text-sm font-medium text-gray-900 ml-4 flex-shrink-0">
                                         Rp <?= number_format((isset($item['harga']) ? $item['harga'] : 0) * (isset($item['quantity']) ? $item['quantity'] : 1), 0, ',', '.') ?>
                                     </p>
                                 </div>

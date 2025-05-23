@@ -286,7 +286,7 @@ function showNotification(type, title, message) {
                                      class="w-full h-48 object-cover hover:scale-110 transition-all duration-300">
                             </a>
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-2"><?= $product['nama_product'] ?></h3>
+                                <h3 class="font-semibold text-lg mb-2 truncate" title="<?= $product['nama_product'] ?>"><?= $product['nama_product'] ?></h3>
                                 <!-- Rest of the card content stays the same -->
                                 <div class="flex items-center mb-2 flex-shrink-0">
                                     <div class="flex text-yellow-400">
