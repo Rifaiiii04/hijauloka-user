@@ -225,7 +225,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
             <input type="text" 
                    id="searchProduct" 
                    placeholder="Cari tanaman hias..." 
-                   class="w-full pl-14 pr-14 py-3 text-base rounded-xl border-2 border-gray-200 
+                   class="w-full relative left-10 pl-14 pr-14 py-3 text-base rounded-xl border-2 border-gray-200 
                           focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:ring-opacity-50 
                           transition-all duration-200 ease-in-out
                           placeholder-gray-400 text-gray-700
