@@ -14,6 +14,7 @@ class User_model extends CI_Model {
         return false;
     }
     
+    // Keeping only one version of the update_password method
     public function update_password($user_id, $new_password) {
         $this->db->where('id_user', $user_id);
         $this->db->update('user', array('password' => $new_password));
@@ -23,11 +24,6 @@ class User_model extends CI_Model {
     
     public function insert_user($data) {
         return $this->db->insert('user', $data);
-    }
-
-    public function update_password($id_user, $hashed_password) {
-        return $this->db->where('id_user', $id_user)
-                        ->update('user', ['password' => $hashed_password]);
     }
     
     // Add this method to help debug
