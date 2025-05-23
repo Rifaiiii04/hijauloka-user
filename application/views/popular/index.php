@@ -265,92 +265,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         </button>
                     </div>
                     <div class="overflow-y-auto h-[calc(100vh-8rem)]">
-                        <!-- Price Range Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
-                            <div class="px-2">
-                                <div class="flex justify-between mb-2">
-                                    <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
-                                    <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
-                                </div>
-                                <div class="relative mb-4">
-                                    <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
-                                    <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
-                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                                    <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
-                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                                </div>
-                                <div class="flex gap-2 items-center">
-                                    <input type="number" id="minPrice" placeholder="Min" value="0"
-                                           class="w-full p-2 text-sm border rounded-md">
-                                    <span class="text-gray-400">-</span>
-                                    <input type="number" id="maxPrice" placeholder="Max" value="1000000"
-                                           class="w-full p-2 text-sm border rounded-md">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Category Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Kategori</h4>
-                            <div class="space-y-2 max-h-48 overflow-y-auto">
-                                <?php foreach ($categories as $category): ?>
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" name="category" value="<?= $category['id_kategori'] ?>" 
-                                           class="category-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                                           <?= ($selected_category == $category['id_kategori']) ? 'checked' : '' ?>>
-                                    <span class="text-gray-700"><?= $category['nama_kategori'] ?></span>
-                                </label>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                        
-                        <!-- Rating Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Rating</h4>
-                            <div class="space-y-2">
-                                <?php for($i = 5; $i >= 1; $i--): ?>
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" name="rating" value="<?= $i ?>" 
-                                           class="rating-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500">
-                                    <div class="flex text-yellow-400">
-                                        <?php for($j = 1; $j <= 5; $j++): ?>
-                                            <?php if($j <= $i): ?>
-                                                <i class="fas fa-star"></i>
-                                            <?php else: ?>
-                                                <i class="far fa-star"></i>
-                                            <?php endif; ?>
-                                        <?php endfor; ?>
-                                    </div>
-                                    <?php if($i == 5): ?>
-                                        <span class="text-sm text-gray-600">& Up</span>
-                                    <?php endif; ?>
-                                </label>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
-                        
-                        <!-- Sort By -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Urutkan</h4>
-                            <select id="sortBy" class="w-full p-2 border rounded-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                <option value="popular">Popularitas</option>
-                                <option value="price_low">Harga: Rendah ke Tinggi</option>
-                                <option value="price_high">Harga: Tinggi ke Rendah</option>
-                                 sticky<option value="rating">Rating Tertinggi</option>
-                                <option value="newest">Terbaru</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Apply/Reset Buttons -->
-                        <div class="flex gap-2">
-                            <button id="resetFilters" class="w-1/2 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">
-                                Reset
-                            </button>
-                            <button id="applyFilters" class="w-1/2 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                                Terapkan
-                            </button>
-                        </div>
+                        <?php $this->load->view('popular/filter_content'); ?>
                     </div>
                 </div>
             </div>
@@ -360,93 +275,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
                 <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2 sticky top-0 bg-white z-10">Filter Produk</h3>
-                
-                <!-- Price Range Filter -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
-                    <div class="px-2">
-                        <div class="flex justify-between mb-2">
-                            <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
-                            <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
-                        </div>
-                        <div class="relative mb-4">
-                            <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
-                            <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
-                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                            <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
-                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                        </div>
-                        <div class="flex gap-2 items-center">
-                            <input type="number" id="minPrice" placeholder="Min" value="0"
-                                   class="w-full p-2 text-sm border rounded-md">
-                            <span class="text-gray-400">-</span>
-                            <input type="number" id="maxPrice" placeholder="Max" value="1000000"
-                                   class="w-full p-2 text-sm border rounded-md">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Category Filter -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Kategori</h4>
-                    <div class="space-y-2 max-h-48 overflow-y-auto">
-                        <?php foreach ($categories as $category): ?>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="category" value="<?= $category['id_kategori'] ?>" 
-                                   class="category-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                                   <?= ($selected_category == $category['id_kategori']) ? 'checked' : '' ?>>
-                            <span class="text-gray-700"><?= $category['nama_kategori'] ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                
-                <!-- Rating Filter -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Rating</h4>
-                    <div class="space-y-2">
-                        <?php for($i = 5; $i >= 1; $i--): ?>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="rating" value="<?= $i ?>" 
-                                   class="rating-checkbox w-4 h-4 text-green-600 rounded focus:ring-green-500">
-                            <div class="flex text-yellow-400">
-                                <?php for($j = 1; $j <= 5; $j++): ?>
-                                    <?php if($j <= $i): ?>
-                                        <i class="fas fa-star"></i>
-                                    <?php else: ?>
-                                        <i class="far fa-star"></i>
-                                    <?php endif; ?>
-                                <?php endfor; ?>
-                            </div>
-                            <?php if($i == 5): ?>
-                                <span class="text-sm text-gray-600">& Up</span>
-                            <?php endif; ?>
-                        </label>
-                        <?php endfor; ?>
-                    </div>
-                </div>
-                
-                <!-- Sort By -->
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-700 mb-3">Urutkan</h4>
-                    <select id="sortBy" class="w-full p-2 border rounded-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="popular">Popularitas</option>
-                        <option value="price_low">Harga: Rendah ke Tinggi</option>
-                        <option value="price_high">Harga: Tinggi ke Rendah</option>
-                        <option value="rating">Rating Tertinggi</option>
-                        <option value="newest">Terbaru</option>
-                    </select>
-                </div>
-                
-                <!-- Apply/Reset Buttons -->
-                <div class="flex gap-2">
-                    <button id="resetFilters" class="w-1/2 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">
-                        Reset
-                    </button>
-                    <button id="applyFilters" class="w-1/2 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                        Terapkan
-                    </button>
-                </div>
+                <?php $this->load->view('popular/filter_content'); ?>
             </div>
         </div>
         
@@ -462,147 +291,15 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                 $paginated_products = array_slice($produk_populer, $offset, $products_per_page);
                 
                 foreach ($paginated_products as $produk) : 
-                    if (!empty($produk['gambar'])) {
-                        $gambarArr = explode(',', $produk['gambar']);
-                        $gambar = trim($gambarArr[0]);
-                    } else {
-                        $gambar = 'default.jpg';
-                    }
-                    
-                    // Initialize product categories array if not set
-                    $product_categories_data = [];
-                    
-                    // Check if product has an ID before querying categories
-                    if (isset($produk['id_product'])) {
-                        // Fetch categories for this specific product
-                        $this->db->select('c.nama_kategori, c.id_kategori');
-                        $this->db->from('product_category pc');
-                        $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
-                        $this->db->where('pc.id_product', $produk['id_product']);
-                        $product_categories_data = $this->db->get()->result_array();
-                    }
-                    
-                    // Create a string of category IDs for data attribute
-                    $category_ids = [];
-                    if (!empty($product_categories_data)) {
-                        foreach ($product_categories_data as $cat) {
-                            if (isset($cat['id_kategori'])) {
-                                $category_ids[] = $cat['id_kategori'];
-                            }
-                        }
-                    }
-                    $category_ids_str = implode(',', $category_ids);
+                    $this->load->view('popular/product_card', ['produk' => $produk]);
+                endforeach; 
                 ?>
-                <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
-                     data-id="<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>"
-                     data-name="<?= strtolower(isset($produk['nama_product']) ? $produk['nama_product'] : '') ?>"
-                     data-price="<?= isset($produk['harga']) ? $produk['harga'] : '0' ?>"
-                     data-rating="<?= floatval(isset($produk['rating']) ? $produk['rating'] : 0) ?>"
-                     data-categories="<?= $category_ids_str ?>">
-                    <a href="<?= base_url('product/detail/' . (isset($produk['id_product']) ? $produk['id_product'] : '0')) ?>" class="block flex-grow">
-                        <div class="aspect-w-1 aspect-h-1">
-                            <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar; ?>" 
-                                 alt="<?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?>" 
-                                 class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?></h3>
-                            <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                                <?php if (!empty($product_categories_data)) : ?>
-                                    <?php foreach ($product_categories_data as $cat) : ?>
-                                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </a>
-
-                    <div class="p-3 sm:p-4">
-                        <div class="flex items-center mb-2">
-                            <div class="flex text-yellow-400">
-                                <?php 
-                                $rating = floatval(isset($produk['rating']) ? $produk['rating'] : 0);
-                                for ($i = 1; $i <= 5; $i++) : ?>
-                                    <?php if ($i <= $rating) : ?>
-                                        <i class="fas fa-star"></i>
-                                    <?php elseif ($i - 0.5 <= $rating) : ?>
-                                        <i class="fas fa-star-half-alt"></i>
-                                    <?php else : ?>
-                                        <i class="far fa-star"></i>
-                                    <?php endif; ?>
-                                <?php endfor; ?>
-                            </div>
-                            <span class="text-gray-500 text-xs ml-1">(<?= number_format($rating, 1) ?>)</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm sm:text-lg font-bold">Rp<?= number_format(isset($produk['harga']) ? $produk['harga'] : 0, 0, ',', '.'); ?></span>
-                            <div class="flex gap-2">
-                                <?php 
-                                $is_wishlisted = false;
-                                if ($this->session->userdata('logged_in') && isset($produk['id_product'])) {
-                                    $is_wishlisted = $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $produk['id_product']);
-                                }
-                                ?>
-                                <button onclick="toggleWishlist(this, <?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>)"
-                                        class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
-                                    <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
-                                </button>
-                                <button onclick="addToCartCard(<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>, this)"
-                                        class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                    <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
             </div>
             
-            <!-- Pagination -->
-            <?php if ($total_pages > 1): ?>
-            <div class="flex justify-center items-center space-x-2 mt-8">
-                <!-- Previous Button -->
-                <?php if ($current_page > 1): ?>
-                    <a href="?page=<?= $current_page - 1 ?>" 
-                       class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
-                        <i class="fas fa-chevron-left"></i>
-                    </a>
-                <?php endif; ?>
-                
-                <!-- Page Numbers -->
-                <?php
-                $start_page = max(1, $current_page - 2);
-                $end_page = min($total_pages, $current_page + 2);
-                
-                if ($start_page > 1) {
-                    echo '<a href="?page=1" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">1</a>';
-                    if ($start_page > 2) {
-                        echo '<span class="px-2 text-gray-500">...</span>';
-                    }
-                }
-                
-                for ($i = $start_page; $i <= $end_page; $i++) {
-                    $active_class = $i === $current_page ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-white text-gray-700 hover:bg-gray-50';
-                    echo '<a href="?page=' . $i . '" class="px-4 py-2 border border-gray-300 rounded-md ' . $active_class . ' transition-colors">' . $i . '</a>';
-                }
-                
-                if ($end_page < $total_pages) {
-                    if ($end_page < $total_pages - 1) {
-                        echo '<span class="px-2 text-gray-500">...</span>';
-                    }
-                    echo '<a href="?page=' . $total_pages . '" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">' . $total_pages . '</a>';
-                }
-                ?>
-                
-                <!-- Next Button -->
-                <?php if ($current_page < $total_pages): ?>
-                    <a href="?page=<?= $current_page + 1 ?>" 
-                       class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
+            <?php $this->load->view('popular/pagination', [
+                'current_page' => $current_page,
+                'total_pages' => $total_pages
+            ]); ?>
             
             <!-- No Results Message -->
             <div id="noResults" class="hidden py-12 text-center">
@@ -619,291 +316,167 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this to your existing script section -->
 <script>
-// Filter and Search Functionality
+// Common utility functions
+const utils = {
+    formatCurrency: (value) => 'Rp' + parseInt(value).toLocaleString('id-ID'),
+    
+    getFilterValues: () => ({
+        searchTerm: document.getElementById('searchProduct').value.toLowerCase(),
+        minPrice: parseInt(document.getElementById('minPriceSlider').value),
+        maxPrice: parseInt(document.getElementById('maxPriceSlider').value),
+        selectedCategories: Array.from(document.querySelectorAll('.category-checkbox:checked')).map(cb => cb.value),
+        selectedRatings: Array.from(document.querySelectorAll('.rating-checkbox:checked')).map(cb => parseInt(cb.value)),
+        sortBy: document.getElementById('sortBy').value
+    }),
+    
+    buildFilterParams: (filters) => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', '1');
+        
+        if (filters.searchTerm) params.set('search', filters.searchTerm);
+        if (filters.minPrice > 0) params.set('min_price', filters.minPrice);
+        if (filters.maxPrice < 1000000) params.set('max_price', filters.maxPrice);
+        if (filters.selectedCategories.length) params.set('categories', filters.selectedCategories.join(','));
+        if (filters.selectedRatings.length) params.set('ratings', filters.selectedRatings.join(','));
+        if (filters.sortBy !== 'popular') params.set('sort', filters.sortBy);
+        
+        return params;
+    },
+    
+    resetFilterInputs: () => {
+        const elements = {
+            searchInput: document.getElementById('searchProduct'),
+            minPriceSlider: document.getElementById('minPriceSlider'),
+            maxPriceSlider: document.getElementById('maxPriceSlider'),
+            minPriceInput: document.getElementById('minPrice'),
+            maxPriceInput: document.getElementById('maxPrice'),
+            minPriceLabel: document.getElementById('minPriceLabel'),
+            maxPriceLabel: document.getElementById('maxPriceLabel'),
+            categoryCheckboxes: document.querySelectorAll('.category-checkbox'),
+            ratingCheckboxes: document.querySelectorAll('.rating-checkbox'),
+            sortBySelect: document.getElementById('sortBy')
+        };
+        
+        elements.searchInput.value = '';
+        elements.minPriceSlider.value = elements.minPriceInput.value = '0';
+        elements.maxPriceSlider.value = elements.maxPriceInput.value = '1000000';
+        elements.minPriceLabel.textContent = utils.formatCurrency(0);
+        elements.maxPriceLabel.textContent = utils.formatCurrency(1000000);
+        elements.categoryCheckboxes.forEach(cb => cb.checked = false);
+        elements.ratingCheckboxes.forEach(cb => cb.checked = false);
+        elements.sortBySelect.value = 'popular';
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Price slider styling
-    const minPriceSlider = document.getElementById('minPriceSlider');
-    const maxPriceSlider = document.getElementById('maxPriceSlider');
-    const minPriceInput = document.getElementById('minPrice');
-    const maxPriceInput = document.getElementById('maxPrice');
-    const minPriceLabel = document.getElementById('minPriceLabel');
-    const maxPriceLabel = document.getElementById('maxPriceLabel');
-    const searchInput = document.getElementById('searchProduct');
-    const productGrid = document.getElementById('productGrid');
-    const noResults = document.getElementById('noResults');
-    const resetFiltersBtn = document.getElementById('resetFilters');
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    const sortBySelect = document.getElementById('sortBy');
-    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-    const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
+    // Initialize price sliders
+    const priceSliders = {
+        min: document.getElementById('minPriceSlider'),
+        max: document.getElementById('maxPriceSlider'),
+        minInput: document.getElementById('minPrice'),
+        maxInput: document.getElementById('maxPrice'),
+        minLabel: document.getElementById('minPriceLabel'),
+        maxLabel: document.getElementById('maxPriceLabel')
+    };
     
     const priceGap = 10000;
     
-    function formatCurrency(value) {
-        return 'Rp' + parseInt(value).toLocaleString('id-ID');
-    }
-    
-    // Initialize price labels
-    minPriceLabel.textContent = formatCurrency(minPriceSlider.value);
-    maxPriceLabel.textContent = formatCurrency(maxPriceSlider.value);
-    
-    // Min price slider
-    minPriceSlider.addEventListener('input', function() {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
+    // Price slider event handlers
+    const handlePriceSlider = (slider, isMin) => {
+        const value = parseInt(slider.value);
+        const otherSlider = isMin ? priceSliders.max : priceSliders.min;
+        const otherValue = parseInt(otherSlider.value);
         
-        if(maxVal - minVal < priceGap) {
-            minVal = maxVal - priceGap;
-            minPriceSlider.value = minVal;
+        if (isMin && otherValue - value < priceGap) {
+            slider.value = otherValue - priceGap;
+        } else if (!isMin && value - otherValue < priceGap) {
+            slider.value = otherValue + priceGap;
         }
         
-        minPriceInput.value = minVal;
-        minPriceLabel.textContent = formatCurrency(minVal);
-    });
+        const input = isMin ? priceSliders.minInput : priceSliders.maxInput;
+        const label = isMin ? priceSliders.minLabel : priceSliders.maxLabel;
+        input.value = slider.value;
+        label.textContent = utils.formatCurrency(slider.value);
+    };
     
-    // Max price slider
-    maxPriceSlider.addEventListener('input', function() {
-        let minVal = parseInt(minPriceSlider.value);
-        let maxVal = parseInt(maxPriceSlider.value);
+    priceSliders.min.addEventListener('input', () => handlePriceSlider(priceSliders.min, true));
+    priceSliders.max.addEventListener('input', () => handlePriceSlider(priceSliders.max, false));
+    
+    // Filter and search functionality
+    const filterProducts = (event) => {
+        const filters = utils.getFilterValues();
         
-        if(maxVal - minVal < priceGap) {
-            maxVal = minVal + priceGap;
-            maxPriceSlider.value = maxVal;
+        if (event?.target?.id === 'applyFilters') {
+            const params = utils.buildFilterParams(filters);
+            window.location.href = window.location.pathname + '?' + params.toString();
+            return;
         }
         
-        maxPriceInput.value = maxVal;
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-    });
-    
-    // Min price input
-    minPriceInput.addEventListener('input', function() {
-        let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        const productCards = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
         
-        if(minVal < 0) minVal = 0;
-        if(minVal > maxVal - priceGap) minVal = maxVal - priceGap;
-        
-        minPriceSlider.value = minVal;
-        minPriceLabel.textContent = formatCurrency(minVal);
-    });
-    
-    // Max price input
-    maxPriceInput.addEventListener('input', function() {
-        let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 1000000;
-        
-        if(maxVal > 1000000) maxVal = 1000000;
-        if(maxVal < minVal + priceGap) maxVal = minVal + priceGap;
-        
-        maxPriceSlider.value = maxVal;
-        maxPriceLabel.textContent = formatCurrency(maxVal);
-    });
-    
-    // Filter products function
-    function filterProducts() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const minPrice = parseInt(minPriceSlider.value);
-        const maxPrice = parseInt(maxPriceSlider.value);
-        const selectedCategories = Array.from(categoryCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        const selectedRatings = Array.from(ratingCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => parseInt(cb.value));
-        const sortBy = sortBySelect.value;
-        
-        // Build query parameters
-        const params = new URLSearchParams(window.location.search);
-        params.set('page', '1'); // Reset to first page when filtering
-        
-        if (searchTerm) params.set('search', searchTerm);
-        if (minPrice > 0) params.set('min_price', minPrice);
-        if (maxPrice < 1000000) params.set('max_price', maxPrice);
-        if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
-        if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
-        if (sortBy !== 'popular') params.set('sort', sortBy);
-        
-        // Redirect to filtered URL
-        window.location.href = window.location.pathname + '?' + params.toString();
-    }
-    
-    // Sort products function
-    function sortProducts(sortBy) {
-        const productCards = Array.from(document.querySelectorAll('.product-card:not(.hidden)'));
-        
-        productCards.sort((a, b) => {
-            const aPrice = parseInt(a.getAttribute('data-price'));
-            const bPrice = parseInt(b.getAttribute('data-price'));
-            const aRating = parseFloat(a.getAttribute('data-rating'));
-            const bRating = parseFloat(b.getAttribute('data-rating'));
-            const aId = parseInt(a.getAttribute('data-id'));
-            const bId = parseInt(b.getAttribute('data-id'));
-            
-            switch(sortBy) {
-                case 'price_low':
-                    return aPrice - bPrice;
-                case 'price_high':
-                    return bPrice - aPrice;
-                case 'rating':
-                    return bRating - aRating;
-                case 'newest':
-                    return bId - aId; // Assuming newer products have higher IDs
-                default: // popular
-                    return 0; // Keep original order
-            }
-        });
-        
-        // Reorder elements in the DOM
-        const parent = productGrid;
         productCards.forEach(card => {
-            parent.appendChild(card);
+            const matches = {
+                search: card.getAttribute('data-name').includes(filters.searchTerm),
+                price: (() => {
+                    const price = parseInt(card.getAttribute('data-price'));
+                    return price >= filters.minPrice && price <= filters.maxPrice;
+                })(),
+                category: filters.selectedCategories.length === 0 || 
+                         card.getAttribute('data-categories').split(',').some(cat => 
+                            filters.selectedCategories.includes(cat)),
+                rating: filters.selectedRatings.length === 0 || 
+                       filters.selectedRatings.some(r => 
+                            parseFloat(card.getAttribute('data-rating')) >= r)
+            };
+            
+            const isVisible = Object.values(matches).every(Boolean);
+            card.classList.toggle('hidden', !isVisible);
+            if (isVisible) visibleCount++;
         });
-    }
-    
-    // Reset all filters
-    function resetFilters() {
-        // Clear all filters
-        searchInput.value = '';
-        minPriceSlider.value = 0;
-        maxPriceSlider.value = 1000000;
-        minPriceInput.value = 0;
-        maxPriceInput.value = 1000000;
-        minPriceLabel.textContent = formatCurrency(0);
-        maxPriceLabel.textContent = formatCurrency(1000000);
         
-        categoryCheckboxes.forEach(cb => cb.checked = false);
-        ratingCheckboxes.forEach(cb => cb.checked = false);
-        sortBySelect.value = 'popular';
+        document.getElementById('productGrid').classList.toggle('hidden', visibleCount === 0);
+        document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
         
-        // Redirect to base URL
-        window.location.href = window.location.pathname;
-    }
+        sortProducts(filters.sortBy);
+    };
     
     // Event listeners
-    searchInput.addEventListener('input', filterProducts);
-    applyFiltersBtn.addEventListener('click', filterProducts);
-    resetFiltersBtn.addEventListener('click', resetFilters);
-    clearFiltersBtn.addEventListener('click', resetFilters);
-    sortBySelect.addEventListener('change', () => sortProducts(sortBySelect.value));
+    document.getElementById('searchProduct').addEventListener('input', filterProducts);
+    document.getElementById('applyFilters').addEventListener('click', filterProducts);
+    document.getElementById('resetFilters').addEventListener('click', (event) => {
+        utils.resetFilterInputs();
+        if (event.target.id === 'resetFilters') {
+            window.location.href = window.location.pathname;
+        } else {
+            filterProducts();
+        }
+    });
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        window.location.href = window.location.pathname;
+    });
+    document.getElementById('sortBy').addEventListener('change', (e) => sortProducts(e.target.value));
     
-    // Add event listeners to all checkboxes
-    categoryCheckboxes.forEach(cb => {
+    document.querySelectorAll('.category-checkbox, .rating-checkbox').forEach(cb => {
         cb.addEventListener('change', filterProducts);
     });
     
-    ratingCheckboxes.forEach(cb => {
-        cb.addEventListener('change', filterProducts);
+    // Mobile filter functionality
+    const mobileFilter = {
+        btn: document.getElementById('mobileFilterBtn'),
+        sidebar: document.getElementById('mobileFilterSidebar'),
+        closeBtn: document.getElementById('closeMobileFilter')
+    };
+    
+    mobileFilter.btn.addEventListener('click', () => mobileFilter.sidebar.classList.remove('hidden'));
+    mobileFilter.closeBtn.addEventListener('click', () => mobileFilter.sidebar.classList.add('hidden'));
+    mobileFilter.sidebar.addEventListener('click', (e) => {
+        if (e.target === mobileFilter.sidebar) mobileFilter.sidebar.classList.add('hidden');
     });
     
     // Initial filter
     filterProducts();
 });
-
-// Mobile filter functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileFilterBtn = document.getElementById('mobileFilterBtn');
-    const mobileFilterSidebar = document.getElementById('mobileFilterSidebar');
-    const closeMobileFilter = document.getElementById('closeMobileFilter');
-    
-    mobileFilterBtn.addEventListener('click', () => {
-        mobileFilterSidebar.classList.remove('hidden');
-    });
-    
-    closeMobileFilter.addEventListener('click', () => {
-        mobileFilterSidebar.classList.add('hidden');
-    });
-    
-    // Close mobile filter when clicking outside
-    mobileFilterSidebar.addEventListener('click', (e) => {
-        if (e.target === mobileFilterSidebar) {
-            mobileFilterSidebar.classList.add('hidden');
-        }
-    });
-    
-    // ... rest of your existing script ...
-});
-
-// 1. Tambahkan fungsi showNotification jika belum ada
-function showNotification(type, title, message) {
-    // Remove any existing notifications
-    const existingNotification = document.querySelector('.custom-notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
-    notification.innerHTML = `
-        <div class="notification-content">
-            <div class="notification-icon ${type}">
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            </div>
-            <div class="notification-text">
-                <h4>${title}</h4>
-                <p>${message}</p>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
-
-// 2. Tambahkan fungsi addToCartCard
-function addToCartCard(productId, button) {
-    <?php if (!$this->session->userdata('logged_in')): ?>
-        document.getElementById('loginPrompt').classList.remove('hidden');
-        return;
-    <?php endif; ?>
-    // Show loading state
-    const originalHTML = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    button.disabled = true;
-    const formData = new FormData();
-    formData.append('id_product', productId);
-    formData.append('quantity', 1);
-    fetch('<?= base_url('cart/add') ?>', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        button.innerHTML = originalHTML;
-        button.disabled = false;
-        if (data.success) {
-            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
-        } else {
-            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
-        }
-    })
-    .catch(error => {
-        button.innerHTML = originalHTML;
-        button.disabled = false;
-        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
-    });
-}
-
-// 3. Ganti tombol keranjang pada card produk
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.product-card .fa-shopping-cart').forEach(function(icon) {
-        const button = icon.closest('button');
-        if (button) {
-            button.onclick = function() {
-                addToCartCard(button.closest('.product-card').getAttribute('data-id'), button);
-            };
-        }
-    });
-});
-
-// 4. Tambahkan style notifikasi jika belum ada
 </script>
 
 <style>
