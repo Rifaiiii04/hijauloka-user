@@ -222,10 +222,9 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 <div class="container mx-auto px-4 mb-8">
     <div class="max-w-2xl mx-auto">
         <div class="relative group">
-        <i class="fas fa-search"></i>
             <input type="text" 
                    id="searchProduct" 
-                   placeholder="Cari tanaman hias..." 
+                   placeholder="🔎 Cari tanaman hias..." 
                    class="w-full p-3 text-base rounded-xl border-2 border-gray-200 
                           focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:ring-opacity-50 
                           transition-all duration-200 ease-in-out
