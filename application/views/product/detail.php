@@ -265,6 +265,17 @@
                         <span class="text-xs text-gray-500"><?= date('d M Y', strtotime($review['tgl_review'])) ?></span>
                     </div>
                     <p class="text-gray-600 text-sm"><?= nl2br(htmlspecialchars($review['ulasan'])) ?></p>
+                    
+                    <!-- Review Photo - Add this section -->
+                    <?php if (!empty($review['foto_review'])): ?>
+                    <div class="mt-3">
+                        <a href="<?= base_url('uploads/reviews/' . $review['foto_review']) ?>" target="_blank" class="block">
+                            <img src="<?= base_url('uploads/reviews/' . $review['foto_review']) ?>" 
+                                 alt="Review Photo" 
+                                 class="h-24 object-cover rounded-md border border-gray-200 hover:opacity-90 transition-opacity">
+                        </a>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             <?php else: ?>
