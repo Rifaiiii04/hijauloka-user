@@ -14,7 +14,7 @@
     <!-- 3D Background Container -->
     <div id="3d-background" class="fixed inset-0 -z-10"></div>
 
-    <div class="container mx-auto px-4 py-12 md:py-16 relative">
+    <div class="container mx-auto px-4 py-12 mt-20 md:py-16 relative">
         <div class="max-w-xl mx-auto">
             <!-- Simple Hero Section -->
             <div class="text-center mb-10">
