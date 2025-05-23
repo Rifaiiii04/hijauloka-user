@@ -14,11 +14,11 @@
     <!-- 3D Background Container -->
     <div id="3d-background" class="fixed inset-0 -z-10"></div>
 
-    <div class="container mx-auto px-4 py-12 mt-20 md:py-16 relative">
+    <div class="container mx-auto px-4 py-12 md:py-16 relative">
         <div class="max-w-xl mx-auto">
             <!-- Simple Hero Section -->
             <div class="text-center mb-10">
-                <h1 class="text-3xl font-bold text-gray-800 mb-4">Coming Soon</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4 mt-24">Coming Soon</h1>
                 <p class="text-gray-600">
                     <?php if (isset($category) && $category === 'seeds'): ?>
                         Kategori benih tanaman akan segera hadir. Kami sedang menyiapkan koleksi benih berkualitas untuk Anda.
