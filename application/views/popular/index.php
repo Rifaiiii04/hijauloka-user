@@ -581,11 +581,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     let searchTimeout;
 
-    // Function to set search term
-    window.setSearchTerm = function(term) {
-        searchInput.value = term;
-        filterProducts();
-    };
+    // Function to get all categories
+    const categories = <?= json_encode(array_map(function($cat) {
+        return [
+            'id' => $cat['id_kategori'],
+            'name' => $cat['nama_kategori']
+        ];
+    }, $categories)) ?>;
 
     // Function to show suggestions
     function showSuggestions(term) {
@@ -594,22 +596,73 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Get all product names
-        const products = Array.from(document.querySelectorAll('.product-card'))
-            .map(card => card.getAttribute('data-name'))
-            .filter(name => name.toLowerCase().includes(term.toLowerCase()))
-            .slice(0, 5); // Limit to 5 suggestions
+        const searchTerm = term.toLowerCase();
+        let suggestions = [];
 
+        // Get product suggestions
+        const products = Array.from(document.querySelectorAll('.product-card'))
+            .map(card => ({
+                name: card.getAttribute('data-name'),
+                categories: card.getAttribute('data-categories').split(','),
+                rating: parseFloat(card.getAttribute('data-rating'))
+            }))
+            .filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.categories.some(catId => {
+                    const category = categories.find(c => c.id === catId);
+                    return category && category.name.toLowerCase().includes(searchTerm);
+                })
+            )
+            .slice(0, 5);
+
+        // Get category suggestions
+        const categoryMatches = categories
+            .filter(cat => cat.name.toLowerCase().includes(searchTerm))
+            .slice(0, 3);
+
+        // Format suggestions
         if (products.length > 0) {
-            searchSuggestions.innerHTML = products
-                .map(product => `
+            suggestions.push('<div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Produk</div>');
+            suggestions.push(...products.map(product => {
+                const categoryNames = product.categories
+                    .map(catId => categories.find(c => c.id === catId)?.name)
+                    .filter(Boolean)
+                    .join(', ');
+                
+                return `
                     <button class="w-full px-4 py-2 text-left hover:bg-green-50 text-gray-700 
-                                 transition-colors duration-150 flex items-center gap-2"
-                            onclick="setSearchTerm('${product}')">
-                        <i class="fas fa-search text-green-600 text-sm"></i>
-                        <span>${product}</span>
+                                 transition-colors duration-150 flex items-start gap-3"
+                            onclick="setSearchTerm('${product.name}')">
+                        <div class="flex-1">
+                            <div class="font-medium">${product.name}</div>
+                            <div class="text-sm text-gray-500">${categoryNames}</div>
+                        </div>
+                        <div class="flex items-center text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <span class="ml-1 text-gray-600">${product.rating.toFixed(1)}</span>
+                        </div>
                     </button>
-                `).join('');
+                `;
+            }));
+        }
+
+        if (categoryMatches.length > 0) {
+            if (suggestions.length > 0) {
+                suggestions.push('<div class="border-t border-gray-100"></div>');
+            }
+            suggestions.push('<div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Kategori</div>');
+            suggestions.push(...categoryMatches.map(category => `
+                <button class="w-full px-4 py-2 text-left hover:bg-green-50 text-gray-700 
+                             transition-colors duration-150 flex items-center gap-2"
+                        onclick="setSearchTerm('${category.name}')">
+                    <i class="fas fa-tag text-green-600 text-sm"></i>
+                    <span>${category.name}</span>
+                </button>
+            `));
+        }
+
+        if (suggestions.length > 0) {
+            searchSuggestions.innerHTML = suggestions.join('');
             searchSuggestions.classList.remove('hidden');
         } else {
             searchSuggestions.classList.add('hidden');
@@ -690,7 +743,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const productRating = parseFloat(card.getAttribute('data-rating'));
             const productCategories = card.getAttribute('data-categories').split(',');
             
-            const matchesSearch = productName.includes(searchTerm);
+            // Check if product matches search term (either by name or category)
+            const matchesSearch = searchTerm === '' || 
+                productName.toLowerCase().includes(searchTerm) ||
+                productCategories.some(catId => {
+                    const category = categories.find(c => c.id === catId);
+                    return category && category.name.toLowerCase().includes(searchTerm);
+                });
+            
             const matchesCategory = selectedCategories.length === 0 || 
                                   productCategories.some(cat => selectedCategories.includes(cat));
             const matchesRating = selectedRatings.length === 0 || 
@@ -743,6 +803,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial filter
     filterProducts();
+
+    // Update search tags to include categories
+    const searchTagsContainer = document.getElementById('searchTags');
+    if (searchTagsContainer) {
+        const popularCategories = categories.slice(0, 3); // Get first 3 categories
+        searchTagsContainer.innerHTML = popularCategories.map(category => `
+            <button class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors"
+                    onclick="setSearchTerm('${category.name}')">
+                ${category.name}
+            </button>
+        `).join('');
+    }
 });
 
 // Mobile filter functionality
@@ -1011,6 +1083,23 @@ input[type="range"]::-moz-range-thumb {
 
 #searchTags button:active {
     transform: translateY(0);
+}
+
+/* Add these styles to your existing style section */
+#searchSuggestions button {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+#searchSuggestions button:last-child {
+    border-bottom: none;
+}
+
+#searchSuggestions .uppercase {
+    letter-spacing: 0.05em;
+}
+
+#searchSuggestions .border-t {
+    margin: 0.5rem 0;
 }
 </style>
 
