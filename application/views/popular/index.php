@@ -269,23 +269,35 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
                             <div class="px-2">
-                                <div class="flex justify-between mb-2">
-                                    <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
-                                    <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
-                                </div>
-                                <div class="relative mb-4">
-                                    <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
-                                    <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
-                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                                    <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
-                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                                </div>
                                 <div class="flex gap-2 items-center">
-                                    <input type="number" id="minPrice" placeholder="Min" value="0"
-                                           class="w-full p-2 text-sm border rounded-md">
-                                    <span class="text-gray-400">-</span>
-                                    <input type="number" id="maxPrice" placeholder="Max" value="1000000"
-                                           class="w-full p-2 text-sm border rounded-md">
+                                    <div class="flex-1">
+                                        <label for="minPrice" class="block text-sm text-gray-600 mb-1">Harga Minimum</label>
+                                        <div class="relative">
+                                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
+                                            <input type="number" 
+                                                   id="minPrice" 
+                                                   placeholder="0" 
+                                                   value="0"
+                                                   class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                                   min="0" 
+                                                   max="5000000" 
+                                                   step="50000">
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <label for="maxPrice" class="block text-sm text-gray-600 mb-1">Harga Maksimum</label>
+                                        <div class="relative">
+                                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
+                                            <input type="number" 
+                                                   id="maxPrice" 
+                                                   placeholder="5000000" 
+                                                   value="5000000"
+                                                   class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                                   min="0" 
+                                                   max="5000000" 
+                                                   step="50000">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -365,23 +377,35 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                 <div class="mb-6">
                     <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
                     <div class="px-2">
-                        <div class="flex justify-between mb-2">
-                            <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
-                            <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
-                        </div>
-                        <div class="relative mb-4">
-                            <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
-                            <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
-                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                            <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
-                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
-                        </div>
                         <div class="flex gap-2 items-center">
-                            <input type="number" id="minPrice" placeholder="Min" value="0"
-                                   class="w-full p-2 text-sm border rounded-md">
-                            <span class="text-gray-400">-</span>
-                            <input type="number" id="maxPrice" placeholder="Max" value="1000000"
-                                   class="w-full p-2 text-sm border rounded-md">
+                            <div class="flex-1">
+                                <label for="minPrice" class="block text-sm text-gray-600 mb-1">Harga Minimum</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input type="number" 
+                                           id="minPrice" 
+                                           placeholder="0" 
+                                           value="0"
+                                           class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                           min="0" 
+                                           max="5000000" 
+                                           step="50000">
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <label for="maxPrice" class="block text-sm text-gray-600 mb-1">Harga Maksimum</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input type="number" 
+                                           id="maxPrice" 
+                                           placeholder="5000000" 
+                                           value="5000000"
+                                           class="w-full pl-10 pr-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                           min="0" 
+                                           max="5000000" 
+                                           step="50000">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -637,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
     const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     
-    const priceGap = 10000;
+    const priceGap = 50000;
     
     function formatCurrency(value) {
         return 'Rp' + parseInt(value).toLocaleString('id-ID');
@@ -678,9 +702,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Min price input
     minPriceInput.addEventListener('input', function() {
         let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        let maxVal = parseInt(maxPriceInput.value) || 5000000;
         
         if(minVal < 0) minVal = 0;
+        if(minVal > 5000000) minVal = 5000000;
         if(minVal > maxVal - priceGap) minVal = maxVal - priceGap;
         
         minPriceSlider.value = minVal;
@@ -690,9 +715,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Max price input
     maxPriceInput.addEventListener('input', function() {
         let minVal = parseInt(minPriceInput.value) || 0;
-        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        let maxVal = parseInt(maxPriceInput.value) || 5000000;
         
-        if(maxVal > 1000000) maxVal = 1000000;
+        if(maxVal > 5000000) maxVal = 5000000;
         if(maxVal < minVal + priceGap) maxVal = minVal + priceGap;
         
         maxPriceSlider.value = maxVal;
@@ -719,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (searchTerm) params.set('search', searchTerm);
             if (minPrice > 0) params.set('min_price', minPrice);
-            if (maxPrice < 1000000) params.set('max_price', maxPrice);
+            if (maxPrice < 5000000) params.set('max_price', maxPrice);
             if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
             if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
             if (sortBy !== 'popular') params.set('sort', sortBy);
@@ -806,11 +831,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear all filters
         searchInput.value = '';
         minPriceSlider.value = 0;
-        maxPriceSlider.value = 1000000;
+        maxPriceSlider.value = 5000000;
         minPriceInput.value = 0;
-        maxPriceInput.value = 1000000;
+        maxPriceInput.value = 5000000;
         minPriceLabel.textContent = formatCurrency(0);
-        maxPriceLabel.textContent = formatCurrency(1000000);
+        maxPriceLabel.textContent = formatCurrency(5000000);
         
         categoryCheckboxes.forEach(cb => cb.checked = false);
         ratingCheckboxes.forEach(cb => cb.checked = false);
