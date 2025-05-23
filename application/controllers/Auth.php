@@ -14,33 +14,44 @@ class Auth extends CI_Controller {
     }
 
     public function login() {
-        $email = $this->input->post('email');
-        $password = $this->input->post('password');
-
-        $user = $this->User_model->get_user_by_email($email);
+        // Check if already logged in
+        if ($this->session->userdata('logged_in')) {
+            redirect('home');
+        }
         
-        if ($user) {
-            // Check if password is plain text (temporary fix)
-            if ($user->password === $password || password_verify($password, $user->password)) {
-                // If plain text password, update it to hashed version
-                if ($user->password === $password) {
-                    $this->User_model->update_password($user->id_user, password_hash($password, PASSWORD_DEFAULT));
+        if ($this->input->post()) {
+            $email = $this->input->post('email');
+            $password = $this->input->post('password');
+            
+            $this->load->model('user_model');
+            $user = $this->user_model->get_user_by_email($email);
+            
+            // Fix: Check if user exists and then verify password
+            if ($user) {
+                // Access password as array element instead of object property
+                if (password_verify($password, $user['password'])) {
+                    // Set session data
+                    $session_data = array(
+                        'id_user' => $user['id_user'],
+                        'email' => $user['email'],
+                        'nama' => $user['nama'],
+                        'logged_in' => TRUE
+                    );
+                    $this->session->set_userdata($session_data);
+                    
+                    // Redirect to home or intended page
+                    redirect('home');
+                } else {
+                    $this->session->set_flashdata('error', 'Invalid email or password');
+                    redirect('auth');
                 }
-
-                $user_data = array(
-                    'id_user' => $user->id_user,
-                    'email' => $user->email,
-                    'nama' => $user->nama,
-                    'logged_in' => TRUE
-                );
-                
-                $this->session->set_userdata($user_data);
-                redirect('home');
+            } else {
+                $this->session->set_flashdata('error', 'Invalid email or password');
+                redirect('auth');
             }
         }
         
-        $this->session->set_flashdata('error', 'Invalid email or password');
-        redirect('auth');
+        $this->load->view('auth/login');
     }
 
     public function logout() {
