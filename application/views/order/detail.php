@@ -12,7 +12,7 @@
 
     <div class="container mx-auto px-4 pt-20 pb-16 md:pt-32">
         <div class="text-center relative mb-12">
-            <h1 class="text-3xl font-bold text-green-800 mt-22 mb-6">Detail Pesanan</h1>
+            <h1 class="text-3xl font-bold text-green-800 mt-5 mb-6">Detail Pesanan</h1>
         </div>
 
         <div class="max-w-4xl mx-auto">

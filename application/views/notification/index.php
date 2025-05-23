@@ -12,7 +12,7 @@
 
     <div class="container mx-auto px-4 pt-20 pb-16 ">
         <div class="text-center relative mb-12">
-            <h1 class="text-3xl font-bold text-green-800 mt-22 mb-6">Notifikasi</h1>
+            <h1 class="text-3xl font-bold text-green-800 mt-6 mb-6">Notifikasi</h1>
         </div>
 
         <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
