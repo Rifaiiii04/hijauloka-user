@@ -218,21 +218,52 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     <p class="text-gray-600 mt-3">Temukan berbagai koleksi tanaman hias pilihan untuk rumah Anda</p>
 </div>
 
-<!-- Category Filter -->
-<!-- <div class="container mx-auto px-4 mb-8">
-    <div class="flex gap-4 overflow-x-auto pb-4">
-        <a href="<?= base_url('popular') ?>" 
-           class="px-4 py-2 rounded-full whitespace-nowrap <?= empty($selected_category) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' ?>">
-            Semua
-        </a>
-        <?php foreach ($categories as $category): ?>
-            <a href="<?= base_url('popular?kategori=' . $category['id_kategori']) ?>" 
-               class="px-4 py-2 rounded-full whitespace-nowrap <?= ($selected_category == $category['id_kategori']) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' ?>">
-                <?= $category['nama_kategori'] ?>
-            </a>
-        <?php endforeach; ?>
+<!-- Search Section -->
+<div class="container mx-auto px-4 mb-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="relative group">
+            <input type="text" 
+                   id="searchProduct" 
+                   placeholder="Cari tanaman hias..." 
+                   class="w-full pl-5 pr-14 py-3 text-base rounded-xl border-2 border-gray-200 
+                          focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:ring-opacity-50 
+                          transition-all duration-200 ease-in-out
+                          placeholder-gray-400 text-gray-700
+                          shadow-sm hover:border-green-300"
+                   autocomplete="off">
+            <button type="button" 
+                    id="searchButton"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 
+                           w-10 h-10 flex items-center justify-center
+                           bg-green-600 text-white rounded-lg
+                           hover:bg-green-700 active:bg-green-800
+                           transition-colors duration-200
+                           focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <i class="fas fa-search"></i>
+            </button>
+            <!-- Search Suggestions -->
+            <div id="searchSuggestions" 
+                 class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 
+                        max-h-60 overflow-y-auto hidden group-focus-within:block">
+            </div>
+        </div>
+        <!-- Search Tags -->
+        <div id="searchTags" class="flex flex-wrap gap-2 mt-3">
+            <button class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors"
+                    onclick="setSearchTerm('Tanaman Hias Daun')">
+                Tanaman Hias Daun
+            </button>
+            <button class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors"
+                    onclick="setSearchTerm('Tanaman Hias Bunga')">
+                Tanaman Hias Bunga
+            </button>
+            <button class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors"
+                    onclick="setSearchTerm('Tanaman Hias Gantung')">
+                Tanaman Hias Gantung
+            </button>
+        </div>
     </div>
-</div> -->
+</div>
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-5 ">
@@ -547,101 +578,143 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchProduct');
-    const productGrid = document.getElementById('productGrid');
-    const noResults = document.getElementById('noResults');
-    const resetFiltersBtn = document.getElementById('resetFilters');
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-    const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
-    
-    // Update filterProducts function
-    function filterProducts() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedCategories = Array.from(categoryCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        const selectedRatings = Array.from(ratingCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => parseInt(cb.value));
-        
-        // Only redirect if apply button is clicked
-        if (event?.target?.id === 'applyFilters') {
-            const params = new URLSearchParams(window.location.search);
-            params.set('page', '1');
-            
-            if (searchTerm) params.set('search', searchTerm);
-            if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
-            if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
-            
-            window.location.href = window.location.pathname + '?' + params.toString();
+    const searchButton = document.getElementById('searchButton');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    let searchTimeout;
+
+    // Function to set search term
+    window.setSearchTerm = function(term) {
+        searchInput.value = term;
+        filterProducts();
+    };
+
+    // Function to show suggestions
+    function showSuggestions(term) {
+        if (!term.trim()) {
+            searchSuggestions.classList.add('hidden');
             return;
         }
-        
-        // Client-side filtering
-        const productCards = document.querySelectorAll('.product-card');
-        let visibleCount = 0;
-        
-        productCards.forEach(card => {
-            const productName = card.getAttribute('data-name');
-            const productRating = parseFloat(card.getAttribute('data-rating'));
-            const productCategories = card.getAttribute('data-categories').split(',');
-            
-            const matchesSearch = productName.includes(searchTerm);
-            const matchesCategory = selectedCategories.length === 0 || 
-                                  productCategories.some(cat => selectedCategories.includes(cat));
-            const matchesRating = selectedRatings.length === 0 || 
-                                selectedRatings.some(r => productRating >= r);
-            
-            if (matchesSearch && matchesCategory && matchesRating) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-        
-        // Show/hide no results message
-        if (visibleCount === 0) {
-            productGrid.classList.add('hidden');
-            noResults.classList.remove('hidden');
+
+        // Get all product names
+        const products = Array.from(document.querySelectorAll('.product-card'))
+            .map(card => card.getAttribute('data-name'))
+            .filter(name => name.toLowerCase().includes(term.toLowerCase()))
+            .slice(0, 5); // Limit to 5 suggestions
+
+        if (products.length > 0) {
+            searchSuggestions.innerHTML = products
+                .map(product => `
+                    <button class="w-full px-4 py-2 text-left hover:bg-green-50 text-gray-700 
+                                 transition-colors duration-150 flex items-center gap-2"
+                            onclick="setSearchTerm('${product}')">
+                        <i class="fas fa-search text-green-600 text-sm"></i>
+                        <span>${product}</span>
+                    </button>
+                `).join('');
+            searchSuggestions.classList.remove('hidden');
         } else {
-            productGrid.classList.remove('hidden');
-            noResults.classList.add('hidden');
+            searchSuggestions.classList.add('hidden');
         }
     }
-    
-    // Update resetFilters function
-    function resetFilters() {
-        searchInput.value = '';
-        categoryCheckboxes.forEach(cb => cb.checked = false);
-        ratingCheckboxes.forEach(cb => cb.checked = false);
+
+    // Handle search input
+    searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        const term = e.target.value;
         
-        if (event?.target?.id === 'resetFilters') {
-            window.location.href = window.location.pathname;
-        } else {
+        // Show suggestions
+        showSuggestions(term);
+        
+        // Debounce the search
+        searchTimeout = setTimeout(() => {
             filterProducts();
+        }, 300);
+    });
+
+    // Handle search button click
+    searchButton.addEventListener('click', function() {
+        filterProducts();
+        searchInput.focus();
+    });
+
+    // Handle enter key
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            filterProducts();
+            searchSuggestions.classList.add('hidden');
         }
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+            searchSuggestions.classList.add('hidden');
+        }
+    });
+
+    // Handle suggestion clicks
+    searchSuggestions.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            searchSuggestions.classList.add('hidden');
+        }
+    });
+});
+
+// Update the existing filterProducts function to handle search better
+function filterProducts() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedCategories = Array.from(categoryCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+    const selectedRatings = Array.from(ratingCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => parseInt(cb.value));
+    
+    // Only redirect if apply button is clicked
+    if (event?.target?.id === 'applyFilters') {
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', '1');
+        
+        if (searchTerm) params.set('search', searchTerm);
+        if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
+        if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
+        
+        window.location.href = window.location.pathname + '?' + params.toString();
+        return;
     }
     
-    // Event listeners
-    searchInput.addEventListener('input', filterProducts);
-    applyFiltersBtn.addEventListener('click', filterProducts);
-    resetFiltersBtn.addEventListener('click', resetFilters);
-    clearFiltersBtn.addEventListener('click', () => window.location.href = window.location.pathname);
+    // Client-side filtering
+    const productCards = document.querySelectorAll('.product-card');
+    let visibleCount = 0;
     
-    // Add event listeners to all checkboxes
-    categoryCheckboxes.forEach(cb => {
-        cb.addEventListener('change', filterProducts);
+    productCards.forEach(card => {
+        const productName = card.getAttribute('data-name');
+        const productRating = parseFloat(card.getAttribute('data-rating'));
+        const productCategories = card.getAttribute('data-categories').split(',');
+        
+        const matchesSearch = productName.includes(searchTerm);
+        const matchesCategory = selectedCategories.length === 0 || 
+                              productCategories.some(cat => selectedCategories.includes(cat));
+        const matchesRating = selectedRatings.length === 0 || 
+                            selectedRatings.some(r => productRating >= r);
+        
+        if (matchesSearch && matchesCategory && matchesRating) {
+            card.classList.remove('hidden');
+            visibleCount++;
+        } else {
+            card.classList.add('hidden');
+        }
     });
     
-    ratingCheckboxes.forEach(cb => {
-        cb.addEventListener('change', filterProducts);
-    });
-    
-    // Initial filter
-    filterProducts();
-});
+    // Show/hide no results message
+    if (visibleCount === 0) {
+        productGrid.classList.add('hidden');
+        noResults.classList.remove('hidden');
+    } else {
+        productGrid.classList.remove('hidden');
+        noResults.classList.add('hidden');
+    }
+}
 
 // Mobile filter functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -868,6 +941,47 @@ input[type="range"]::-moz-range-thumb {
 
 .pagination-link:hover:not(.active) {
     background-color: #f3f4f6;
+}
+
+/* Add these styles to your existing style section */
+#searchSuggestions {
+    scrollbar-width: thin;
+    scrollbar-color: #22c55e #f3f4f6;
+}
+
+#searchSuggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+#searchSuggestions::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 3px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb {
+    background-color: #22c55e;
+    border-radius: 3px;
+}
+
+#searchSuggestions button:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+#searchSuggestions button:hover {
+    background-color: #f0fdf4;
+}
+
+#searchTags button {
+    transition: all 0.2s ease-in-out;
+}
+
+#searchTags button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#searchTags button:active {
+    transform: translateY(0);
 }
 </style>
 
