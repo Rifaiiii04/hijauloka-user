@@ -73,4 +73,33 @@ class Review_model extends CI_Model {
         
         return $this->db->get()->result_array();
     }
+    
+    public function upload_review_image($file_data) {
+        // Set upload configuration
+        $config['upload_path'] = './uploads/reviews/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 2048; // 2MB
+        $config['encrypt_name'] = TRUE;
+        
+        // Create directory if it doesn't exist
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777, TRUE);
+        }
+        
+        // Load upload library
+        $this->load->library('upload', $config);
+        
+        if (!$this->upload->do_upload('foto_review')) {
+            return [
+                'status' => FALSE,
+                'error' => $this->upload->display_errors()
+            ];
+        } else {
+            $upload_data = $this->upload->data();
+            return [
+                'status' => TRUE,
+                'file_name' => $upload_data['file_name']
+            ];
+        }
+    }
 }
