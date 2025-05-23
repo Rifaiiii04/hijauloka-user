@@ -244,6 +244,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                    placeholder="Cari tanaman..." 
                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
             <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <div id="searchSuggestions" class="absolute z-10 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
         <!-- Mobile Filter Button -->
         <button id="mobileFilterBtn" class="md:hidden ml-4 p-2 bg-green-600 text-white rounded-lg">
@@ -257,7 +258,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Mobile Filter Sidebar -->
         <div id="mobileFilterSidebar" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden">
-            <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+            <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto">
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-semibold text-lg text-green-800">Filter Produk</h3>
@@ -357,10 +358,10 @@ document.getElementById('cartNotification').addEventListener('click', function(e
             </div>
         </div>
 
-        <!-- Desktop Filters -->
-        <div class="w-full md:w-64 hidden md:flex sticky flex-shrink-0">
-            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24">
-                <h3 class="font-semibold text-lg text-green-800 mb-4 sticky border-b pb-2">Filter Produk</h3>
+        <!-- Desktop Filters - Make it sticky -->
+        <div class="w-full md:w-64 hidden md:block flex-shrink-0">
+            <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+                <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2">Filter Produk</h3>
                 
                 <!-- Price Range Filter -->
                 <div class="mb-6">
@@ -797,6 +798,107 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ... rest of your existing script ...
+});
+
+// Add this CSS to improve the UI
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Improved scrollbar for filter sidebar */
+        .sticky::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sticky::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .sticky::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .sticky::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        /* Smooth transitions */
+        #searchSuggestions {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Improved search input */
+        #searchProduct:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+    `;
+    document.head.appendChild(style);
+});
+});
+
+// Improve mobile filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+    const mobileFilterSidebar = document.getElementById('mobileFilterSidebar');
+    const closeMobileFilter = document.getElementById('closeMobileFilter');
+    
+    mobileFilterBtn.addEventListener('click', () => {
+        mobileFilterSidebar.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+    
+    closeMobileFilter.addEventListener('click', () => {
+        mobileFilterSidebar.classList.add('hidden');
+        document.body.style.overflow = ''; // Restore scrolling
+    });
+    
+    // Close mobile filter when clicking outside
+    mobileFilterSidebar.addEventListener('click', (e) => {
+        if (e.target === mobileFilterSidebar) {
+            mobileFilterSidebar.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    });
+});
+
+// Add this CSS to improve the UI
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Improved scrollbar for filter sidebar */
+        .sticky::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sticky::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .sticky::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .sticky::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        /* Smooth transitions */
+        #searchSuggestions {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Improved search input */
+        #searchProduct:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+    `;
+    document.head.appendChild(style);
+});
 });
 
 // 1. Tambahkan fungsi showNotification jika belum ada
