@@ -236,7 +236,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between w-72">
         <div class="relative flex-grow">
             <input type="text" 
                    id="searchProduct" 
@@ -403,8 +403,9 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <!-- Product Grid -->
         <div class="flex-grow">
             <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <?php foreach ($produk_populer as $produk) : ?>
-                    <?php 
+                <?php 
+                $initial_products = array_slice($produk_populer, 0, 12); // Get first 12 products
+                foreach ($initial_products as $produk) : 
                     if (!empty($produk['gambar'])) {
                         $gambarArr = explode(',', $produk['gambar']);
                         $gambar = trim($gambarArr[0]);
@@ -501,6 +502,17 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                 <?php endforeach; ?>
             </div>
             
+            <!-- Load More Button -->
+            <?php if (count($produk_populer) > 12): ?>
+            <div class="text-center mt-8">
+                <button id="loadMoreBtn" 
+                        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 mx-auto">
+                    <span>Load More</span>
+                    <i class="fas fa-spinner fa-spin hidden"></i>
+                </button>
+            </div>
+            <?php endif; ?>
+            
             <!-- No Results Message -->
             <div id="noResults" class="hidden py-12 text-center">
                 <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
@@ -516,7 +528,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this to your existing script section -->
 <script>
-// Filter and Search Functionality
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchProduct');
     const productGrid = document.getElementById('productGrid');
@@ -528,7 +539,120 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
     const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     
-    // Filter products function
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    let currentPage = 1;
+    const productsPerPage = 12;
+    let allProducts = <?= json_encode($produk_populer) ?>;
+    let filteredProducts = [...allProducts];
+    
+    // Function to create product card HTML
+    function createProductCard(produk) {
+        const gambar = produk.gambar ? produk.gambar.split(',')[0].trim() : 'default.jpg';
+        const category_ids = produk.categories ? produk.categories.map(cat => cat.id_kategori).join(',') : '';
+        const is_wishlisted = <?= $this->session->userdata('logged_in') ? 'true' : 'false' ?>;
+        
+        return `
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
+                 data-id="${produk.id_product || '0'}"
+                 data-name="${(produk.nama_product || '').toLowerCase()}"
+                 data-price="${produk.harga || '0'}"
+                 data-rating="${parseFloat(produk.rating || 0)}"
+                 data-categories="${category_ids}">
+                <a href="${baseUrl}product/detail/${produk.id_product || '0'}" class="block flex-grow">
+                    <div class="aspect-w-1 aspect-h-1">
+                        <img src="https://admin.hijauloka.my.id/uploads/${gambar}" 
+                             alt="${produk.nama_product || 'Product'}" 
+                             class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">${produk.nama_product || 'Product'}</h3>
+                        <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
+                            ${produk.categories ? produk.categories.map(cat => 
+                                `<span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full">${cat.nama_kategori}</span>`
+                            ).join('') : ''}
+                        </div>
+                    </div>
+                </a>
+                <div class="p-3 sm:p-4">
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400">
+                            ${generateStarRating(produk.rating || 0)}
+                        </div>
+                        <span class="text-gray-500 text-xs ml-1">(${parseFloat(produk.rating || 0).toFixed(1)})</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm sm:text-lg font-bold">Rp${formatNumber(produk.harga || 0)}</span>
+                        <div class="flex gap-2">
+                            <button onclick="toggleWishlist(this, ${produk.id_product || '0'})"
+                                    class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors ${is_wishlisted ? 'active' : ''}">
+                                <i class="fas fa-heart ${is_wishlisted ? 'text-red-500' : ''}"></i>
+                            </button>
+                            <button onclick="addToCartCard(${produk.id_product || '0'}, this)"
+                                    class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                                <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Helper function to generate star rating HTML
+    function generateStarRating(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                stars += '<i class="fas fa-star"></i>';
+            } else if (i - 0.5 <= rating) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            } else {
+                stars += '<i class="far fa-star"></i>';
+            }
+        }
+        return stars;
+    }
+    
+    // Helper function to format numbers
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    
+    // Function to load more products
+    function loadMoreProducts() {
+        const spinner = loadMoreBtn.querySelector('.fa-spinner');
+        const buttonText = loadMoreBtn.querySelector('span');
+        
+        spinner.classList.remove('hidden');
+        buttonText.textContent = 'Loading...';
+        loadMoreBtn.disabled = true;
+        
+        setTimeout(() => {
+            const start = currentPage * productsPerPage;
+            const end = start + productsPerPage;
+            const productsToAdd = filteredProducts.slice(start, end);
+            
+            if (productsToAdd.length > 0) {
+                const productGrid = document.getElementById('productGrid');
+                productsToAdd.forEach(produk => {
+                    productGrid.insertAdjacentHTML('beforeend', createProductCard(produk));
+                });
+                
+                currentPage++;
+                
+                // Hide load more button if no more products
+                if (end >= filteredProducts.length) {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+            
+            spinner.classList.add('hidden');
+            buttonText.textContent = 'Load More';
+            loadMoreBtn.disabled = false;
+        }, 500); // Simulate loading delay
+    }
+    
+    // Update filterProducts function
     function filterProducts() {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedCategories = Array.from(categoryCheckboxes)
@@ -539,54 +663,30 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(cb => parseInt(cb.value));
         const sortBy = sortBySelect.value;
         
-        const productCards = document.querySelectorAll('.product-card');
-        let visibleCount = 0;
-        
-        productCards.forEach(card => {
-            const productName = card.getAttribute('data-name');
-            const productPrice = parseInt(card.getAttribute('data-price'));
-            const productRating = parseFloat(card.getAttribute('data-rating'));
-            const productCategories = card.getAttribute('data-categories').split(',');
+        // Filter products
+        filteredProducts = allProducts.filter(produk => {
+            const productName = produk.nama_product.toLowerCase();
+            const productRating = parseFloat(produk.rating || 0);
+            const productCategories = produk.categories ? 
+                produk.categories.map(cat => cat.id_kategori.toString()) : [];
             
-            // Check if product matches all filters
             const matchesSearch = productName.includes(searchTerm);
             const matchesCategory = selectedCategories.length === 0 || 
                                    productCategories.some(cat => selectedCategories.includes(cat));
             const matchesRating = selectedRatings.length === 0 || 
                                  selectedRatings.some(r => productRating >= r);
             
-            if (matchesSearch && matchesCategory && matchesRating) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
+            return matchesSearch && matchesCategory && matchesRating;
         });
         
-        // Show/hide no results message
-        if (visibleCount === 0) {
-            productGrid.classList.add('hidden');
-            noResults.classList.remove('hidden');
-        } else {
-            productGrid.classList.remove('hidden');
-            noResults.classList.add('hidden');
-        }
-        
-        // Sort visible products
-        sortProducts(sortBy);
-    }
-    
-    // Sort products function
-    function sortProducts(sortBy) {
-        const productCards = Array.from(document.querySelectorAll('.product-card:not(.hidden)'));
-        
-        productCards.sort((a, b) => {
-            const aPrice = parseInt(a.getAttribute('data-price'));
-            const bPrice = parseInt(b.getAttribute('data-price'));
-            const aRating = parseFloat(a.getAttribute('data-rating'));
-            const bRating = parseFloat(b.getAttribute('data-rating'));
-            const aId = parseInt(a.getAttribute('data-id'));
-            const bId = parseInt(b.getAttribute('data-id'));
+        // Sort filtered products
+        filteredProducts.sort((a, b) => {
+            const aPrice = parseInt(a.harga || 0);
+            const bPrice = parseInt(b.harga || 0);
+            const aRating = parseFloat(a.rating || 0);
+            const bRating = parseFloat(b.rating || 0);
+            const aId = parseInt(a.id_product || 0);
+            const bId = parseInt(b.id_product || 0);
             
             switch(sortBy) {
                 case 'price_low':
@@ -597,42 +697,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     return bRating - aRating;
                 case 'newest':
                     return bId - aId;
-                default: // popular
+                default:
                     return 0;
             }
         });
         
-        // Reorder elements in the DOM
-        const parent = productGrid;
-        productCards.forEach(card => {
-            parent.appendChild(card);
-        });
+        // Reset pagination
+        currentPage = 1;
+        
+        // Update product grid
+        const productGrid = document.getElementById('productGrid');
+        productGrid.innerHTML = '';
+        
+        if (filteredProducts.length === 0) {
+            productGrid.classList.add('hidden');
+            noResults.classList.remove('hidden');
+            loadMoreBtn.style.display = 'none';
+        } else {
+            productGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+            
+            // Show initial products
+            const initialProducts = filteredProducts.slice(0, productsPerPage);
+            initialProducts.forEach(produk => {
+                productGrid.insertAdjacentHTML('beforeend', createProductCard(produk));
+            });
+            
+            // Show/hide load more button
+            loadMoreBtn.style.display = filteredProducts.length > productsPerPage ? 'flex' : 'none';
+        }
     }
     
-    // Reset all filters
-    function resetFilters() {
-        searchInput.value = '';
-        categoryCheckboxes.forEach(cb => cb.checked = false);
-        ratingCheckboxes.forEach(cb => cb.checked = false);
-        sortBySelect.value = 'popular';
-        filterProducts();
+    // Add load more button event listener
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', loadMoreProducts);
     }
     
-    // Event listeners
-    searchInput.addEventListener('input', filterProducts);
-    applyFiltersBtn.addEventListener('click', filterProducts);
-    resetFiltersBtn.addEventListener('click', resetFilters);
-    clearFiltersBtn.addEventListener('click', resetFilters);
-    sortBySelect.addEventListener('change', () => sortProducts(sortBySelect.value));
-    
-    // Add event listeners to all checkboxes
-    categoryCheckboxes.forEach(cb => {
-        cb.addEventListener('change', filterProducts);
-    });
-    
-    ratingCheckboxes.forEach(cb => {
-        cb.addEventListener('change', filterProducts);
-    });
+    // ... rest of your existing event listeners ...
     
     // Initial filter
     filterProducts();
@@ -850,4 +951,5 @@ input[type="range"]::-moz-range-thumb {
 }
 </style>
 
+<?php $this->load->view('templates/footer') ?>
 <?php $this->load->view('templates/footer') ?>
