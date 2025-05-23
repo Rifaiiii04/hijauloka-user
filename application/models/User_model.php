@@ -4,13 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends CI_Model {
     
     public function get_user_by_email($email) {
-        $query = $this->db->where('email', $email)
-                         ->get('user');
+        $this->db->where('email', $email);
+        $query = $this->db->get('user');
         
         if ($query->num_rows() > 0) {
-            return $query->row();
+            return $query->row_array();
         }
-        return null;
+        
+        return false;
+    }
+    
+    public function update_password($user_id, $new_password) {
+        $this->db->where('id_user', $user_id);
+        $this->db->update('user', array('password' => $new_password));
+        
+        return $this->db->affected_rows() > 0;
     }
     
     public function insert_user($data) {

@@ -97,4 +97,87 @@ class Auth extends CI_Controller {
     
         $this->load->view('auth/register');
     }
+    
+    public function forgot_password() {
+        // Check if user is already logged in
+        if ($this->session->userdata('logged_in')) {
+            redirect('home');
+        }
+        
+        $this->load->view('auth/forgot_password');
+    }
+    
+    public function find_account() {
+        $email = $this->input->post('email');
+        
+        // Validate email
+        if (!$email) {
+            $this->session->set_flashdata('error', 'Please enter your email address');
+            redirect('auth/forgot_password');
+        }
+        
+        // Check if email exists in database
+        $this->load->model('user_model');
+        $user = $this->user_model->get_user_by_email($email);
+        
+        if (!$user) {
+            $this->session->set_flashdata('error', 'No account found with that email address');
+            redirect('auth/forgot_password');
+        }
+        
+        // Pass user data to reset password page
+        $data = array(
+            'user_id' => $user['id_user'],
+            'email' => $user['email']
+        );
+        
+        $this->load->view('auth/reset_password', $data);
+    }
+    
+    public function update_password() {
+        $user_id = $this->input->post('user_id');
+        $email = $this->input->post('email');
+        $new_password = $this->input->post('new_password');
+        $confirm_password = $this->input->post('confirm_password');
+        
+        // Validate inputs
+        if (!$user_id || !$email || !$new_password || !$confirm_password) {
+            $this->session->set_flashdata('error', 'All fields are required');
+            redirect('auth/forgot_password');
+        }
+        
+        // Check if passwords match
+        if ($new_password !== $confirm_password) {
+            $this->session->set_flashdata('error', 'Passwords do not match');
+            
+            // Pass back the user data to the reset password page
+            $data = array(
+                'user_id' => $user_id,
+                'email' => $email
+            );
+            
+            $this->load->view('auth/reset_password', $data);
+            return;
+        }
+        
+        // Update password in database
+        $this->load->model('user_model');
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        $result = $this->user_model->update_password($user_id, $hashed_password);
+        
+        if ($result) {
+            $this->session->set_flashdata('success', 'Password has been reset successfully. You can now login with your new password.');
+            redirect('auth');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update password. Please try again.');
+            
+            // Pass back the user data to the reset password page
+            $data = array(
+                'user_id' => $user_id,
+                'email' => $email
+            );
+            
+            $this->load->view('auth/reset_password', $data);
+        }
+    }
 }
