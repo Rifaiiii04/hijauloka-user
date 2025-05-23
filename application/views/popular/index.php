@@ -136,6 +136,81 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
     </div>
 </div>
 
+<!-- Add these styles to the existing style section -->
+<style>
+    @keyframes bounce-once {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .animate-bounce-once {
+        animation: bounce-once 0.5s ease-in-out;
+    }
+</style>
+
+<!-- Replace the handleCartClick function with this improved version
+function handleCartClick(event, productId) {
+    event.preventDefault();
+    
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+
+    // Show loading state
+    const button = event.currentTarget;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `id_product=${productId}&jumlah=1`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            document.getElementById('cartNotification').classList.remove('hidden');
+            setTimeout(() => {
+                closeCartNotification();
+            }, 2000);
+        } else {
+            // Show error message
+            const errorMessage = data.message || 'Gagal menambahkan ke keranjang';
+            alert(errorMessage);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalContent;
+        button.disabled = false;
+    });
+}
+
+// Add this function to handle cart notification
+function closeCartNotification() {
+    document.getElementById('cartNotification').classList.add('hidden');
+}
+
+// Close notification when clicking outside
+document.getElementById('cartNotification').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeCartNotification();
+    }
+}); -->
+
 <div class="mb-12 mt-28 text-center">
     <h1 class="font-bold text-4xl text-green-800 relative inline-block pb-4">
         Katalog Tanaman
@@ -143,6 +218,22 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
     </h1>
     <p class="text-gray-600 mt-3">Temukan berbagai koleksi tanaman hias pilihan untuk rumah Anda</p>
 </div>
+
+<!-- Category Filter -->
+<!-- <div class="container mx-auto px-4 mb-8">
+    <div class="flex gap-4 overflow-x-auto pb-4">
+        <a href="<?= base_url('popular') ?>" 
+           class="px-4 py-2 rounded-full whitespace-nowrap <?= empty($selected_category) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' ?>">
+            Semua
+        </a>
+        <?php foreach ($categories as $category): ?>
+            <a href="<?= base_url('popular?kategori=' . $category['id_kategori']) ?>" 
+               class="px-4 py-2 rounded-full whitespace-nowrap <?= ($selected_category == $category['id_kategori']) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' ?>">
+                <?= $category['nama_kategori'] ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div> -->
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
@@ -474,14 +565,426 @@ document.getElementById('loginPrompt').addEventListener('click', function(e) {
     </div>
 </main>
 
-<!-- Pass PHP variables to JavaScript -->
+<!-- Add this to your existing script section -->
 <script>
-var isUserLoggedIn = <?= $this->session->userdata('logged_in') ? 'true' : 'false' ?>;
-var baseUrl = '<?= base_url() ?>';
+// Filter and Search Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Price slider styling
+    const minPriceSlider = document.getElementById('minPriceSlider');
+    const maxPriceSlider = document.getElementById('maxPriceSlider');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const minPriceLabel = document.getElementById('minPriceLabel');
+    const maxPriceLabel = document.getElementById('maxPriceLabel');
+    const searchInput = document.getElementById('searchProduct');
+    const productGrid = document.getElementById('productGrid');
+    const noResults = document.getElementById('noResults');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const sortBySelect = document.getElementById('sortBy');
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
+    
+    const priceGap = 10000;
+    
+    function formatCurrency(value) {
+        return 'Rp' + parseInt(value).toLocaleString('id-ID');
+    }
+    
+    // Initialize price labels
+    minPriceLabel.textContent = formatCurrency(minPriceSlider.value);
+    maxPriceLabel.textContent = formatCurrency(maxPriceSlider.value);
+    
+    // Min price slider
+    minPriceSlider.addEventListener('input', function() {
+        let minVal = parseInt(minPriceSlider.value);
+        let maxVal = parseInt(maxPriceSlider.value);
+        
+        if(maxVal - minVal < priceGap) {
+            minVal = maxVal - priceGap;
+            minPriceSlider.value = minVal;
+        }
+        
+        minPriceInput.value = minVal;
+        minPriceLabel.textContent = formatCurrency(minVal);
+    });
+    
+    // Max price slider
+    maxPriceSlider.addEventListener('input', function() {
+        let minVal = parseInt(minPriceSlider.value);
+        let maxVal = parseInt(maxPriceSlider.value);
+        
+        if(maxVal - minVal < priceGap) {
+            maxVal = minVal + priceGap;
+            maxPriceSlider.value = maxVal;
+        }
+        
+        maxPriceInput.value = maxVal;
+        maxPriceLabel.textContent = formatCurrency(maxVal);
+    });
+    
+    // Min price input
+    minPriceInput.addEventListener('input', function() {
+        let minVal = parseInt(minPriceInput.value) || 0;
+        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        
+        if(minVal < 0) minVal = 0;
+        if(minVal > maxVal - priceGap) minVal = maxVal - priceGap;
+        
+        minPriceSlider.value = minVal;
+        minPriceLabel.textContent = formatCurrency(minVal);
+    });
+    
+    // Max price input
+    maxPriceInput.addEventListener('input', function() {
+        let minVal = parseInt(minPriceInput.value) || 0;
+        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        
+        if(maxVal > 1000000) maxVal = 1000000;
+        if(maxVal < minVal + priceGap) maxVal = minVal + priceGap;
+        
+        maxPriceSlider.value = maxVal;
+        maxPriceLabel.textContent = formatCurrency(maxVal);
+    });
+    
+    // Filter products function
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const minPrice = parseInt(minPriceSlider.value);
+        const maxPrice = parseInt(maxPriceSlider.value);
+        const selectedCategories = Array.from(categoryCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        const selectedRatings = Array.from(ratingCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => parseInt(cb.value));
+        const sortBy = sortBySelect.value;
+        
+        const productCards = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
+        productCards.forEach(card => {
+            const productName = card.getAttribute('data-name');
+            const productPrice = parseInt(card.getAttribute('data-price'));
+            const productRating = parseFloat(card.getAttribute('data-rating'));
+            const productCategories = card.getAttribute('data-categories').split(',');
+            
+            // Check if product matches all filters
+            const matchesSearch = productName.includes(searchTerm);
+            const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
+            const matchesCategory = selectedCategories.length === 0 || 
+                                   productCategories.some(cat => selectedCategories.includes(cat));
+            const matchesRating = selectedRatings.length === 0 || 
+                                 selectedRatings.some(r => productRating >= r);
+            
+            if (matchesSearch && matchesPrice && matchesCategory && matchesRating) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            productGrid.classList.add('hidden');
+            noResults.classList.remove('hidden');
+        } else {
+            productGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+        }
+        
+        // Sort visible products
+        sortProducts(sortBy);
+    }
+    
+    // Sort products function
+    function sortProducts(sortBy) {
+        const productCards = Array.from(document.querySelectorAll('.product-card:not(.hidden)'));
+        
+        productCards.sort((a, b) => {
+            const aPrice = parseInt(a.getAttribute('data-price'));
+            const bPrice = parseInt(b.getAttribute('data-price'));
+            const aRating = parseFloat(a.getAttribute('data-rating'));
+            const bRating = parseFloat(b.getAttribute('data-rating'));
+            const aId = parseInt(a.getAttribute('data-id'));
+            const bId = parseInt(b.getAttribute('data-id'));
+            
+            switch(sortBy) {
+                case 'price_low':
+                    return aPrice - bPrice;
+                case 'price_high':
+                    return bPrice - aPrice;
+                case 'rating':
+                    return bRating - aRating;
+                case 'newest':
+                    return bId - aId; // Assuming newer products have higher IDs
+                default: // popular
+                    return 0; // Keep original order
+            }
+        });
+        
+        // Reorder elements in the DOM
+        const parent = productGrid;
+        productCards.forEach(card => {
+            parent.appendChild(card);
+        });
+    }
+    
+    // Reset all filters
+    function resetFilters() {
+        searchInput.value = '';
+        minPriceSlider.value = 0;
+        maxPriceSlider.value = 1000000;
+        minPriceInput.value = 0;
+        maxPriceInput.value = 1000000;
+        minPriceLabel.textContent = formatCurrency(0);
+        maxPriceLabel.textContent = formatCurrency(1000000);
+        
+        categoryCheckboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        
+        ratingCheckboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        
+        sortBySelect.value = 'popular';
+        
+        filterProducts();
+    }
+    
+    // Event listeners
+    searchInput.addEventListener('input', filterProducts);
+    applyFiltersBtn.addEventListener('click', filterProducts);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    clearFiltersBtn.addEventListener('click', resetFilters);
+    sortBySelect.addEventListener('change', () => sortProducts(sortBySelect.value));
+    
+    // Add event listeners to all checkboxes
+    categoryCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+    });
+    
+    ratingCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+    });
+    
+    // Initial filter
+    filterProducts();
+});
+
+// Mobile filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+    const mobileFilterSidebar = document.getElementById('mobileFilterSidebar');
+    const closeMobileFilter = document.getElementById('closeMobileFilter');
+    
+    mobileFilterBtn.addEventListener('click', () => {
+        mobileFilterSidebar.classList.remove('hidden');
+    });
+    
+    closeMobileFilter.addEventListener('click', () => {
+        mobileFilterSidebar.classList.add('hidden');
+    });
+    
+    // Close mobile filter when clicking outside
+    mobileFilterSidebar.addEventListener('click', (e) => {
+        if (e.target === mobileFilterSidebar) {
+            mobileFilterSidebar.classList.add('hidden');
+        }
+    });
+    
+    // ... rest of your existing script ...
+});
+
+// 1. Tambahkan fungsi showNotification jika belum ada
+function showNotification(type, title, message) {
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification' + (type === 'error' ? ' error' : '');
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon ${type}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            </div>
+            <div class="notification-text">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// 2. Tambahkan fungsi addToCartCard
+function addToCartCard(productId, button) {
+    <?php if (!$this->session->userdata('logged_in')): ?>
+        document.getElementById('loginPrompt').classList.remove('hidden');
+        return;
+    <?php endif; ?>
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+    const formData = new FormData();
+    formData.append('id_product', productId);
+    formData.append('quantity', 1);
+    fetch('<?= base_url('cart/add') ?>', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        if (data.success) {
+            showNotification('success', 'Berhasil!', 'Produk telah ditambahkan ke keranjang');
+        } else {
+            showNotification('error', 'Gagal', data.message || 'Terjadi kesalahan saat menambahkan produk ke keranjang');
+        }
+    })
+    .catch(error => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        showNotification('error', 'Oops...', 'Terjadi kesalahan saat menghubungi server');
+    });
+}
+
+// 3. Ganti tombol keranjang pada card produk
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.product-card .fa-shopping-cart').forEach(function(icon) {
+        const button = icon.closest('button');
+        if (button) {
+            button.onclick = function() {
+                addToCartCard(button.closest('.product-card').getAttribute('data-id'), button);
+            };
+        }
+    });
+});
+
+// 4. Tambahkan style notifikasi jika belum ada
 </script>
 
-<!-- Include external CSS and JS files -->
-<link rel="stylesheet" href="<?= base_url('assets/css/popular.css') ?>">
-<script src="<?= base_url('assets/js/popular.js') ?>"></script>
+<style>
+/* Custom styles for range sliders */
+input[type="range"] {
+    -webkit-appearance: none;
+    height: 5px;
+    background: #ddd;
+    border-radius: 5px;
+    background-image: linear-gradient(#22c55e, #22c55e);
+    background-repeat: no-repeat;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    cursor: pointer;
+    box-shadow: 0 0 2px 0 #555;
+}
+
+input[type="range"]::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    cursor: pointer;
+    box-shadow: 0 0 2px 0 #555;
+}
+
+/* Checkbox styling */
+.category-checkbox, .rating-checkbox {
+    accent-color: #22c55e;
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+    .product-card {
+        height: auto;
+    }
+    
+    .product-card img {
+        height: 120px;
+        object-fit: cover;
+    }
+    
+    .product-card h3 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    .product-card .price {
+        font-size: 0.875rem;
+    }
+    
+    .product-card .rating {
+        font-size: 0.75rem;
+    }
+}
+
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 300px;
+    background-color: white;
+    border-left: 4px solid #10b981;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    padding: 16px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease-out;
+    z-index: 9999;
+}
+.custom-notification.show {
+    transform: translateX(0);
+}
+.custom-notification.error {
+    border-left-color: #ef4444;
+}
+.notification-content {
+    display: flex;
+    align-items: center;
+}
+.notification-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+.notification-icon.success {
+    color: #10b981;
+}
+.notification-icon.error {
+    color: #ef4444;
+}
+.notification-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+.notification-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+</style>
 
 <?php $this->load->view('templates/footer') ?>
