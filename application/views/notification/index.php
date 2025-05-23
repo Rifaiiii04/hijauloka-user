@@ -10,7 +10,7 @@
 <body class="bg-gray-50 min-h-screen">
     <?php $this->load->view('templates/navbar'); ?>
 
-    <div class="container mx-auto px-4 pt-20 pb-16 md:pt-28">
+    <div class="container mx-auto px-4 pt-20 pb-16 ">
         <div class="text-center relative mb-12">
             <h1 class="text-3xl font-bold text-green-800 mt-22 mb-6">Notifikasi</h1>
         </div>

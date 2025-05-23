@@ -188,19 +188,19 @@
                         <?php foreach($items as $item): ?>
                         <div class="py-4 flex">
                             <div class="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
-                                <img src="https://admin.hijauloka.my.id/uploads/<?= $item['gambar'] ?>" alt="<?= $item['nama_produk'] ?>" class="w-full h-full object-cover">
+                                <img src="https://admin.hijauloka.my.id/uploads/<?= $item['gambar'] ?>" alt="<?= $item['nama_product'] ?>" class="w-full h-full object-cover">
                             </div>
                             <div class="ml-4 flex-1">
                                 <div class="flex justify-between">
                                     <div>
-                                        <h3 class="text-sm font-medium text-gray-900"><?= $item['nama_produk'] ?></h3>
+                                        <h3 class="text-sm font-medium text-gray-900"><?= $item['nama_product'] ?></h3>
                                         <p class="text-sm text-gray-500 mt-1">
-                                            <?= isset($item['qty']) ? $item['qty'] : 1 ?> x 
+                                            <?= isset($item['quantity']) ? $item['quantity'] : 1 ?> x 
                                             Rp <?= number_format(isset($item['harga']) ? $item['harga'] : 0, 0, ',', '.') ?>
                                         </p>
                                     </div>
                                     <p class="text-sm font-medium text-gray-900">
-                                        Rp <?= number_format((isset($item['harga']) ? $item['harga'] : 0) * (isset($item['qty']) ? $item['qty'] : 1), 0, ',', '.') ?>
+                                        Rp <?= number_format((isset($item['harga']) ? $item['harga'] : 0) * (isset($item['quantity']) ? $item['quantity'] : 1), 0, ',', '.') ?>
                                     </p>
                                 </div>
                             </div>
