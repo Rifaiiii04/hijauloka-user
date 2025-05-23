@@ -265,18 +265,10 @@ document.getElementById('cartNotification').addEventListener('click', function(e
     </div>
 </div>
 
-<!-- Add this after the category filter and before the main content -->
-<div class="container mx-auto px-4 mb-5 ">
-    <div class="flex items-center justify-between mx-auto w-96 ">
-        <div class="relative flex-grow">
-            <input type="text" 
-                   id="searchProduct" 
-                   placeholder="Cari tanaman..." 
-                   class="w-full px-4 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            <i class="fas fa-search absolute right-5 top-1/2 w-12 h-full text-center flex items-center justify-center -translate-y-1/2 text-white bg-green-600 rounded-lg"></i>
-        </div>
-        <!-- Mobile Filter Button -->
-        <button id="mobileFilterBtn" class="md:hidden ml-4 p-2 bg-green-600 text-white rounded-lg">
+<!-- Mobile Filter Button -->
+<div class="container mx-auto px-4 mb-6">
+    <div class="flex justify-end">
+        <button id="mobileFilterBtn" class="md:hidden p-2 bg-green-600 text-white rounded-lg">
             <i class="fas fa-filter"></i>
         </button>
     </div>
@@ -580,6 +572,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchProduct');
     const searchButton = document.getElementById('searchButton');
     const searchSuggestions = document.getElementById('searchSuggestions');
+    const productGrid = document.getElementById('productGrid');
+    const noResults = document.getElementById('noResults');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     let searchTimeout;
 
     // Function to set search term
@@ -658,63 +657,93 @@ document.addEventListener('DOMContentLoaded', function() {
             searchSuggestions.classList.add('hidden');
         }
     });
-});
 
-// Update the existing filterProducts function to handle search better
-function filterProducts() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const selectedCategories = Array.from(categoryCheckboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-    const selectedRatings = Array.from(ratingCheckboxes)
-        .filter(cb => cb.checked)
-        .map(cb => parseInt(cb.value));
-    
-    // Only redirect if apply button is clicked
-    if (event?.target?.id === 'applyFilters') {
-        const params = new URLSearchParams(window.location.search);
-        params.set('page', '1');
+    // Update filterProducts function
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedCategories = Array.from(categoryCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        const selectedRatings = Array.from(ratingCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => parseInt(cb.value));
         
-        if (searchTerm) params.set('search', searchTerm);
-        if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
-        if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
-        
-        window.location.href = window.location.pathname + '?' + params.toString();
-        return;
-    }
-    
-    // Client-side filtering
-    const productCards = document.querySelectorAll('.product-card');
-    let visibleCount = 0;
-    
-    productCards.forEach(card => {
-        const productName = card.getAttribute('data-name');
-        const productRating = parseFloat(card.getAttribute('data-rating'));
-        const productCategories = card.getAttribute('data-categories').split(',');
-        
-        const matchesSearch = productName.includes(searchTerm);
-        const matchesCategory = selectedCategories.length === 0 || 
-                              productCategories.some(cat => selectedCategories.includes(cat));
-        const matchesRating = selectedRatings.length === 0 || 
-                            selectedRatings.some(r => productRating >= r);
-        
-        if (matchesSearch && matchesCategory && matchesRating) {
-            card.classList.remove('hidden');
-            visibleCount++;
-        } else {
-            card.classList.add('hidden');
+        // Only redirect if apply button is clicked
+        if (event?.target?.id === 'applyFilters') {
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', '1');
+            
+            if (searchTerm) params.set('search', searchTerm);
+            if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
+            if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
+            
+            window.location.href = window.location.pathname + '?' + params.toString();
+            return;
         }
+        
+        // Client-side filtering
+        const productCards = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
+        productCards.forEach(card => {
+            const productName = card.getAttribute('data-name');
+            const productRating = parseFloat(card.getAttribute('data-rating'));
+            const productCategories = card.getAttribute('data-categories').split(',');
+            
+            const matchesSearch = productName.includes(searchTerm);
+            const matchesCategory = selectedCategories.length === 0 || 
+                                  productCategories.some(cat => selectedCategories.includes(cat));
+            const matchesRating = selectedRatings.length === 0 || 
+                                selectedRatings.some(r => productRating >= r);
+            
+            if (matchesSearch && matchesCategory && matchesRating) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            productGrid.classList.add('hidden');
+            noResults.classList.remove('hidden');
+        } else {
+            productGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+        }
+    }
+
+    // Update resetFilters function
+    function resetFilters() {
+        searchInput.value = '';
+        categoryCheckboxes.forEach(cb => cb.checked = false);
+        ratingCheckboxes.forEach(cb => cb.checked = false);
+        
+        if (event?.target?.id === 'resetFilters') {
+            window.location.href = window.location.pathname;
+        } else {
+            filterProducts();
+        }
+    }
+
+    // Event listeners for filters
+    applyFiltersBtn.addEventListener('click', filterProducts);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    clearFiltersBtn.addEventListener('click', () => window.location.href = window.location.pathname);
+    
+    // Add event listeners to all checkboxes
+    categoryCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
     });
     
-    // Show/hide no results message
-    if (visibleCount === 0) {
-        productGrid.classList.add('hidden');
-        noResults.classList.remove('hidden');
-    } else {
-        productGrid.classList.remove('hidden');
-        noResults.classList.add('hidden');
-    }
-}
+    ratingCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+    });
+    
+    // Initial filter
+    filterProducts();
+});
 
 // Mobile filter functionality
 document.addEventListener('DOMContentLoaded', function() {
