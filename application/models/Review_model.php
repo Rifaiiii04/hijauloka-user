@@ -25,7 +25,7 @@ class Review_model extends CI_Model {
     }
     
     public function get_product_reviews($product_id, $limit = 10, $offset = 0) {
-        $this->db->select('r.*, u.nama, u.foto_profil');
+        $this->db->select('r.*, u.nama, u.profile_image as foto_profil');
         $this->db->from('review_rating r');
         $this->db->join('user u', 'r.id_user = u.id_user');
         $this->db->where('r.id_product', $product_id);
