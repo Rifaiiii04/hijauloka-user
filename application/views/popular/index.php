@@ -236,7 +236,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
-    <div class="flex items-center justify-between w-72">
+    <div class="flex items-center mx-auto justify-between w-92">
         <div class="relative flex-grow">
             <input type="text" 
                    id="searchProduct" 
@@ -404,7 +404,8 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <div class="flex-grow">
             <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <?php 
-                $initial_products = array_slice($produk_populer, 0, 12); // Get first 12 products
+                // Get first 12 products (4 rows x 3 columns)
+                $initial_products = array_slice($produk_populer, 0, 12);
                 foreach ($initial_products as $produk) : 
                     if (!empty($produk['gambar'])) {
                         $gambarArr = explode(',', $produk['gambar']);
@@ -413,12 +414,9 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         $gambar = 'default.jpg';
                     }
                     
-                    // Initialize product categories array if not set
+                    // Get product categories
                     $product_categories_data = [];
-                    
-                    // Check if product has an ID before querying categories
                     if (isset($produk['id_product'])) {
-                        // Fetch categories for this specific product
                         $this->db->select('c.nama_kategori, c.id_kategori');
                         $this->db->from('product_category pc');
                         $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
@@ -426,7 +424,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         $product_categories_data = $this->db->get()->result_array();
                     }
                     
-                    // Create a string of category IDs for data attribute
                     $category_ids = [];
                     if (!empty($product_categories_data)) {
                         foreach ($product_categories_data as $cat) {
@@ -436,7 +433,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         }
                     }
                     $category_ids_str = implode(',', $category_ids);
-                    ?>
+                ?>
                     <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
                          data-id="<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>"
                          data-name="<?= strtolower(isset($produk['nama_product']) ? $produk['nama_product'] : '') ?>"
@@ -541,9 +538,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     let currentPage = 1;
-    const productsPerPage = 12;
+    const productsPerPage = 12; // 4 rows x 3 columns
     let allProducts = <?= json_encode($produk_populer) ?>;
     let filteredProducts = [...allProducts];
+    let remainingProducts = allProducts.slice(productsPerPage); // Products after initial 12
     
     // Function to create product card HTML
     function createProductCard(produk) {
@@ -628,14 +626,15 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMoreBtn.disabled = true;
         
         setTimeout(() => {
-            const start = currentPage * productsPerPage;
+            const start = (currentPage - 1) * productsPerPage;
             const end = start + productsPerPage;
             const productsToAdd = filteredProducts.slice(start, end);
             
             if (productsToAdd.length > 0) {
                 const productGrid = document.getElementById('productGrid');
                 productsToAdd.forEach(produk => {
-                    productGrid.insertAdjacentHTML('beforeend', createProductCard(produk));
+                    const card = createProductCard(produk);
+                    productGrid.insertAdjacentHTML('beforeend', card);
                 });
                 
                 currentPage++;
@@ -649,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function() {
             spinner.classList.add('hidden');
             buttonText.textContent = 'Load More';
             loadMoreBtn.disabled = false;
-        }, 500); // Simulate loading delay
+        }, 500);
     }
     
     // Update filterProducts function
@@ -717,14 +716,19 @@ document.addEventListener('DOMContentLoaded', function() {
             productGrid.classList.remove('hidden');
             noResults.classList.add('hidden');
             
-            // Show initial products
+            // Show initial 12 products (4 rows)
             const initialProducts = filteredProducts.slice(0, productsPerPage);
             initialProducts.forEach(produk => {
-                productGrid.insertAdjacentHTML('beforeend', createProductCard(produk));
+                const card = createProductCard(produk);
+                productGrid.insertAdjacentHTML('beforeend', card);
             });
             
             // Show/hide load more button
-            loadMoreBtn.style.display = filteredProducts.length > productsPerPage ? 'flex' : 'none';
+            if (filteredProducts.length > productsPerPage) {
+                loadMoreBtn.style.display = 'flex';
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
         }
     }
     
@@ -951,5 +955,4 @@ input[type="range"]::-moz-range-thumb {
 }
 </style>
 
-<?php $this->load->view('templates/footer') ?>
 <?php $this->load->view('templates/footer') ?>
