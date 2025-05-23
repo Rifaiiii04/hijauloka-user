@@ -235,14 +235,14 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 </div> -->
 
 <!-- Add this after the category filter and before the main content -->
-<div class="container mx-auto px-4 mb-6">
-    <div class="flex items-center justify-between mx-auto w-96">
+<div class="container mx-auto px-4 ">
+    <div class="flex items-center justify-between mx-auto w-96 ">
         <div class="relative flex-grow">
             <input type="text" 
                    id="searchProduct" 
                    placeholder="Cari tanaman..." 
-                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                   class="w-full px-4 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-white bg-green-600 rounded-lg"></i>
         </div>
         <!-- Mobile Filter Button -->
         <button id="mobileFilterBtn" class="md:hidden ml-4 p-2 bg-green-600 text-white rounded-lg">
