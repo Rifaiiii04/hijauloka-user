@@ -453,8 +453,15 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <!-- Product Grid -->
         <div class="flex-grow">
             <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <?php foreach ($produk_populer as $produk) : ?>
-                    <?php 
+                <?php 
+                $products_per_page = 15;
+                $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                $total_products = count($produk_populer);
+                $total_pages = ceil($total_products / $products_per_page);
+                $offset = ($current_page - 1) * $products_per_page;
+                $paginated_products = array_slice($produk_populer, $offset, $products_per_page);
+                
+                foreach ($paginated_products as $produk) : 
                     if (!empty($produk['gambar'])) {
                         $gambarArr = explode(',', $produk['gambar']);
                         $gambar = trim($gambarArr[0]);
@@ -485,71 +492,117 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         }
                     }
                     $category_ids_str = implode(',', $category_ids);
-                    ?>
-                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
-                         data-id="<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>"
-                         data-name="<?= strtolower(isset($produk['nama_product']) ? $produk['nama_product'] : '') ?>"
-                         data-price="<?= isset($produk['harga']) ? $produk['harga'] : '0' ?>"
-                         data-rating="<?= floatval(isset($produk['rating']) ? $produk['rating'] : 0) ?>"
-                         data-categories="<?= $category_ids_str ?>">
-                        <a href="<?= base_url('product/detail/' . (isset($produk['id_product']) ? $produk['id_product'] : '0')) ?>" class="block flex-grow">
-                            <div class="aspect-w-1 aspect-h-1">
-                                <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar; ?>" 
-                                     alt="<?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?>" 
-                                     class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
-                            </div>
-                            <div class="p-3 sm:p-4">
-                                <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?></h3>
-                                <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                                    <?php if (!empty($product_categories_data)) : ?>
-                                        <?php foreach ($product_categories_data as $cat) : ?>
-                                            <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </a>
-
+                ?>
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
+                     data-id="<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>"
+                     data-name="<?= strtolower(isset($produk['nama_product']) ? $produk['nama_product'] : '') ?>"
+                     data-price="<?= isset($produk['harga']) ? $produk['harga'] : '0' ?>"
+                     data-rating="<?= floatval(isset($produk['rating']) ? $produk['rating'] : 0) ?>"
+                     data-categories="<?= $category_ids_str ?>">
+                    <a href="<?= base_url('product/detail/' . (isset($produk['id_product']) ? $produk['id_product'] : '0')) ?>" class="block flex-grow">
+                        <div class="aspect-w-1 aspect-h-1">
+                            <img src="https://admin.hijauloka.my.id/uploads/<?= $gambar; ?>" 
+                                 alt="<?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?>" 
+                                 class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
+                        </div>
                         <div class="p-3 sm:p-4">
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400">
-                                    <?php 
-                                    $rating = floatval(isset($produk['rating']) ? $produk['rating'] : 0);
-                                    for ($i = 1; $i <= 5; $i++) : ?>
-                                        <?php if ($i <= $rating) : ?>
-                                            <i class="fas fa-star"></i>
-                                        <?php elseif ($i - 0.5 <= $rating) : ?>
-                                            <i class="fas fa-star-half-alt"></i>
-                                        <?php else : ?>
-                                            <i class="far fa-star"></i>
-                                        <?php endif; ?>
-                                    <?php endfor; ?>
-                                </div>
-                                <span class="text-gray-500 text-xs ml-1">(<?= number_format($rating, 1) ?>)</span>
+                            <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1"><?= isset($produk['nama_product']) ? $produk['nama_product'] : 'Product'; ?></h3>
+                            <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
+                                <?php if (!empty($product_categories_data)) : ?>
+                                    <?php foreach ($product_categories_data as $cat) : ?>
+                                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full"><?= $cat['nama_kategori'] ?></span>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm sm:text-lg font-bold">Rp<?= number_format(isset($produk['harga']) ? $produk['harga'] : 0, 0, ',', '.'); ?></span>
-                                <div class="flex gap-2">
-                                    <?php 
-                                    $is_wishlisted = false;
-                                    if ($this->session->userdata('logged_in') && isset($produk['id_product'])) {
-                                        $is_wishlisted = $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $produk['id_product']);
-                                    }
-                                    ?>
-                                    <button onclick="toggleWishlist(this, <?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>)"
-                                            class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
-                                        <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
-                                    </button>
-                                    <button onclick="addToCartCard(<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>, this)"
-                                            class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                        <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                                    </button>
-                                </div>
+                        </div>
+                    </a>
+
+                    <div class="p-3 sm:p-4">
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <?php 
+                                $rating = floatval(isset($produk['rating']) ? $produk['rating'] : 0);
+                                for ($i = 1; $i <= 5; $i++) : ?>
+                                    <?php if ($i <= $rating) : ?>
+                                        <i class="fas fa-star"></i>
+                                    <?php elseif ($i - 0.5 <= $rating) : ?>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    <?php else : ?>
+                                        <i class="far fa-star"></i>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(<?= number_format($rating, 1) ?>)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm sm:text-lg font-bold">Rp<?= number_format(isset($produk['harga']) ? $produk['harga'] : 0, 0, ',', '.'); ?></span>
+                            <div class="flex gap-2">
+                                <?php 
+                                $is_wishlisted = false;
+                                if ($this->session->userdata('logged_in') && isset($produk['id_product'])) {
+                                    $is_wishlisted = $this->wishlist_model->is_wishlisted($this->session->userdata('id_user'), $produk['id_product']);
+                                }
+                                ?>
+                                <button onclick="toggleWishlist(this, <?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>)"
+                                        class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors <?= $is_wishlisted ? 'active' : '' ?>">
+                                    <i class="fas fa-heart <?= $is_wishlisted ? 'text-red-500' : '' ?>"></i>
+                                </button>
+                                <button onclick="addToCartCard(<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>, this)"
+                                        class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
+                                    <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
+            
+            <!-- Pagination -->
+            <?php if ($total_pages > 1): ?>
+            <div class="flex justify-center items-center space-x-2 mt-8">
+                <!-- Previous Button -->
+                <?php if ($current_page > 1): ?>
+                    <a href="?page=<?= $current_page - 1 ?>" 
+                       class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <!-- Page Numbers -->
+                <?php
+                $start_page = max(1, $current_page - 2);
+                $end_page = min($total_pages, $current_page + 2);
+                
+                if ($start_page > 1) {
+                    echo '<a href="?page=1" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">1</a>';
+                    if ($start_page > 2) {
+                        echo '<span class="px-2 text-gray-500">...</span>';
+                    }
+                }
+                
+                for ($i = $start_page; $i <= $end_page; $i++) {
+                    $active_class = $i === $current_page ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-white text-gray-700 hover:bg-gray-50';
+                    echo '<a href="?page=' . $i . '" class="px-4 py-2 border border-gray-300 rounded-md ' . $active_class . ' transition-colors">' . $i . '</a>';
+                }
+                
+                if ($end_page < $total_pages) {
+                    if ($end_page < $total_pages - 1) {
+                        echo '<span class="px-2 text-gray-500">...</span>';
+                    }
+                    echo '<a href="?page=' . $total_pages . '" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">' . $total_pages . '</a>';
+                }
+                ?>
+                
+                <!-- Next Button -->
+                <?php if ($current_page < $total_pages): ?>
+                    <a href="?page=<?= $current_page + 1 ?>" 
+                       class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
             
             <!-- No Results Message -->
             <div id="noResults" class="hidden py-12 text-center">
@@ -660,42 +713,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(cb => parseInt(cb.value));
         const sortBy = sortBySelect.value;
         
-        const productCards = document.querySelectorAll('.product-card');
-        let visibleCount = 0;
+        // Build query parameters
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', '1'); // Reset to first page when filtering
         
-        productCards.forEach(card => {
-            const productName = card.getAttribute('data-name');
-            const productPrice = parseInt(card.getAttribute('data-price'));
-            const productRating = parseFloat(card.getAttribute('data-rating'));
-            const productCategories = card.getAttribute('data-categories').split(',');
-            
-            // Check if product matches all filters
-            const matchesSearch = productName.includes(searchTerm);
-            const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
-            const matchesCategory = selectedCategories.length === 0 || 
-                                   productCategories.some(cat => selectedCategories.includes(cat));
-            const matchesRating = selectedRatings.length === 0 || 
-                                 selectedRatings.some(r => productRating >= r);
-            
-            if (matchesSearch && matchesPrice && matchesCategory && matchesRating) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
+        if (searchTerm) params.set('search', searchTerm);
+        if (minPrice > 0) params.set('min_price', minPrice);
+        if (maxPrice < 1000000) params.set('max_price', maxPrice);
+        if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
+        if (selectedRatings.length > 0) params.set('ratings', selectedRatings.join(','));
+        if (sortBy !== 'popular') params.set('sort', sortBy);
         
-        // Show/hide no results message
-        if (visibleCount === 0) {
-            productGrid.classList.add('hidden');
-            noResults.classList.remove('hidden');
-        } else {
-            productGrid.classList.remove('hidden');
-            noResults.classList.add('hidden');
-        }
-        
-        // Sort visible products
-        sortProducts(sortBy);
+        // Redirect to filtered URL
+        window.location.href = window.location.pathname + '?' + params.toString();
     }
     
     // Sort products function
@@ -733,6 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reset all filters
     function resetFilters() {
+        // Clear all filters
         searchInput.value = '';
         minPriceSlider.value = 0;
         maxPriceSlider.value = 1000000;
@@ -741,17 +772,12 @@ document.addEventListener('DOMContentLoaded', function() {
         minPriceLabel.textContent = formatCurrency(0);
         maxPriceLabel.textContent = formatCurrency(1000000);
         
-        categoryCheckboxes.forEach(cb => {
-            cb.checked = false;
-        });
-        
-        ratingCheckboxes.forEach(cb => {
-            cb.checked = false;
-        });
-        
+        categoryCheckboxes.forEach(cb => cb.checked = false);
+        ratingCheckboxes.forEach(cb => cb.checked = false);
         sortBySelect.value = 'popular';
         
-        filterProducts();
+        // Redirect to base URL
+        window.location.href = window.location.pathname;
     }
     
     // Event listeners
@@ -983,6 +1009,22 @@ input[type="range"]::-moz-range-thumb {
     margin: 0;
     font-size: 14px;
     color: #6b7280;
+}
+
+/* Add styles for pagination */
+.pagination-link {
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+.pagination-link.active {
+    background-color: #059669;
+    color: white;
+    border-color: #059669;
+}
+
+.pagination-link:hover:not(.active) {
+    background-color: #f3f4f6;
 }
 </style>
 
