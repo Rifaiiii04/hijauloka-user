@@ -84,7 +84,8 @@ class Product extends CI_Controller {
         }
         
         // Check if user has already reviewed this product
-        $existing_review = $this->review_model->get_review_by_user_and_product($id_user, $id_product);
+        // Around line 87, you should have something like:
+        $existing_review = $this->review_model->get_review_by_user_and_product($user_id, $product_id);
         
         if ($existing_review) {
             // Update existing review

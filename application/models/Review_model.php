@@ -12,7 +12,6 @@ class Review_model extends CI_Model {
         return $this->db->insert_id();
     }
     
-    // Add this new method
     public function get_review_by_user_and_product($user_id, $product_id) {
         $this->db->where('id_user', $user_id);
         $this->db->where('id_product', $product_id);
