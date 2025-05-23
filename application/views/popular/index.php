@@ -222,7 +222,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 <div class="container mx-auto px-4 mb-8">
     <div class="max-w-2xl mx-auto">
         <div class="relative group">
-            <div class="flex items-center justify-betweend ">
+        <i class="fas fa-search"></i>
             <input type="text" 
                    id="searchProduct" 
                    placeholder="Cari tanaman hias..." 
@@ -232,7 +232,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                           placeholder-gray-400 text-gray-700
                           shadow-sm hover:border-green-300"
                    autocomplete="off">
-            <button type="button" 
+            <!-- <button type="button" 
                     id="searchButton"
                     class="absolute right-10 top-1/2
                            w-10 h-10 flex items-center justify-center
@@ -240,9 +240,8 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                            hover:bg-green-700 active:bg-green-800
                            transition-colors duration-200
                            focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
+                
+            </button> -->
             <!-- Search Suggestions -->
             <div id="searchSuggestions" 
                  class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 
