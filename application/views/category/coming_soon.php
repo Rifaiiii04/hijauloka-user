@@ -11,14 +11,13 @@
 <body class="bg-gray-50 min-h-screen">
     <?php $this->load->view('templates/navbar'); ?>
 
-    <div class="container mx-auto px-4 py-12 md:py-16">
-        <div class="max-w-xl mx-auto">
-            <!-- 3D Object Container -->
-            <div id="3d-container" class="w-48 h-48 mx-auto mb-8"></div>
+    <!-- 3D Background Container -->
+    <div id="3d-background" class="fixed inset-0 -z-10"></div>
 
+    <div class="container mx-auto px-4 py-12 md:py-16 relative">
+        <div class="max-w-xl mx-auto">
             <!-- Simple Hero Section -->
             <div class="text-center mb-10">
-                <i class="fas fa-seedling text-6xl text-green-500 mb-6"></i>
                 <h1 class="text-3xl font-bold text-gray-800 mb-4">Coming Soon</h1>
                 <p class="text-gray-600">
                     <?php if (isset($category) && $category === 'seeds'): ?>
@@ -77,12 +76,12 @@
             animation: fade-in 0.3s ease-out forwards;
         }
 
-        #3d-container {
-            position: relative;
-            perspective: 1000px;
+        #3d-background {
+            opacity: 0.15;
+            pointer-events: none;
         }
 
-        #3d-container canvas {
+        #3d-background canvas {
             width: 100% !important;
             height: 100% !important;
         }
@@ -91,50 +90,96 @@
     <script>
         // Three.js initialization
         function initThreeJS() {
-            const container = document.getElementById('3d-container');
-            const width = container.clientWidth;
-            const height = container.clientHeight;
+            const container = document.getElementById('3d-background');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
 
             // Scene setup
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf9fafb); // Light gray background
+            scene.background = new THREE.Color(0xf9fafb);
 
             // Camera setup
             const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-            camera.position.z = 5;
+            camera.position.z = 15;
 
             // Renderer setup
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(width, height);
             container.appendChild(renderer.domElement);
 
-            // Create pot geometry
-            const potGeometry = new THREE.CylinderGeometry(1, 0.8, 1.5, 32);
-            const potMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x4ade80, // Green color
-                shininess: 30,
-                flatShading: true
-            });
-            const pot = new THREE.Mesh(potGeometry, potMaterial);
+            // Create multiple random objects
+            const objects = [];
+            const numObjects = Math.floor(Math.random() * 10) + 5; // Random number between 5-15 objects
 
-            // Create plant geometry
-            const plantGeometry = new THREE.ConeGeometry(0.5, 1, 32);
-            const plantMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x22c55e, // Darker green
-                shininess: 30,
-                flatShading: true
-            });
-            const plant = new THREE.Mesh(plantGeometry, plantMaterial);
-            plant.position.y = 1.2;
+            for (let i = 0; i < numObjects; i++) {
+                // Random position
+                const x = (Math.random() - 0.5) * 30;
+                const y = (Math.random() - 0.5) * 30;
+                const z = (Math.random() - 0.5) * 10;
 
-            // Create group for pot and plant
-            const potGroup = new THREE.Group();
-            potGroup.add(pot);
-            potGroup.add(plant);
-            scene.add(potGroup);
+                // Random size
+                const scale = Math.random() * 0.5 + 0.5;
+
+                // Create pot geometry
+                const potGeometry = new THREE.CylinderGeometry(1, 0.8, 1.5, 32);
+                const potMaterial = new THREE.MeshPhongMaterial({ 
+                    color: new THREE.Color(
+                        Math.random() * 0.2 + 0.4, // R: 0.4-0.6
+                        Math.random() * 0.2 + 0.6, // G: 0.6-0.8
+                        Math.random() * 0.2 + 0.4  // B: 0.4-0.6
+                    ),
+                    shininess: 30,
+                    flatShading: true
+                });
+                const pot = new THREE.Mesh(potGeometry, potMaterial);
+
+                // Create plant geometry
+                const plantGeometry = new THREE.ConeGeometry(0.5, 1, 32);
+                const plantMaterial = new THREE.MeshPhongMaterial({ 
+                    color: new THREE.Color(
+                        Math.random() * 0.2 + 0.2, // R: 0.2-0.4
+                        Math.random() * 0.2 + 0.6, // G: 0.6-0.8
+                        Math.random() * 0.2 + 0.2  // B: 0.2-0.4
+                    ),
+                    shininess: 30,
+                    flatShading: true
+                });
+                const plant = new THREE.Mesh(plantGeometry, plantMaterial);
+                plant.position.y = 1.2;
+
+                // Create group
+                const potGroup = new THREE.Group();
+                potGroup.add(pot);
+                potGroup.add(plant);
+                
+                // Set random position and scale
+                potGroup.position.set(x, y, z);
+                potGroup.scale.set(scale, scale, scale);
+                
+                // Set random initial rotation
+                potGroup.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+
+                // Add random rotation speed
+                potGroup.userData = {
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.01,
+                        y: (Math.random() - 0.5) * 0.01,
+                        z: (Math.random() - 0.5) * 0.01
+                    },
+                    floatSpeed: Math.random() * 0.001 + 0.0005,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(potGroup);
+                objects.push(potGroup);
+            }
 
             // Add lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -145,19 +190,24 @@
             function animate() {
                 requestAnimationFrame(animate);
                 
-                // Rotate the pot group
-                potGroup.rotation.y += 0.005;
-                
-                // Gentle floating motion
-                potGroup.position.y = Math.sin(Date.now() * 0.001) * 0.1;
+                // Update each object
+                objects.forEach(obj => {
+                    // Random rotation
+                    obj.rotation.x += obj.userData.rotationSpeed.x;
+                    obj.rotation.y += obj.userData.rotationSpeed.y;
+                    obj.rotation.z += obj.userData.rotationSpeed.z;
+                    
+                    // Floating motion
+                    obj.position.y += Math.sin(Date.now() * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.01;
+                });
                 
                 renderer.render(scene, camera);
             }
 
             // Handle window resize
             window.addEventListener('resize', () => {
-                const newWidth = container.clientWidth;
-                const newHeight = container.clientHeight;
+                const newWidth = window.innerWidth;
+                const newHeight = window.innerHeight;
                 
                 camera.aspect = newWidth / newHeight;
                 camera.updateProjectionMatrix();
