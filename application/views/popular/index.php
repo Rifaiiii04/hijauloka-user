@@ -236,7 +236,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this after the category filter and before the main content -->
 <div class="container mx-auto px-4 mb-6">
-    <div class="flex items-center mx-auto justify-between w-92">
+    <div class="flex items-center justify-between">
         <div class="relative flex-grow">
             <input type="text" 
                    id="searchProduct" 
@@ -265,6 +265,31 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         </button>
                     </div>
                     <div class="overflow-y-auto h-[calc(100vh-8rem)]">
+                        <!-- Price Range Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
+                            <div class="px-2">
+                                <div class="flex justify-between mb-2">
+                                    <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
+                                    <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
+                                    <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
+                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                                    <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
+                                           class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                                </div>
+                                <div class="flex gap-2 items-center">
+                                    <input type="number" id="minPrice" placeholder="Min" value="0"
+                                           class="w-full p-2 text-sm border rounded-md">
+                                    <span class="text-gray-400">-</span>
+                                    <input type="number" id="maxPrice" placeholder="Max" value="1000000"
+                                           class="w-full p-2 text-sm border rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- Category Filter -->
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-3">Kategori</h4>
@@ -312,7 +337,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                                 <option value="popular">Popularitas</option>
                                 <option value="price_low">Harga: Rendah ke Tinggi</option>
                                 <option value="price_high">Harga: Tinggi ke Rendah</option>
-                                <option value="rating">Rating Tertinggi</option>
+                                 sticky<option value="rating">Rating Tertinggi</option>
                                 <option value="newest">Terbaru</option>
                             </select>
                         </div>
@@ -335,6 +360,31 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <div class="w-full md:w-64 hidden md:flex flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
                 <h3 class="font-semibold text-lg text-green-800 mb-4 border-b pb-2 sticky top-0 bg-white z-10">Filter Produk</h3>
+                
+                <!-- Price Range Filter -->
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-700 mb-3">Rentang Harga</h4>
+                    <div class="px-2">
+                        <div class="flex justify-between mb-2">
+                            <span id="minPriceLabel" class="text-sm text-gray-600">Rp0</span>
+                            <span id="maxPriceLabel" class="text-sm text-gray-600">Rp1.000.000</span>
+                        </div>
+                        <div class="relative mb-4">
+                            <div class="slider-track h-1 bg-gray-200 rounded-full absolute inset-0"></div>
+                            <input type="range" id="minPriceSlider" min="0" max="1000000" value="0" step="10000"
+                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                            <input type="range" id="maxPriceSlider" min="0" max="1000000" value="1000000" step="10000"
+                                   class="absolute w-full h-1 bg-transparent appearance-none pointer-events-auto">
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input type="number" id="minPrice" placeholder="Min" value="0"
+                                   class="w-full p-2 text-sm border rounded-md">
+                            <span class="text-gray-400">-</span>
+                            <input type="number" id="maxPrice" placeholder="Max" value="1000000"
+                                   class="w-full p-2 text-sm border rounded-md">
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Category Filter -->
                 <div class="mb-6">
@@ -403,10 +453,8 @@ document.getElementById('cartNotification').addEventListener('click', function(e
         <!-- Product Grid -->
         <div class="flex-grow">
             <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <?php 
-                // Get first 12 products (4 rows x 3 columns)
-                $initial_products = array_slice($produk_populer, 0, 12);
-                foreach ($initial_products as $produk) : 
+                <?php foreach ($produk_populer as $produk) : ?>
+                    <?php 
                     if (!empty($produk['gambar'])) {
                         $gambarArr = explode(',', $produk['gambar']);
                         $gambar = trim($gambarArr[0]);
@@ -414,9 +462,12 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         $gambar = 'default.jpg';
                     }
                     
-                    // Get product categories
+                    // Initialize product categories array if not set
                     $product_categories_data = [];
+                    
+                    // Check if product has an ID before querying categories
                     if (isset($produk['id_product'])) {
+                        // Fetch categories for this specific product
                         $this->db->select('c.nama_kategori, c.id_kategori');
                         $this->db->from('product_category pc');
                         $this->db->join('category c', 'c.id_kategori = pc.id_kategori');
@@ -424,6 +475,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         $product_categories_data = $this->db->get()->result_array();
                     }
                     
+                    // Create a string of category IDs for data attribute
                     $category_ids = [];
                     if (!empty($product_categories_data)) {
                         foreach ($product_categories_data as $cat) {
@@ -433,7 +485,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                         }
                     }
                     $category_ids_str = implode(',', $category_ids);
-                ?>
+                    ?>
                     <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
                          data-id="<?= isset($produk['id_product']) ? $produk['id_product'] : '0' ?>"
                          data-name="<?= strtolower(isset($produk['nama_product']) ? $produk['nama_product'] : '') ?>"
@@ -499,17 +551,6 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                 <?php endforeach; ?>
             </div>
             
-            <!-- Load More Button -->
-            <?php if (count($produk_populer) > 12): ?>
-            <div class="text-center mt-8">
-                <button id="loadMoreBtn" 
-                        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 mx-auto">
-                    <span>Load More</span>
-                    <i class="fas fa-spinner fa-spin hidden"></i>
-                </button>
-            </div>
-            <?php endif; ?>
-            
             <!-- No Results Message -->
             <div id="noResults" class="hidden py-12 text-center">
                 <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
@@ -525,7 +566,15 @@ document.getElementById('cartNotification').addEventListener('click', function(e
 
 <!-- Add this to your existing script section -->
 <script>
+// Filter and Search Functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Price slider styling
+    const minPriceSlider = document.getElementById('minPriceSlider');
+    const maxPriceSlider = document.getElementById('maxPriceSlider');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const minPriceLabel = document.getElementById('minPriceLabel');
+    const maxPriceLabel = document.getElementById('maxPriceLabel');
     const searchInput = document.getElementById('searchProduct');
     const productGrid = document.getElementById('productGrid');
     const noResults = document.getElementById('noResults');
@@ -536,124 +585,73 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
     const ratingCheckboxes = document.querySelectorAll('.rating-checkbox');
     
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    let currentPage = 1;
-    const productsPerPage = 12; // 4 rows x 3 columns
-    let allProducts = <?= json_encode($produk_populer) ?>;
-    let filteredProducts = [...allProducts];
-    let remainingProducts = allProducts.slice(productsPerPage); // Products after initial 12
+    const priceGap = 10000;
     
-    // Function to create product card HTML
-    function createProductCard(produk) {
-        const gambar = produk.gambar ? produk.gambar.split(',')[0].trim() : 'default.jpg';
-        const category_ids = produk.categories ? produk.categories.map(cat => cat.id_kategori).join(',') : '';
-        const is_wishlisted = <?= $this->session->userdata('logged_in') ? 'true' : 'false' ?>;
-        
-        return `
-            <div class="product-card bg-white rounded-lg overflow-hidden shadow-lg h-full flex flex-col transform hover:scale-105 transition-all duration-300"
-                 data-id="${produk.id_product || '0'}"
-                 data-name="${(produk.nama_product || '').toLowerCase()}"
-                 data-price="${produk.harga || '0'}"
-                 data-rating="${parseFloat(produk.rating || 0)}"
-                 data-categories="${category_ids}">
-                <a href="${baseUrl}product/detail/${produk.id_product || '0'}" class="block flex-grow">
-                    <div class="aspect-w-1 aspect-h-1">
-                        <img src="https://admin.hijauloka.my.id/uploads/${gambar}" 
-                             alt="${produk.nama_product || 'Product'}" 
-                             class="w-full h-36 sm:h-48 object-cover transform hover:scale-110 transition-all duration-300">
-                    </div>
-                    <div class="p-3 sm:p-4">
-                        <h3 class="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">${produk.nama_product || 'Product'}</h3>
-                        <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                            ${produk.categories ? produk.categories.map(cat => 
-                                `<span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full">${cat.nama_kategori}</span>`
-                            ).join('') : ''}
-                        </div>
-                    </div>
-                </a>
-                <div class="p-3 sm:p-4">
-                    <div class="flex items-center mb-2">
-                        <div class="flex text-yellow-400">
-                            ${generateStarRating(produk.rating || 0)}
-                        </div>
-                        <span class="text-gray-500 text-xs ml-1">(${parseFloat(produk.rating || 0).toFixed(1)})</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm sm:text-lg font-bold">Rp${formatNumber(produk.harga || 0)}</span>
-                        <div class="flex gap-2">
-                            <button onclick="toggleWishlist(this, ${produk.id_product || '0'})"
-                                    class="wishlist-btn bg-gray-100 text-gray-600 p-2 sm:p-2.5 rounded-md hover:bg-gray-200 transition-colors ${is_wishlisted ? 'active' : ''}">
-                                <i class="fas fa-heart ${is_wishlisted ? 'text-red-500' : ''}"></i>
-                            </button>
-                            <button onclick="addToCartCard(${produk.id_product || '0'}, this)"
-                                    class="bg-green-600 text-white p-2 sm:p-2.5 rounded-md hover:bg-green-700 transition-colors">
-                                <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+    function formatCurrency(value) {
+        return 'Rp' + parseInt(value).toLocaleString('id-ID');
     }
     
-    // Helper function to generate star rating HTML
-    function generateStarRating(rating) {
-        let stars = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= rating) {
-                stars += '<i class="fas fa-star"></i>';
-            } else if (i - 0.5 <= rating) {
-                stars += '<i class="fas fa-star-half-alt"></i>';
-            } else {
-                stars += '<i class="far fa-star"></i>';
-            }
+    // Initialize price labels
+    minPriceLabel.textContent = formatCurrency(minPriceSlider.value);
+    maxPriceLabel.textContent = formatCurrency(maxPriceSlider.value);
+    
+    // Min price slider
+    minPriceSlider.addEventListener('input', function() {
+        let minVal = parseInt(minPriceSlider.value);
+        let maxVal = parseInt(maxPriceSlider.value);
+        
+        if(maxVal - minVal < priceGap) {
+            minVal = maxVal - priceGap;
+            minPriceSlider.value = minVal;
         }
-        return stars;
-    }
-    
-    // Helper function to format numbers
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-    
-    // Function to load more products
-    function loadMoreProducts() {
-        const spinner = loadMoreBtn.querySelector('.fa-spinner');
-        const buttonText = loadMoreBtn.querySelector('span');
         
-        spinner.classList.remove('hidden');
-        buttonText.textContent = 'Loading...';
-        loadMoreBtn.disabled = true;
-        
-        setTimeout(() => {
-            const start = (currentPage - 1) * productsPerPage;
-            const end = start + productsPerPage;
-            const productsToAdd = filteredProducts.slice(start, end);
-            
-            if (productsToAdd.length > 0) {
-                const productGrid = document.getElementById('productGrid');
-                productsToAdd.forEach(produk => {
-                    const card = createProductCard(produk);
-                    productGrid.insertAdjacentHTML('beforeend', card);
-                });
-                
-                currentPage++;
-                
-                // Hide load more button if no more products
-                if (end >= filteredProducts.length) {
-                    loadMoreBtn.style.display = 'none';
-                }
-            }
-            
-            spinner.classList.add('hidden');
-            buttonText.textContent = 'Load More';
-            loadMoreBtn.disabled = false;
-        }, 500);
-    }
+        minPriceInput.value = minVal;
+        minPriceLabel.textContent = formatCurrency(minVal);
+    });
     
-    // Update filterProducts function
+    // Max price slider
+    maxPriceSlider.addEventListener('input', function() {
+        let minVal = parseInt(minPriceSlider.value);
+        let maxVal = parseInt(maxPriceSlider.value);
+        
+        if(maxVal - minVal < priceGap) {
+            maxVal = minVal + priceGap;
+            maxPriceSlider.value = maxVal;
+        }
+        
+        maxPriceInput.value = maxVal;
+        maxPriceLabel.textContent = formatCurrency(maxVal);
+    });
+    
+    // Min price input
+    minPriceInput.addEventListener('input', function() {
+        let minVal = parseInt(minPriceInput.value) || 0;
+        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        
+        if(minVal < 0) minVal = 0;
+        if(minVal > maxVal - priceGap) minVal = maxVal - priceGap;
+        
+        minPriceSlider.value = minVal;
+        minPriceLabel.textContent = formatCurrency(minVal);
+    });
+    
+    // Max price input
+    maxPriceInput.addEventListener('input', function() {
+        let minVal = parseInt(minPriceInput.value) || 0;
+        let maxVal = parseInt(maxPriceInput.value) || 1000000;
+        
+        if(maxVal > 1000000) maxVal = 1000000;
+        if(maxVal < minVal + priceGap) maxVal = minVal + priceGap;
+        
+        maxPriceSlider.value = maxVal;
+        maxPriceLabel.textContent = formatCurrency(maxVal);
+    });
+    
+    // Filter products function
     function filterProducts() {
         const searchTerm = searchInput.value.toLowerCase();
+        const minPrice = parseInt(minPriceSlider.value);
+        const maxPrice = parseInt(maxPriceSlider.value);
         const selectedCategories = Array.from(categoryCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
@@ -662,30 +660,55 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(cb => parseInt(cb.value));
         const sortBy = sortBySelect.value;
         
-        // Filter products
-        filteredProducts = allProducts.filter(produk => {
-            const productName = produk.nama_product.toLowerCase();
-            const productRating = parseFloat(produk.rating || 0);
-            const productCategories = produk.categories ? 
-                produk.categories.map(cat => cat.id_kategori.toString()) : [];
+        const productCards = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
+        productCards.forEach(card => {
+            const productName = card.getAttribute('data-name');
+            const productPrice = parseInt(card.getAttribute('data-price'));
+            const productRating = parseFloat(card.getAttribute('data-rating'));
+            const productCategories = card.getAttribute('data-categories').split(',');
             
+            // Check if product matches all filters
             const matchesSearch = productName.includes(searchTerm);
+            const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
             const matchesCategory = selectedCategories.length === 0 || 
                                    productCategories.some(cat => selectedCategories.includes(cat));
             const matchesRating = selectedRatings.length === 0 || 
                                  selectedRatings.some(r => productRating >= r);
             
-            return matchesSearch && matchesCategory && matchesRating;
+            if (matchesSearch && matchesPrice && matchesCategory && matchesRating) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
         });
         
-        // Sort filtered products
-        filteredProducts.sort((a, b) => {
-            const aPrice = parseInt(a.harga || 0);
-            const bPrice = parseInt(b.harga || 0);
-            const aRating = parseFloat(a.rating || 0);
-            const bRating = parseFloat(b.rating || 0);
-            const aId = parseInt(a.id_product || 0);
-            const bId = parseInt(b.id_product || 0);
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            productGrid.classList.add('hidden');
+            noResults.classList.remove('hidden');
+        } else {
+            productGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+        }
+        
+        // Sort visible products
+        sortProducts(sortBy);
+    }
+    
+    // Sort products function
+    function sortProducts(sortBy) {
+        const productCards = Array.from(document.querySelectorAll('.product-card:not(.hidden)'));
+        
+        productCards.sort((a, b) => {
+            const aPrice = parseInt(a.getAttribute('data-price'));
+            const bPrice = parseInt(b.getAttribute('data-price'));
+            const aRating = parseFloat(a.getAttribute('data-rating'));
+            const bRating = parseFloat(b.getAttribute('data-rating'));
+            const aId = parseInt(a.getAttribute('data-id'));
+            const bId = parseInt(b.getAttribute('data-id'));
             
             switch(sortBy) {
                 case 'price_low':
@@ -695,49 +718,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'rating':
                     return bRating - aRating;
                 case 'newest':
-                    return bId - aId;
-                default:
-                    return 0;
+                    return bId - aId; // Assuming newer products have higher IDs
+                default: // popular
+                    return 0; // Keep original order
             }
         });
         
-        // Reset pagination
-        currentPage = 1;
-        
-        // Update product grid
-        const productGrid = document.getElementById('productGrid');
-        productGrid.innerHTML = '';
-        
-        if (filteredProducts.length === 0) {
-            productGrid.classList.add('hidden');
-            noResults.classList.remove('hidden');
-            loadMoreBtn.style.display = 'none';
-        } else {
-            productGrid.classList.remove('hidden');
-            noResults.classList.add('hidden');
-            
-            // Show initial 12 products (4 rows)
-            const initialProducts = filteredProducts.slice(0, productsPerPage);
-            initialProducts.forEach(produk => {
-                const card = createProductCard(produk);
-                productGrid.insertAdjacentHTML('beforeend', card);
-            });
-            
-            // Show/hide load more button
-            if (filteredProducts.length > productsPerPage) {
-                loadMoreBtn.style.display = 'flex';
-            } else {
-                loadMoreBtn.style.display = 'none';
-            }
-        }
+        // Reorder elements in the DOM
+        const parent = productGrid;
+        productCards.forEach(card => {
+            parent.appendChild(card);
+        });
     }
     
-    // Add load more button event listener
-    if (loadMoreBtn) {
-        loadMoreBtn.addEventListener('click', loadMoreProducts);
+    // Reset all filters
+    function resetFilters() {
+        searchInput.value = '';
+        minPriceSlider.value = 0;
+        maxPriceSlider.value = 1000000;
+        minPriceInput.value = 0;
+        maxPriceInput.value = 1000000;
+        minPriceLabel.textContent = formatCurrency(0);
+        maxPriceLabel.textContent = formatCurrency(1000000);
+        
+        categoryCheckboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        
+        ratingCheckboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        
+        sortBySelect.value = 'popular';
+        
+        filterProducts();
     }
     
-    // ... rest of your existing event listeners ...
+    // Event listeners
+    searchInput.addEventListener('input', filterProducts);
+    applyFiltersBtn.addEventListener('click', filterProducts);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    clearFiltersBtn.addEventListener('click', resetFilters);
+    sortBySelect.addEventListener('change', () => sortProducts(sortBySelect.value));
+    
+    // Add event listeners to all checkboxes
+    categoryCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+    });
+    
+    ratingCheckboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+    });
     
     // Initial filter
     filterProducts();
