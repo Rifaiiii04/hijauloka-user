@@ -225,7 +225,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
             <input type="text" 
                    id="searchProduct" 
                    placeholder="Cari tanaman hias..." 
-                   class="w-full pl-10 pr-14 py-3 text-base rounded-xl border-2 border-gray-200 
+                   class="w-full pl-14 pr-14 py-3 text-base rounded-xl border-2 border-gray-200 
                           focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:ring-opacity-50 
                           transition-all duration-200 ease-in-out
                           placeholder-gray-400 text-gray-700
@@ -233,7 +233,7 @@ document.getElementById('cartNotification').addEventListener('click', function(e
                    autocomplete="off">
             <button type="button" 
                     id="searchButton"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 
+                    class="absolute right-1 top-1/2 -translate-y-1/2 
                            w-10 h-10 flex items-center justify-center
                            bg-green-600 text-white rounded-lg
                            hover:bg-green-700 active:bg-green-800
